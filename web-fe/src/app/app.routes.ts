@@ -26,6 +26,7 @@ import { ListExamComponent } from './components/student/list-exam/list-exam.comp
 import { ListAssignmentComponent } from './components/student/list-assignment/list-assignment.component';
 import { TakeExamComponent } from './components/student/take-exam/take-exam.component';
 import { AssignExamComponent } from './components/teacher/exam/assign-exam/assign-exam.component';
+import { ListScoreComponent } from './components/teacher/teacher-dashboard/list-score/list-score.component';
 
 
 export const routes: Routes = [
@@ -61,6 +62,7 @@ export const routes: Routes = [
     { path: 'update-question/:id', component: UpdateQuestionComponent },
     { path: 'try-exam/:id', component: TryExamComponent },
     { path: 'assign-exam/:id', component: AssignExamComponent },
+    { path: 'list-score/:id', component: ListScoreComponent },
 
     { path: 'add-assignment/:id', component: AddAssignmentComponent },
     { path: 'assignments', component: TeacherListAssignmentComponent },

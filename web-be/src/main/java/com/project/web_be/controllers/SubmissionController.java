@@ -4,6 +4,7 @@ import com.project.web_be.dtos.SubmissionExamDTO;
 import com.project.web_be.entities.Submission;
 import com.project.web_be.exceptions.DataNotFoundException;
 import com.project.web_be.responses.AssignedExamResponse;
+import com.project.web_be.responses.ListSubmissionResponse;
 import com.project.web_be.responses.SubmitExamResponse;
 import com.project.web_be.services.Impl.SubmissionService;
 import lombok.RequiredArgsConstructor;
@@ -101,10 +102,13 @@ public class SubmissionController {
     }
 
     @GetMapping("/exam/{examId}")
-    public ResponseEntity<?> getExamSubmissions(@PathVariable Long examId) {
+    public ResponseEntity<?> getAllSubmissionByExamId(@PathVariable Long examId) {
         try {
             List<Submission> submissions = submissionService.getExamSubmissions(examId);
-            return ResponseEntity.ok(submissions);
+            List<ListSubmissionResponse> listSubmissionResponses = submissions.stream()
+                    .map(ListSubmissionResponse::fromSubmission)
+                    .toList();
+            return ResponseEntity.ok(listSubmissionResponses);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("error", e.getMessage());

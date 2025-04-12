@@ -19,7 +19,7 @@
         <td>
           <button class="btn btn-primary" routerLink="/teacher/try-exam/{{exam.id}}">Thử</button>
           <button class="btn btn-success" (click)="openAssignPopup(exam.id)">Giao bài</button>
-
+          <button class="btn btn-secondary" routerLink="/teacher/list-score/{{exam.id}}">Điểm</button>
           <button class="btn btn-danger" (click)="deleteExam(exam.id)">Xóa</button>
         </td>
       </tr>

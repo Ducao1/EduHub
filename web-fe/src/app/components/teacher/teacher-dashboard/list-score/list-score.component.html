@@ -1,0 +1,20 @@
+<div class="container mt-4">
+    <h2>Danh sách bài nộp cho bài kiểm tra</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tên học sinh</th>
+          <th>Điểm</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let submission of submissions; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ submission.studentName }}</td>
+          <td>{{ submission.score }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

@@ -71,4 +71,7 @@ export class SubmissionService {
   getSubmissionById(id: number): Observable<any> {
     return this.http.get<any>(`${environment.apiBaseUrl}/submissions/${id}`);
   }
+  getAllSubmissionByExamId(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.apiBaseUrl}/submissions/exam/${id}`);
+  }
 }
