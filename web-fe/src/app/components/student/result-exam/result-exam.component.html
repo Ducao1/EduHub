@@ -1,0 +1,20 @@
+<div class="container mt-4" *ngIf="submission">
+    <h3>Kết quả bài làm: {{ submission.title }}</h3>
+    <p>Thời gian nộp: {{ submission.submittedAt | date:'medium' }}</p>
+    <p>Điểm: {{ submission.score?.score ?? 'Chưa chấm điểm' }}</p>
+  
+    <div *ngFor="let answer of submission.submissionAnswers; let i = index" class="card mt-3 p-3">
+      <h5>{{i+1}}. {{ answer.question.questionText }}</h5>
+      <p>Loại câu hỏi: {{ answer.question.type }}</p>
+      <ul>
+        <li>Đáp án chọn: {{ answer.answer.answerText }}</li>
+        <li *ngIf="answer.answer.correct">Đúng</li>
+        <li *ngIf="!answer.answer.correct">Sai</li>
+      </ul>
+    </div>
+    <div class="text-end mt-3">
+        <button class="btn btn-primary" routerLink="/student/dashboard">Trở lại</button>
+      </div>
+      
+  </div>
+  

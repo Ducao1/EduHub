@@ -1,0 +1,27 @@
+<app-teacher-nav-bar></app-teacher-nav-bar>
+<div class="container mt-4">
+    <div style="display: flex; justify-content: flex-end; padding: 10px;">
+      <a class="btn btn-primary" routerLink="/teacher/add-assignment/{{classId}}">
+          Tạo bài tập</a>
+    </div>
+      <h2>Danh sách bài tập</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tiêu đề</th>
+            <th>Nội dung</th>
+            <th>Thời hạn</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let assignment of assignments; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td><a routerLink="/teacher/detail-assignment/{{assignment.id}}">{{ assignment.title }}</a></td>
+            <td>{{ assignment.content }}</td>
+            <td>{{formatDate(assignment.assignedDate)}} - {{formatDate(assignment.dueDate)}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    

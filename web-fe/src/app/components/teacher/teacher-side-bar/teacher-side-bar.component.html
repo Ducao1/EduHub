@@ -1,0 +1,38 @@
+<app-header></app-header>
+
+<div class="container-fluid px-0">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="sidebar p-3" style="background-color: rgb(114, 125, 241); min-height: 100vh;">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" routerLink="/teacher/dashboard" routerLinkActive="active">
+                            Màn hình chính
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" routerLink="/teacher/assignments" routerLinkActive="active">
+                            Bài tập
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" routerLink="/teacher/exam" routerLinkActive="active">
+                            Đề thi
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" routerLink="/teacher/class" routerLinkActive="active">
+                            Quản lý lớp học
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10" style="background-color: aliceblue;">
+            <router-outlet></router-outlet>
+        </div>
+
+    </div>
+</div>
+
+<app-footer></app-footer>

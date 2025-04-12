@@ -1,0 +1,11 @@
+<div class="mb-3">
+    <label for="text" class="form-label">Tên</label>
+    <input type="text" class="form-control" placeholder="Nhập tiêu dề cho bài thi" name="title"
+    [(ngModel)]="title">
+</div>
+<div class="mb-3">
+    <label for="duration" class="form-label">Thời gian (phút)</label>
+    <input type="number" class="form-control" placeholder="Nhập thời gian cho bài thi" name="duration" 
+    [(ngModel)]="duration" min="1">
+</div>
+<button type="submit" class="btn btn-primary w-100" (click)="addAssignment()">Tạo</button>

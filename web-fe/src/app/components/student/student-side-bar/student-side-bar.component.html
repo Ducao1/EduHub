@@ -1,0 +1,24 @@
+<app-header></app-header>
+<div class="container-fluid px-0">
+  <div class="row">
+    <div class="col-md-2">
+      <div class="sidebar p-3" style="background-color: rgb(0, 153, 255); min-height: 100vh;">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLink="/student/dashboard" routerLinkActive="active">
+              Màn hình chính
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-10" style="background-color: aliceblue;">
+      
+      
+
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

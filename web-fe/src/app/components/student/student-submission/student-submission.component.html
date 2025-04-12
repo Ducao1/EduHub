@@ -1,0 +1,11 @@
+<div class="container">
+    <h2>Nộp bài tập</h2>
+  
+    <input type="file" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx,.png,.jpg" />
+    <button (click)="uploadFile()" [disabled]="isUploading || !selectedFile">
+      {{ isUploading ? 'Đang tải...' : 'Nộp bài' }}
+    </button>
+  
+    <p *ngIf="message" class="message">{{ message }}</p>
+  </div>
+  

@@ -1,0 +1,18 @@
+<nav class="navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">EduHub</a>
+      <div class="dropdown">
+        <a class="nav-link dropdown-toggle" id="userDropdown" role="button"
+          (click)="toggleDropdown()" aria-expanded="true"> 
+          {{ userName }}
+        </a>
+        <ul class="dropdown-menu" [class.show]="dropdownOpen" aria-labelledby="userDropdown">
+          <li><a class="dropdown-item" (click)="handleAction(0)">Thông tin tài khoản</a></li>
+          <li><a class="dropdown-item" (click)="handleAction(1)">Đăng ký làm giáo viên</a></li>
+          <li><a class="dropdown-item" (click)="handleAction(2)">Đăng xuất</a></li>
+        </ul>
+      </div>
+      
+    </div>
+  </nav>
+  

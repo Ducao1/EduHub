@@ -1,0 +1,48 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .assignment-details h2 {
+    color: #007bff;
+    font-size: 24px;
+  }
+  
+  .assignment-details p {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .submission-list {
+    margin-top: 20px;
+  }
+  
+  .submission-list h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .student-submission {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .student-info {
+    font-size: 16px;
+  }
+  
+  .badge {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+  
+  .bg-success {
+    background-color: #28a745;
+  }
+  
+  .bg-danger {
+    background-color: #dc3545;
+  }
+  

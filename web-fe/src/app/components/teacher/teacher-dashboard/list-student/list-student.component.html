@@ -1,0 +1,24 @@
+<app-teacher-nav-bar></app-teacher-nav-bar>
+<div class="container mt-4">
+    <div style="display: flex; justify-content: flex-end; padding: 10px;">
+      <a class="btn btn-primary" routerLink="/teacher/class/{{classId}}/add-student">
+          Thêm</a>
+  </div>
+    <h2>Danh sách sinh viên</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Ho tên</th>
+          <th>SĐT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of students; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ student.fullName }}</td>
+          <td>{{ student.phoneNumber }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

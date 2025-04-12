@@ -1,0 +1,29 @@
+<form (ngSubmit)="updateQuestion()">
+    <div class="mb-3">
+        <label class="form-label">Nội dung câu hỏi</label>
+        <input type="text" class="form-control" [(ngModel)]="questionDTO.question_text" name="questionText" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Loại câu hỏi</label>
+        <!-- <select class="form-select" [(ngModel)]="questionDTO.type" name="type">
+            <option value="MULTI_CHOICE">Trắc nghiệm</option>
+            <option value="ESSAY">Tự luận</option>
+        </select> -->
+        <input type="text" class="form-control" [(ngModel)]="questionDTO.type" name="type" readonly>
+    </div>
+    <div class="mb-3">
+        <label class="form-label fw-bold">Điểm số</label>
+        <input type="number" class="form-control" [(ngModel)]="questionDTO.point" name="point"
+            placeholder="Nhập điểm số..." min="0" step="0.5">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Danh sách đáp án</label>
+        <div *ngFor="let answer of questionDTO.answers; let i = index" class="d-flex align-items-center gap-2 mb-2">
+            <input type="checkbox" [(ngModel)]="answer.is_correct" name="correct{{i}}">
+            <input type="text" class="form-control mb-2" [(ngModel)]="answer.answer_text" name="answerText{{i}}" required>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" (click)="updateQuestion()">Cập nhật</button>
+</form>

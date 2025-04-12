@@ -1,0 +1,40 @@
+<div class="container mt-4">
+  <div class="card p-4">
+    <h4 class="fw-bold">{{ assignment.title }}</h4>
+    <p><strong>Lớp:</strong> {{ classroom.name }}</p>
+    <p><strong>Tên học sinh:</strong> {{ student.fullName }}</p>
+    <p><strong>Nội dung:</strong> {{ assignment.content }}</p>
+    <p>
+      <strong>Ngày giao:</strong> {{ formatDate(assignment.assignedDate) }}
+      &nbsp;<strong>Hạn nộp:</strong> {{ assignment.dueDate ? formatDate(assignment.dueDate) : 'Không có hạn nộp' }}
+    </p>
+
+    <div class="expired-box" *ngIf="assignment.isExpired && assignment.dueDate">
+      <p class="expired-text text-danger">Đã hết thời gian nộp bài tập</p>
+    </div>
+
+    <div *ngIf="!hasSubmitted && (!assignment.isExpired || !assignment.dueDate)" class="mt-3">
+      <label class="form-label"><strong>Chọn file để nộp bài:</strong></label>
+      <input type="file" class="form-control" (change)="onFileSelected($event)">
+    </div>
+
+    <div class="d-flex mt-3">
+      <button class="btn btn-danger me-2"
+        *ngIf="!hasSubmitted"
+        [disabled]="(assignment.isExpired && assignment.dueDate) || !selectedFile"
+        (click)="submitAssignment()">
+        Nộp bài
+      </button>
+
+      <button class="btn btn-success" *ngIf="hasSubmitted" disabled>
+        Đã nộp
+      </button>
+
+      <div *ngIf="submittedFile">
+        <p>File đã nộp: <strong>{{ submittedFile.name }}</strong></p>
+        <button (click)="cancelSubmission()">Hủy nộp bài</button>
+      </div>
+      
+    </div>
+  </div>
+</div>

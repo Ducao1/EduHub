@@ -1,0 +1,57 @@
+<div class="container mt-4">
+  <div style="display: flex; justify-content: flex-end; padding: 10px;">
+    <a class="btn btn-primary" routerLink="/teacher/add-exam">
+        Tạo bài kiểm tra</a>
+  </div>
+  <h2>Danh sách bài kiểm tra</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Tiêu đề</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let exam of exams; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td><a routerLink="/teacher/detail-exam/{{exam.id}}">{{ exam.title }}</a></td>
+        <td>
+          <button class="btn btn-primary" routerLink="/teacher/try-exam/{{exam.id}}">Thử</button>
+          <button class="btn btn-success" (click)="openAssignPopup(exam.id)">Giao bài</button>
+
+          <button class="btn btn-danger" (click)="deleteExam(exam.id)">Xóa</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="popup-overlay" *ngIf="isPopupVisible" (click)="closePopup($event)">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h5>Giao bài kiểm tra</h5>
+      <button class="close-button" (click)="togglePopup()">×</button>
+    </div>
+    <div class="popup-body">
+      <div class="form-group mb-3">
+        <label>Chọn lớp học</label>
+        <select class="form-control" [(ngModel)]="selectedClassId">
+          <option [ngValue]="0">Chọn lớp</option>
+          <option *ngFor="let class of classes" [ngValue]="class.id">{{ class.name }}</option>
+        </select>
+      </div>
+      <div class="form-group mb-3">
+        <label>Ngày giao bài</label>
+        <input type="datetime-local" class="form-control" [(ngModel)]="assignedDate" name="assignedDate">
+      </div>
+      <div class="form-group mb-3">
+        <label>Ngày hết hạn</label>
+        <input type="datetime-local" class="form-control" [(ngModel)]="dueDate" name="dueDate">
+      </div>
+    </div>
+    <div class="popup-footer">
+      <button class="btn btn-secondary" (click)="togglePopup()">Hủy</button>
+      <button class="btn btn-primary" (click)="assignExamToClass(examId)">Đồng ý</button>
+    </div>
+  </div>
+</div>

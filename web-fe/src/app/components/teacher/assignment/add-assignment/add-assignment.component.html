@@ -1,0 +1,27 @@
+<form>
+    <div class="mb-3">
+      <label for="text" class="form-label">Tiêu đề</label>
+      <input type="text" class="form-control" placeholder="Nhập tiêu đề"
+      name="title" [(ngModel)]="title">
+    </div>
+    <div class="mb-3">
+        <label for="text" class="form-label">Nội dung</label>
+        <input type="text" class="form-control" id="name" placeholder="Nhập nội dung"
+        name="content" [(ngModel)]="content">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Bắt đầu</label>
+        <input type="datetime-local" class="form-control"
+          name="assignedDate" [(ngModel)]="assignedDate">
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Kết thúc</label>
+        <input type="datetime-local" class="form-control"
+          name="dueDate" [(ngModel)]="dueDate">
+      </div>
+      
+    <button type="submit" 
+    class="btn btn-primary w-100" (click)="addAssignment()">Thêm</button>
+    
+  </form>

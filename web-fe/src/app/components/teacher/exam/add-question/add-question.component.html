@@ -1,0 +1,65 @@
+<div class="container mt-4">
+    <h4 class="fw-bold">Thêm câu hỏi</h4>
+
+    <div class="card p-3">
+        <div class="mb-3">
+            <label class="form-label fw-bold">Nội dung câu hỏi</label>
+            <input type="text" class="form-control" [(ngModel)]="questionDTO.question_text"
+                placeholder="Nhập câu hỏi...">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Loại câu hỏi</label>
+            <select class="form-select" [(ngModel)]="questionDTO.type">
+                <option value="MULTI_CHOICE" selected>Nhiều lựa chọn</option>
+                <option value="SINGLE_CHOICE" selected>Một lựa chọn</option>
+                <option value="ESSAY">Tự luận</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Điểm số</label>
+            <input type="number" class="form-control" [(ngModel)]="questionDTO.point" 
+                placeholder="Nhập điểm số..." min="0" step="0.5">
+        </div>
+
+        <h5 class="fw-bold mt-3">Đáp án</h5>
+        <div *ngIf="questionDTO.type === 'SINGLE_CHOICE'">
+            <div *ngFor="let answer of questionDTO.answers; let i = index" class="d-flex align-items-center gap-2 mb-2">
+                <input type="radio" 
+                       name="correctAnswer" 
+                       [value]="i" 
+                       [(ngModel)]="selectedAnswerIndex">
+                <input type="text" class="form-control" [(ngModel)]="answer.answer_text" placeholder="Nhập đáp án...">
+                <button class="btn btn-danger btn-sm" (click)="removeAnswer(i)">Xóa</button>
+            </div>
+            <p class="text-danger" *ngIf="!isValidQuestion()">Phải có ít nhất một đáp án đúng!</p>
+            <button class="btn btn-primary" (click)="addAnswer()">+ Thêm đáp án</button>
+        </div>
+
+        <div *ngIf="questionDTO.type === 'MULTI_CHOICE'">
+            <div *ngFor="let answer of questionDTO.answers; let i = index" class="d-flex align-items-center gap-2 mb-2">
+                <input type="checkbox" [(ngModel)]="answer.is_correct">
+                <input type="text" class="form-control" [(ngModel)]="answer.answer_text" placeholder="Nhập đáp án...">
+                <button class="btn btn-danger btn-sm" (click)="removeAnswer(i)">Xóa</button>
+            </div>
+            <p class="text-danger" *ngIf="!isValidQuestion()">Phải có ít nhất một đáp án đúng!</p>
+            <button class="btn btn-primary" (click)="addAnswer()">+ Thêm đáp án</button>
+        </div>
+
+        <div *ngIf="questionDTO.type === 'ESSAY'">
+            <div class="d-flex align-items-center gap-2">
+                <input type="text" class="form-control" [(ngModel)]="questionDTO.answers[0].answer_text"
+                    placeholder="Nhập đáp án...">
+                <span class="badge bg-success">✓ Đáp án đúng</span>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="d-flex gap-2">
+            <button class="btn btn-success" (click)="saveQuestion()">Lưu câu hỏi</button>
+            <button class="btn btn-secondary" routerLink="/teacher/detail-exam/{{examId}}">Hủy</button>
+        </div>
+    </div>
+</div>

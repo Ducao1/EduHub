@@ -1,0 +1,40 @@
+<app-header></app-header>
+<div class="container">
+    <form #registerForm="ngForm">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="register-form mx-auto">
+                    <h2 class="register-header">Đăng ký</h2>
+
+                    <div class="form-group">
+                        <label for="fullName">Họ và Tên</label>
+                        <input type="text" class="form-control" name="fullName" [(ngModel)]="fullName"
+                            placeholder="Nhập họ và tên" id="fullName">
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">Số điện thoại</label>
+                        <input type="text" class="form-control" name="phone" [(ngModel)]="phoneNumber"
+                            placeholder="Nhập số điện thoại" id="phoneNumber">
+                    </div>
+                    <div class="form-group password-field">
+                        <label for="password">Mật khẩu</label>
+                        <input name="password" [(ngModel)]="password" placeholder="Ít nhất 3 ký tự" class="form-control"
+                            id="password">
+                    </div>
+
+                    <div class="form-group password-field">
+                        <label for="confirmPassword">Xác nhận mật khẩu</label>
+                        <input name="confirmPassword" placeholder="Nhập lại mật khẩu" class="form-control"
+                            id="confirmPassword">
+                    </div>
+                    <button type="button" class="register-button" (click)="register()">Đăng ký</button>
+
+                    <div class="divider"></div>
+                    <p class="text-center">Đã có tài khoản?
+                        <span><a class="login-link" routerLink="/login">Đăng nhập</a></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

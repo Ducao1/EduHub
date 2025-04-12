@@ -1,0 +1,15 @@
+<form>
+    <div class="mb-3">
+      <label for="text" class="form-label">Tên lớp</label>
+      <input type="text" class="form-control" id="name" placeholder="Nhập tên lớp"
+      name="name" [(ngModel)]="className">
+    </div>
+    <div class="mb-3">
+      <label for="text" class="form-label">Mô tả</label>
+      <input type="text" class="form-control" id="description" placeholder="Mô tả"
+      name="description" [(ngModel)]="description">
+    </div>
+    <button type="submit" 
+    class="btn btn-primary w-100" (click)="createClass()">Tạo lớp</button>
+    
+  </form>

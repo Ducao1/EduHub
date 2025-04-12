@@ -1,0 +1,75 @@
+.course-container {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+  }
+.course-card {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    padding: 16px;
+    width: 300px;
+    background: #fff;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .course-info {
+    margin-bottom: 8px;
+  }
+  
+  .course-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .course-instructor {
+    font-size: 14px;
+    color: gray;
+  }
+  
+  .progress-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+  }
+  
+  .progress-bar {
+    width: 80%;
+    height: 5px;
+    background: #ddd;
+    border-radius: 4px;
+    position: relative;
+  }
+  
+  .progress-fill {
+    height: 5px;
+    background: #007bff;
+    border-radius: 4px;
+    position: absolute;
+  }
+  
+  .progress-text {
+    margin-left: 8px;
+    font-size: 12px;
+    color: #007bff;
+  }
+  
+  .course-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .course-level {
+    color: #007bff;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .course-arrow {
+    font-size: 18px;
+    color: #007bff;
+    text-decoration: none;
+  }
+  

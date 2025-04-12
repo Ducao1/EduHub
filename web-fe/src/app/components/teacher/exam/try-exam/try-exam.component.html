@@ -1,0 +1,47 @@
+<div *ngIf="questions && questions.length > 0"
+    style="margin: auto; width: 80%; padding: 20px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="time-container" style="text-align: center; margin-bottom: 20px;">
+        <div class="timer" style="font-size: 1.5em; font-weight: bold; color: #007bff;">
+            Time remaining: {{getFormattedTime()}}
+        </div>
+    </div>
+    <form (ngSubmit)="submitAnswers()">
+        <div *ngFor="let question of questions; let i = index" class="card p-3 mb-3"
+            style="background-color: #fff; border-radius: 8px; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);">
+            <h5 style="font-weight: bold; margin-bottom: 10px;">
+                {{question.questionText}}
+            </h5>
+            <div *ngIf="question.type === 'SINGLE_CHOICE'">
+                <div *ngFor="let answer of question.answers" class="d-block mb-2">
+                    <label class="d-flex align-items-center">
+                        <input type="radio" 
+                               [name]="'question_' + question.id"
+                               [value]="answer.answerText"
+                               (change)="onSingleChoiceChange(question.id, answer.answerText)">
+                        <span class="ms-2">{{answer.answerText}}</span>
+                    </label>
+                </div>
+            </div>
+
+            <div *ngIf="question.type === 'MULTI_CHOICE'">
+                <label *ngFor="let answer of question.answers" class="d-block">
+                    <input type="checkbox" [value]="answer.answerText"
+                        (change)="onAnswerChange(question.id, answer.answerText, $event)">
+                    {{answer.answerText}}
+                </label>
+            </div>
+
+            <!-- <div *ngIf="question.type === 'ESSAY'">
+                <input type="text" class="form-control" [(ngModel)]="essayAnswer[question.id]"
+                    placeholder="Nhập câu trả lời..." [name]="'essay_' + question.id">
+            </div> -->
+
+        </div>
+        <div style="margin-top: 20px; text-align: right;">
+            <button class="btn btn-primary" type="submit"
+                style="padding: 10px 20px; font-size: 1em; background-color: #007bff; border: none; border-radius: 5px; color: #fff; cursor: pointer; transition: background-color 0.3s;">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>

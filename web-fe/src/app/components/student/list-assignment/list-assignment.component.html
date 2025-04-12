@@ -1,0 +1,23 @@
+<app-student-nav-bar></app-student-nav-bar>
+<div class="container mt-4">
+      <h2>Danh sách bài tập</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tiêu đề</th>
+            <th>Nội dung</th>
+            <th>Thời hạn</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let assignment of assignments; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td><a routerLink="/student/detail-assignment/{{assignment.id}}">{{ assignment.title }}</a></td>
+            <td>{{ assignment.content }}</td>
+            <td>{{formatDate(assignment.assignedDate)}} - {{formatDate(assignment.dueDate)}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    

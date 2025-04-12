@@ -1,0 +1,28 @@
+<app-header></app-header>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-lg" style="width: 400px;">
+      <h3 class="text-center mb-3">Đăng nhập</h3>
+      <form #loginForm="ngForm">
+        <div class="mb-3">
+          <label for="text" class="form-label">SĐT</label>
+          <input type="text" class="form-control" id="phoneNumber" placeholder="Nhập SĐT"
+          name="phoneNumber"
+          [(ngModel)]="phoneNumber">
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Mật khẩu</label>
+          <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu"
+          name="password"
+          [(ngModel)]="password">
+        </div>
+        <button type="submit" 
+        class="btn btn-primary w-100"
+        (click)="login()"
+        >Đăng nhập</button>
+        <p class="text-center mt-3">
+          Chưa có tài khoản?<span><a class="login-link" routerLink="/register">Đăng ký</a></span>
+
+        </p>
+      </form>
+    </div>
+  </div>

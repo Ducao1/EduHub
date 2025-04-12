@@ -1,0 +1,17 @@
+<h2>Danh sách lớp</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Ho tên</th>
+            <th>SĐT</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let class of classes; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ class.name }}</td>
+            <td>{{ class.description }}</td>
+        </tr>
+    </tbody>
+</table>

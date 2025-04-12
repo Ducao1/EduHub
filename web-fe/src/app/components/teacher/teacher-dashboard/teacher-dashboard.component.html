@@ -1,0 +1,19 @@
+<div style="display: flex; justify-content: flex-end; padding: 10px;">
+    <a class="btn btn-primary" routerLink="/teacher/add-class">
+        Tạo lớp mới</a>
+</div>
+<div class="col-md-10" style="background-color: aliceblue;">
+    
+    <div class="course-container">
+        <div *ngIf="classes.length === 0">Bạn không có lớp học nào, nhấn tạo lớp</div>
+        <div *ngFor="let class of classes" class="course-card">
+            <div class="course-info">
+                <h3 class="course-title"><a routerLink="/teacher/detail-class/{{class.id}}">{{ class.name }}</a></h3>
+                <p class="course-instructor">{{ class.description }}</p>
+            </div>
+            <div class="course-footer">
+                <a class="course-arrow" routerLink="/teacher/detail-class/{{class.id}}">→</a>
+            </div>
+        </div>
+    </div>
+</div>
