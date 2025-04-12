@@ -1,0 +1,72 @@
+package com.project.web_be.controllers;
+
+import com.project.web_be.dtos.AssignmentDTO;
+import com.project.web_be.entities.Assignment;
+import com.project.web_be.services.Impl.AssignmentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("${api.prefix}/assignments")
+@RequiredArgsConstructor
+public class AssignmentController {
+    private final AssignmentService assignmentService;
+    @PostMapping("/add")
+    public ResponseEntity<?> addAssignment(@RequestBody AssignmentDTO assignmentDTO){
+        try {
+            Assignment assignment = assignmentService.addAssignment(assignmentDTO);
+            return ResponseEntity.ok(assignment);
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getAssignmentById(@PathVariable("id") long id){
+        try {
+            Assignment assignment = assignmentService.getAssignmentById(id);
+            return ResponseEntity.ok(assignment);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/class/{id}")
+    public ResponseEntity<?> getAssignmentsByClassId(@PathVariable long id){
+        try {
+            List<Assignment> assignmentList = assignmentService.getAllAssignmentsByClassId(id);
+            return ResponseEntity.ok(assignmentList);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/teacher/{id}")
+    public ResponseEntity<?> getAssignmentsByTeacherId(@PathVariable Long id){
+        try {
+            List<Assignment> assignments = assignmentService.getAllAssignmentsByTeacherId(id);
+            return ResponseEntity.ok(assignments);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateAssignment(@RequestBody AssignmentDTO assignmentDTO, @PathVariable long id){
+        try {
+            Assignment assignment = assignmentService.updateAssignment(assignmentDTO, id);
+            return ResponseEntity.ok(assignment);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAssignment(@PathVariable long id){
+        assignmentService.deleteAssignment(id);
+        return ResponseEntity.ok("Delete assignment successfully");
+    }
+}
