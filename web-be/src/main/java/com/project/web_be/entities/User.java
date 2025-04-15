@@ -46,6 +46,10 @@ public class User extends BaseEntity implements UserDetails {
     public String getUsername() {
         return phoneNumber;
     }
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
     @Override
     public boolean isAccountNonExpired() {

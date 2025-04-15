@@ -2,8 +2,7 @@ package com.project.web_be.controllers;
 
 import com.project.web_be.dtos.ClassroomDTO;
 import com.project.web_be.entities.Classroom;
-import com.project.web_be.entities.Submission;
-import com.project.web_be.responses.ClasssResponse;
+import com.project.web_be.responses.ClassResponse;
 import com.project.web_be.services.Impl.ClassroomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class ClassroomController {
     public ResponseEntity<?> getClassById(@PathVariable("id") long id){
         try {
             Classroom classroom = classroomService.getClassroomById(id);
-            return ResponseEntity.ok(classroom);
+            return ResponseEntity.ok(ClassResponse.fromClassroom(classroom));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -43,7 +42,10 @@ public class ClassroomController {
     public ResponseEntity<?> getAllClasses(){
         try {
             List<Classroom> classrooms = classroomService.getAllClassrooms();
-            return ResponseEntity.ok(classrooms);
+            List<ClassResponse> listClassResponses = classrooms.stream()
+                    .map(ClassResponse::fromClassroom)
+                    .toList();
+            return ResponseEntity.ok(listClassResponses);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -53,7 +55,7 @@ public class ClassroomController {
     public ResponseEntity<?> updateClassroom(@RequestBody ClassroomDTO classroomDTO, @PathVariable long id){
         try {
             Classroom classroom = classroomService.updateClassroom(classroomDTO, id);
-            return ResponseEntity.ok(classroom);
+            return ResponseEntity.ok(ClassResponse.fromClassroom(classroom));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -63,8 +65,10 @@ public class ClassroomController {
     public ResponseEntity<?> getClassByTeacher(@PathVariable Long teacherId) {
         try {
             List<Classroom> classrooms = classroomService.getClassByTeacher(teacherId);
-//            return ResponseEntity.ok(classrooms);
-            return ResponseEntity.ok(ClasssResponse.fromClassroomList(classrooms));
+            List<ClassResponse> listClassResponses = classrooms.stream()
+                    .map(ClassResponse::fromClassroom)
+                    .toList();
+            return ResponseEntity.ok(listClassResponses);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("error", e.getMessage());

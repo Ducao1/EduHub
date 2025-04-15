@@ -2,13 +2,18 @@ package com.project.web_be.controllers;
 
 import com.project.web_be.dtos.UserDTO;
 import com.project.web_be.dtos.UserLoginDTO;
+import com.project.web_be.entities.Submission;
 import com.project.web_be.entities.User;
 import com.project.web_be.services.Impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -28,12 +33,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDTO userDTO){
-        User dbUser = userService.login(userDTO);
-        if (dbUser == null){
-            return new ResponseEntity<>("Wrong conditionals", HttpStatus.NOT_ACCEPTABLE);
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) throws Exception {
+        try {
+            String token = userService.login(userLoginDTO);
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
-        return new ResponseEntity<>(dbUser,HttpStatus.OK);
     }
 
     @GetMapping("/student/{id}")
@@ -45,14 +55,4 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO){
-//        try {
-//            String token = userService.login(userLoginDTO);
-//            return ResponseEntity.ok(token);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
 }
