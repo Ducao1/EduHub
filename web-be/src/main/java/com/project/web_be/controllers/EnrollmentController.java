@@ -45,7 +45,7 @@ public class EnrollmentController {
     }
 
     @GetMapping("/class/{classId}")
-    public ResponseEntity<?> getAllStudentInClass(@PathVariable Long classId) {
+    public ResponseEntity<?> getAllStudentByClassId(@PathVariable Long classId) {
         try {
             List<User> userList = enrollmentService.getAllStudentInClass(classId);
             return ResponseEntity.ok(userList);

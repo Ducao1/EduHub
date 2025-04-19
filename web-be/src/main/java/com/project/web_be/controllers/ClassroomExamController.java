@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ClassroomExamController {
     private final ClassroomExamService classroomExamService;
     @PostMapping("/add")
-    public ResponseEntity<?> createExamToClass(@RequestBody AssignExamDTO assignExamDTO){
+    public ResponseEntity<?> addExamToClass(@RequestBody AssignExamDTO assignExamDTO){
         try {
             ClassExam classExam = classroomExamService.assignExam(assignExamDTO);
             return ResponseEntity.ok(classExam);

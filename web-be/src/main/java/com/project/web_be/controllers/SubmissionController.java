@@ -56,6 +56,7 @@ public class SubmissionController {
         response.put("submitted", hasSubmitted);
         return ResponseEntity.ok(response);
     }
+
     @GetMapping("/status/class/{classId}/assignment/{assignmentId}")
     public ResponseEntity<List<Map<String, Object>>> getClassSubmissionStatus(
             @PathVariable Long classId, @PathVariable Long assignmentId) {
