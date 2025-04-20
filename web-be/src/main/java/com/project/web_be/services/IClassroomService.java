@@ -14,7 +14,7 @@ public interface IClassroomService {
     @Transactional
     Classroom updateClassCode(long id) throws Exception;
 
-    List<Classroom> getClassByTeacher(Long teacherId);
+    List<Classroom> getClassByTeacherId(Long teacherId);
 
     void deleteClassroom(long id);
 }

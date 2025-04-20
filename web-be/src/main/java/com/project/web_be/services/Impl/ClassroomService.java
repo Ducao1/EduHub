@@ -94,7 +94,7 @@ public class ClassroomService implements IClassroomService {
     }
 
     @Override
-    public List<Classroom> getClassByTeacher(Long teacherId) {
+    public List<Classroom> getClassByTeacherId(Long teacherId) {
         return classroomRepository.findByTeacherId(teacherId);
     }
 

@@ -10,7 +10,6 @@ import { LoginDTO } from '../dtos/login.dto';
   providedIn: 'root'
 })
 export class UserService {
-  
   private apiRegister = `${environment.apiBaseUrl}/users/register`;
   private apiLogin = `${environment.apiBaseUrl}/users/login`;
   constructor(
@@ -59,4 +58,15 @@ export class UserService {
   getStudentById(id: number): Observable<any> {
     return this.http.get(`${environment.apiBaseUrl}/users/student/${id}`);
   }
+
+  getStudentByIdFromToken(): Observable<any> {
+    const token = localStorage.getItem('jwt_token');
+    if (!token) throw new Error("Token not found!");
+  
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userId = payload.id;
+  
+    return this.getStudentById(userId);
+  }
+  
 }

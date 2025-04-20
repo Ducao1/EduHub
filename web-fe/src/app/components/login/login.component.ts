@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
 import { UserService } from '../../services/user.service';
 import { TokenService } from '../../services/token.service';
 import { LoginDTO } from '../../dtos/login.dto';
@@ -31,39 +30,44 @@ export class LoginComponent {
   ) { }
 
   login() {
-    const message = `phone: ${this.phoneNumber}` +
-      `password: ${this.password}`;
-    debugger
-
     const loginDTO: LoginDTO = {
       phone_number: this.phoneNumber,
       password: this.password
     };
-
+  
     this.userService.login(loginDTO).subscribe({
       next: (response: any) => {
-        debugger;
-        localStorage.setItem("user", JSON.stringify(response));
-        
-        const userRole = response.role?.name;
+        debugger
+        const token = response.token;
+        this.tokenService.saveToken(token);
+  
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const userId = payload.id;
+        const phoneNumber = payload.phoneNumber;
+        const role = payload.role;
 
-        if (userRole === "TEACHER") {
+        //them cho tien sau nay lay khong can decode token
+        localStorage.setItem('id', userId.toString());
+        localStorage.setItem('phoneNumber', phoneNumber);
+        localStorage.setItem('role', role);
+  
+        if (role === "TEACHER") {
           this.router.navigate(['/teacher/dashboard']);
-        } else if (userRole === "STUDENT") {
+        } else if (role === "STUDENT") {
           this.router.navigate(['/student/dashboard']);
         } else {
           alert("Vai trò không hợp lệ!");
         }
       },
-      complete: () => {
-        debugger;
-      },
       error: (error: any) => {
-        debugger;
+        debugger
         alert(error.error);
       }
     });
   }
+  
+  
+  
 
   createAccount() {
     debugger
