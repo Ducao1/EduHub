@@ -6,12 +6,15 @@ import com.project.web_be.dtos.JoinClassDTO;
 import com.project.web_be.entities.Classroom;
 import com.project.web_be.entities.Enrollment;
 import com.project.web_be.entities.User;
+import com.project.web_be.responses.ClassResponse;
+import com.project.web_be.responses.StudentResponse;
 import com.project.web_be.services.Impl.EnrollmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.prefix}/enrollments")
@@ -40,15 +43,22 @@ public class EnrollmentController {
 
 
     @GetMapping("/student/{studentId}")
-    public List<Classroom> getStudentClasses(@PathVariable Long studentId) {
-        return enrollmentService.getStudentClasses(studentId);
+    public ResponseEntity<List<ClassResponse>> getAllClassByStudentId(@PathVariable Long studentId) {
+        List<ClassResponse> classResponseList = enrollmentService.getListClassByStudentId(studentId)
+                .stream()
+                .map(ClassResponse::fromClassroom)
+                .toList();
+        return ResponseEntity.ok(classResponseList);
     }
 
     @GetMapping("/class/{classId}")
     public ResponseEntity<?> getAllStudentByClassId(@PathVariable Long classId) {
         try {
-            List<User> userList = enrollmentService.getAllStudentInClass(classId);
-            return ResponseEntity.ok(userList);
+            List<User> studentList = enrollmentService.getAllStudentInClass(classId);
+            List<StudentResponse> studentResponses = studentList.stream()
+                    .map(StudentResponse::fromStudent)
+                    .toList();
+            return ResponseEntity.ok(studentResponses);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

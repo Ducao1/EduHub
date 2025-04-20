@@ -3,6 +3,7 @@ package com.project.web_be.controllers;
 
 import com.project.web_be.dtos.ExamDTO;
 import com.project.web_be.entities.Exam;
+import com.project.web_be.responses.ExamResponse;
 import com.project.web_be.services.Impl.ExamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class ExamController {
     public ResponseEntity<?> getExamById(@PathVariable("id") long id){
         try {
             Exam exam = examService.getExamById(id);
-            return ResponseEntity.ok(exam);
+            return ResponseEntity.ok(ExamResponse.fromExam(exam));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -42,7 +43,10 @@ public class ExamController {
     public ResponseEntity<?> getAllExamsByTeacher(@PathVariable Long id){
         try {
             List<Exam> exams = examService.getAllExamsByTeacherId(id);
-            return ResponseEntity.ok(exams);
+            List<ExamResponse> examResponses = exams.stream()
+                    .map(ExamResponse::fromExam)
+                    .toList();
+            return ResponseEntity.ok(examResponses);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

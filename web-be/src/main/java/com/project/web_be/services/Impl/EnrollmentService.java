@@ -61,7 +61,7 @@ public class EnrollmentService implements IEnrollmentService {
         return enrollmentRepository.save(newEnrollment);
     }
 
-    public List<Classroom> getStudentClasses(Long studentId) {
+    public List<Classroom> getListClassByStudentId(Long studentId) {
         return enrollmentRepository.findClassesByStudentId(studentId);
     }
 

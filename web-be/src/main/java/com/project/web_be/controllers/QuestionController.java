@@ -2,6 +2,7 @@ package com.project.web_be.controllers;
 
 import com.project.web_be.dtos.QuestionDTO;
 import com.project.web_be.entities.Question;
+import com.project.web_be.responses.QuestionResponse;
 import com.project.web_be.services.Impl.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class QuestionController {
     public ResponseEntity<?> getQuestionById(@PathVariable long id){
         try {
             Question question = questionService.getQuestionById(id);
-            return ResponseEntity.ok(question);
+            return ResponseEntity.ok(QuestionResponse.fromQuestion(question));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -2,6 +2,7 @@ package com.project.web_be.controllers;
 
 import com.project.web_be.dtos.AssignmentDTO;
 import com.project.web_be.entities.Assignment;
+import com.project.web_be.responses.AssignmentResponse;
 import com.project.web_be.services.Impl.AssignmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,27 +29,33 @@ public class AssignmentController {
     public ResponseEntity<?> getAssignmentById(@PathVariable("id") long id){
         try {
             Assignment assignment = assignmentService.getAssignmentById(id);
-            return ResponseEntity.ok(assignment);
+            return ResponseEntity.ok(AssignmentResponse.fromAssignment(assignment));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping("/class/{id}")
-    public ResponseEntity<?> getAssignmentsByClassId(@PathVariable long id){
+    public ResponseEntity<?> getAllAssignmentByClassId(@PathVariable long id){
         try {
-            List<Assignment> assignmentList = assignmentService.getAllAssignmentsByClassId(id);
-            return ResponseEntity.ok(assignmentList);
+            List<Assignment> assignments = assignmentService.getAllAssignmentsByClassId(id);
+            List<AssignmentResponse> assignmentResponses = assignments.stream()
+                    .map(AssignmentResponse::fromAssignment)
+                    .toList();
+            return ResponseEntity.ok(assignmentResponses);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping("/teacher/{id}")
-    public ResponseEntity<?> getAssignmentsByTeacherId(@PathVariable Long id){
+    public ResponseEntity<?> getAllAssignmentByTeacherId(@PathVariable Long id){
         try {
             List<Assignment> assignments = assignmentService.getAllAssignmentsByTeacherId(id);
-            return ResponseEntity.ok(assignments);
+            List<AssignmentResponse> assignmentResponses = assignments.stream()
+                    .map(AssignmentResponse::fromAssignment)
+                    .toList();
+            return ResponseEntity.ok(assignmentResponses);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
