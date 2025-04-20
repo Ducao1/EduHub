@@ -33,12 +33,31 @@ export class UserService {
     return this.http.post(this.apiLogin, loginDTO, this.getApiConfig());
   }
 
-  saveUserData(userData: any): void {
-    if (!userData || !userData.id) {
-      console.error("Lỗi: Dữ liệu đăng nhập không hợp lệ!", userData);
+  // saveUserData(userData: any): void {
+  //   if (!userData || !userData.token) {
+  //     console.error("Lỗi: Token không tồn tại!", userData);
+  //     return;
+  //   }
+  //   localStorage.setItem('user', JSON.stringify(userData));
+  // }
+  saveUserData(token: string): void {
+    if (!token) {
+      console.error("Lỗi: Token không tồn tại!");
       return;
     }
-    localStorage.setItem('user', JSON.stringify(userData));
+  
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userData = {
+        id: payload.id,
+        phoneNumber: payload.phoneNumber,
+        role: payload.role,
+        token: token
+      };
+      localStorage.setItem('user', JSON.stringify(userData));
+    } catch (e) {
+      console.error("Lỗi khi phân tích token:", e);
+    }
   }
   
 

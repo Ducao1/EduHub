@@ -30,38 +30,34 @@ export class LoginComponent {
   ) { }
 
   login() {
+    this.tokenService.clearToken(); // Xóa token và user cũ
+
     const loginDTO: LoginDTO = {
       phone_number: this.phoneNumber,
       password: this.password
     };
-  
+
     this.userService.login(loginDTO).subscribe({
       next: (response: any) => {
         debugger
         const token = response.token;
         this.tokenService.saveToken(token);
-  
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const userId = payload.id;
-        const phoneNumber = payload.phoneNumber;
-        const role = payload.role;
+        this.userService.saveUserData(token);
 
-        //them cho tien sau nay lay khong can decode token
-        localStorage.setItem('id', userId.toString());
-        localStorage.setItem('phoneNumber', phoneNumber);
-        localStorage.setItem('role', role);
-  
-        if (role === "TEACHER") {
+        const payload = this.tokenService.getDecodedToken();
+        const role = payload?.role;
+
+        if (role === 'TEACHER') {
           this.router.navigate(['/teacher/dashboard']);
-        } else if (role === "STUDENT") {
+        } else if (role === 'STUDENT') {
           this.router.navigate(['/student/dashboard']);
         } else {
-          alert("Vai trò không hợp lệ!");
+          alert('Vai trò không hợp lệ!');
         }
       },
       error: (error: any) => {
         debugger
-        alert(error.error);
+        alert(error?.error || 'Đăng nhập thất bại');
       }
     });
   }

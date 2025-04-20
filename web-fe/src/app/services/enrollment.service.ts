@@ -22,7 +22,7 @@ export class EnrollmentService {
     };
   }
 
-  getStudentClasses(studentId: number): Observable<any> {
+  getAllClassByStudentId(studentId: number): Observable<any> {
     return this.http.get(`${environment.apiBaseUrl}/enrollments/student/${studentId}`);
   }
 

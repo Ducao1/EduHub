@@ -24,11 +24,11 @@ export class TeacherDashboardComponent {
   ){}
   ngOnInit(): void {
     this.userId = this.userService.getUserId() ?? 0;
-    this.loadClassByTeacher();
+    this.loadAllClassByTeacher();
     
   }
 
-  loadClassByTeacher() {
+  loadAllClassByTeacher() {
     this.classroomService.getClassByTeacher(this.userId).subscribe({
       next: (response) => {
         debugger

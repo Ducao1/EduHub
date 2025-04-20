@@ -23,11 +23,11 @@ export class StudentDashboardComponent {
 
   ngOnInit(): void {
     this.userId = this.userService.getUserId() ?? 0;
-    this.loadStudentClasses();
+    this.loadAllClassByStudent();
   }
 
-  loadStudentClasses() {
-    this.enrollmentService.getStudentClasses(this.userId).subscribe({
+  loadAllClassByStudent() {
+    this.enrollmentService.getAllClassByStudentId(this.userId).subscribe({
       next: (response) => {
         debugger
         this.classes = response;
