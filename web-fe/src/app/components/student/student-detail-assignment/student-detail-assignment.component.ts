@@ -50,15 +50,17 @@ export class StudentDetailAssignmentComponent implements OnInit {
   getAssignmentDetails(assignmentId: number) {
     this.assignmentService.getAssignmentById(assignmentId).subscribe({
       next: (response) => {
+        debugger
         this.assignment = response;
         this.getStudentInfo();
-        if (response.classroom) {
-          this.getClassDetails(response.classroom.id);
-        }
+        // if (response.classroom) {
+        //   this.getClassDetails(response.classId);
+        // }
         this.checkDeadline();
         this.checkSubmissionStatus();
       },
       error: (error) => {
+        debugger
         alert(error.error);
       }
     });
@@ -67,6 +69,7 @@ export class StudentDetailAssignmentComponent implements OnInit {
   checkSubmissionStatus() {
     this.submissionService.getStudentSubmissionStatus(this.userId, this.assignmentId).subscribe({
       next: (response) => {
+        debugger
         this.hasSubmitted = response.submitted;
         if (response.fileName) {
           this.submittedFile = { name: response.fileName } as File;
@@ -80,23 +83,27 @@ export class StudentDetailAssignmentComponent implements OnInit {
   }
 
 
-  getClassDetails(classId: number) {
-    this.classService.getClassById(classId).subscribe({
-      next: (response) => {
-        this.classroom = response;
-      },
-      error: (error) => {
-        alert(error.error);
-      }
-    });
-  }
+  // getClassDetails(classId: number) {
+  //   this.classService.getClassById(classId).subscribe({
+  //     next: (response) => {
+  //       debugger
+  //       this.classroom = response;
+  //     },
+  //     error: (error) => {
+  //       debugger
+  //       alert(error.error);
+  //     }
+  //   });
+  // }
 
   getStudentInfo() {
     this.userService.getStudentById(this.userId).subscribe({
       next: (response) => {
+        debugger
         this.student = response;
       },
       error: (error) => {
+        debugger
         alert(error.error);
       }
     });
@@ -118,12 +125,14 @@ export class StudentDetailAssignmentComponent implements OnInit {
 
     this.submissionService.submitAssignment(this.userId, this.assignmentId, this.selectedFile).subscribe({
       next: () => {
+        debugger
         alert("Nộp bài thành công!");
         this.hasSubmitted = true;
         this.submittedFile = this.selectedFile;
         this.selectedFile = null;
       },
       error: (error) => {
+        debugger
         alert(error.error);
       }
     });
@@ -132,11 +141,13 @@ export class StudentDetailAssignmentComponent implements OnInit {
   cancelSubmission() {
     this.submissionService.cancelSubmission(this.userId, this.assignmentId).subscribe({
       next: () => {
+        debugger
         alert("Hủy nộp bài thành công!");
         this.hasSubmitted = false;
         this.submittedFile = null;
       },
       error: (error) => {
+        debugger
         alert(error.error?.message || "Lỗi khi hủy nộp bài!");
       }
     });
@@ -154,8 +165,10 @@ export class StudentDetailAssignmentComponent implements OnInit {
   }
 
 
-  formatDate(date: string): string {
-    return this.datePipe.transform(date, 'HH:mm dd/MM/yyyy') || '';
+  formatDate(dateArray: number[]): string {
+    const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
+    const jsDate = new Date(year, month - 1, day, hour, minute, second);
+    return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
   }
 }
 

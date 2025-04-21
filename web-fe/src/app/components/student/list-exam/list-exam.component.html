@@ -13,7 +13,13 @@
             <tr *ngFor="let exam of exams; let i = index">
                 <td>{{ i + 1 }}</td>
                 <td><a routerLink="/student/take-exam/{{exam.exam_id}}">{{ exam.title }}</a></td>
-            <td>{{formatDate(exam.assignedDate)}} - {{formatDate(exam.dueDate)}}</td>
+            <!-- <td>{{formatDate(exam.assignedDate)}} - {{formatDate(exam.dueDate)}}</td> -->
+            <td>
+              <ng-container *ngIf="exam.dueDate && exam.dueDate[0] !== 9999; else noDeadline">
+                {{ formatDate(exam.assignedDate) }} – {{ formatDate(exam.dueDate) }}
+              </ng-container>
+              <ng-template #noDeadline>Không có thời hạn</ng-template>
+            </td>
           </tr>
         </tbody>
       </table>

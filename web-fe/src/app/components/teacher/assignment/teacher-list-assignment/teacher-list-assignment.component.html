@@ -15,7 +15,13 @@
         <td><a routerLink="/teacher/detail-class/{{assignment.classroom.id}}">{{assignment.classroom.name}}</a></td>
         <td><a routerLink="/teacher/detail-assignment/{{assignment.id}}">{{ assignment.title }}</a></td>
         <td>{{ assignment.content }}</td>
-        <td>{{formatDate(assignment.assignedDate)}} - {{formatDate(assignment.dueDate)}}</td>
+        <!-- <td>{{formatDate(assignment.assignedDate)}} - {{formatDate(assignment.dueDate)}}</td> -->
+        <td>
+          <ng-container *ngIf="assignment.dueDate && assignment.dueDate[0] !== 9999; else noDeadline">
+            {{ formatDate(assignment.assignedDate) }} – {{ formatDate(assignment.dueDate) }}
+          </ng-container>
+          <ng-template #noDeadline>Không có thời hạn</ng-template>
+        </td>
     </tr>
   </tbody>
 </table>

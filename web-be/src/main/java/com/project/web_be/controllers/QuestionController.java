@@ -41,7 +41,8 @@ public class QuestionController {
     public ResponseEntity<?> getQuestionById(@PathVariable long id){
         try {
             Question question = questionService.getQuestionById(id);
-            return ResponseEntity.ok(QuestionResponse.fromQuestion(question));
+//            return ResponseEntity.ok(QuestionResponse.fromQuestion(question));
+            return ResponseEntity.ok(question);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

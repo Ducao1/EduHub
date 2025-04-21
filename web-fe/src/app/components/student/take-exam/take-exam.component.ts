@@ -56,6 +56,7 @@ export class TakeExamComponent {
   LoadExam() {
     this.examService.getExamById(this.examId).subscribe({
       next: (response) => {
+        debugger
         this.exam = response;
         this.questions = response.questions || [];
         this.timeremaining = response.duration;
@@ -73,6 +74,7 @@ export class TakeExamComponent {
         console.log('Loaded questions:', this.questions);
       },
       error: (error) => {
+        debugger
         console.error('Error loading exam:', error);
         alert(error.error);
       }

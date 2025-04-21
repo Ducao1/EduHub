@@ -51,6 +51,7 @@ export class TryExamComponent implements OnInit, OnDestroy {
   LoadExam() {
     this.examService.getExamById(this.examId).subscribe({
       next: (response) => {
+        debugger
         this.exam = response;
         this.questions = response.questions || [];
         this.timeremaining = response.duration;
@@ -68,6 +69,7 @@ export class TryExamComponent implements OnInit, OnDestroy {
         console.log('Loaded questions:', this.questions);
       },
       error: (error) => {
+        debugger
         console.error('Error loading exam:', error);
         alert(error.error);
       }

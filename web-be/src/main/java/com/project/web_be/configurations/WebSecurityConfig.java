@@ -52,7 +52,7 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,
                                     String.format("%s/classes/add", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(GET,
-                                    String.format("%s/classes/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                                    String.format("%s/classes/**", apiPrefix)).hasAnyAuthority(Role.STUDENT,Role.TEACHER)
                             .requestMatchers(GET,
                                     String.format("%s/classes", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(GET,
@@ -63,11 +63,11 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,
                                     String.format("%s/assignments/add", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(GET,
-                                    String.format("%s/assignments/**", apiPrefix)).hasAuthority(Role.TEACHER)
-                            .requestMatchers(GET,
-                                    String.format("%s/assignments/class/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                                    String.format("%s/assignments/class/**", apiPrefix)).hasAnyAuthority(Role.STUDENT,Role.TEACHER)
                             .requestMatchers(GET,
                                     String.format("%s/assignments/teacher/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                            .requestMatchers(GET,
+                                    String.format("%s/assignments/**", apiPrefix)).hasAnyAuthority(Role.TEACHER,Role.STUDENT)
                             .requestMatchers(PUT,
                                     String.format("%s/assignments/**", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(DELETE,
@@ -76,9 +76,9 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,
                                     String.format("%s/exams/add", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(GET,
-                                    String.format("%s/exams/**", apiPrefix)).hasAuthority(Role.TEACHER)
-                            .requestMatchers(GET,
                                     String.format("%s/exams/teacher/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                            .requestMatchers(GET,
+                                    String.format("%s/exams/**", apiPrefix)).hasAnyAuthority(Role.TEACHER,Role.STUDENT)
                             .requestMatchers(PUT,
                                     String.format("%s/exams/**", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(DELETE,
@@ -87,14 +87,14 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,
                                     String.format("%s/questions/add", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(GET,
-                                    String.format("%s/questions/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                                    String.format("%s/questions/**", apiPrefix)).hasAnyAuthority(Role.TEACHER,Role.STUDENT)
                             .requestMatchers(PUT,
                                     String.format("%s/questions/**", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(DELETE,
                                     String.format("%s/questions/**", apiPrefix)).hasAuthority(Role.TEACHER)
 
                             .requestMatchers(GET,
-                                    String.format("%s/class/exams/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                                    String.format("%s/class/exams/**", apiPrefix)).hasAnyAuthority(Role.TEACHER,Role.STUDENT)
                             .requestMatchers(POST,
                                     String.format("%s/class/exams/add", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(PUT,
@@ -103,7 +103,7 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,
                                     String.format("%s/submissions/assignment", apiPrefix)).hasAuthority(Role.STUDENT)
                             .requestMatchers(GET,
-                                    String.format("%s/submissions/status/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                                    String.format("%s/submissions/status/**", apiPrefix)).hasAnyAuthority(Role.TEACHER,Role.STUDENT)
                             .requestMatchers(DELETE,
                                     String.format("%s/submissions/cancel/**", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(POST,

@@ -19,7 +19,7 @@ public class AssignmentResponse {
     private String teacher;
     private LocalDateTime assignedDate;
     private LocalDateTime dueDate;
-    private String classroom;
+    private String className;
 
     public static AssignmentResponse fromAssignment(Assignment assignment){
         return AssignmentResponse.builder()
@@ -29,7 +29,7 @@ public class AssignmentResponse {
                 .teacher(assignment.getTeacher().getFullName())
                 .assignedDate(assignment.getAssignedDate())
                 .dueDate(assignment.getDueDate())
-                .classroom(assignment.getClassroom().getName())
+                .className(assignment.getClassroom().getName())
                 .build();
     }
 }

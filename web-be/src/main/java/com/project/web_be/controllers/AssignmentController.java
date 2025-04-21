@@ -26,7 +26,7 @@ public class AssignmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getAssignmentById(@PathVariable("id") long id){
+    public ResponseEntity<?> getAllAssignmentByTeacherId(@PathVariable("id") long id){
         try {
             Assignment assignment = assignmentService.getAssignmentById(id);
             return ResponseEntity.ok(AssignmentResponse.fromAssignment(assignment));

@@ -33,7 +33,8 @@ public class ExamController {
     public ResponseEntity<?> getExamById(@PathVariable("id") long id){
         try {
             Exam exam = examService.getExamById(id);
-            return ResponseEntity.ok(ExamResponse.fromExam(exam));
+//            return ResponseEntity.ok(ExamResponse.fromExam(exam));
+            return ResponseEntity.ok(exam);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

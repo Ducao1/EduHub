@@ -32,9 +32,9 @@ export class StudentDashboardComponent {
         debugger
         this.classes = response;
       },
-      error: (err) => {
+      error: (error) => {
         debugger
-        alert(`Lỗi khi lấy danh sách lớp: ${err.message}`);
+        alert(`Lỗi khi lấy danh sách lớp: ${error.message}`);
       }
     });
   }

@@ -28,7 +28,7 @@ public class ClassroomExamController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getExamByClass(@PathVariable Long id){
+    public ResponseEntity<?> getExamByClassId(@PathVariable Long id){
         try {
             List<ClassExam> classExams = classroomExamService.getExamByClassroomId(id);
             List<AssignedExamResponse> assignedExamResponses = classExams.stream()

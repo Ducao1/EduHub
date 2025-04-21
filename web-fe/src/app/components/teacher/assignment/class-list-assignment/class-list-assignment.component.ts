@@ -44,7 +44,10 @@ export class ClassListAssignmentComponent {
     });
   }
 
-  formatDate(date: string): string {
-    return this.datePipe.transform(date, 'HH:mm dd/MM/yyyy') || '';
+  formatDate(dateArray: number[]): string {
+    const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
+    const jsDate = new Date(year, month - 1, day, hour, minute, second);
+    return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
   }
+  
 }
