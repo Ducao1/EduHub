@@ -1,0 +1,28 @@
+# Ép tất cả file text dùng LF khi commit
+* text=auto eol=lf
+
+# Đảm bảo file shell/scripts luôn dùng LF (tránh lỗi trên Linux)
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Đảm bảo JS/TS dùng LF
+*.js text eol=lf
+*.ts text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Ignore binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.woff binary
+*.woff2 binary
