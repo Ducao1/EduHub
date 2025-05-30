@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -66,4 +68,25 @@ public class ScoreService implements IScoreService {
 
         return scoreRepository.save(score);
     }
+
+
+    @Override
+    public Score getScoreBySubmissionId(Long submissionId) {
+        return scoreRepository.findBySubmissionId(submissionId).orElse(null);
+    }
+
+//    @Override
+//    public List<Score> getScoresByAssignmentId(Long assignmentId) {
+//        return scoreRepository.findByAssignmentId(assignmentId);
+//    }
+//
+//    @Override
+//    public List<Score> getScoresByExamId(Long examId) {
+//        return scoreRepository.findByExamId(examId);
+//    }
+//
+//    @Override
+//    public List<Score> getScoresByUserId(Long userId) {
+//        return scoreRepository.findByUserId(userId);
+//    }
 }

@@ -33,4 +33,40 @@ public class ScoreController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/submissions/{id}")
+    public ResponseEntity<?> getScoresBySubmissionId(@PathVariable long id){
+        try {
+            return ResponseEntity.ok(scoreService.getScoreBySubmissionId(id));
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+//    @GetMapping("/assignments/{id}")
+//    public ResponseEntity<?> getScoresByAssignmentId(@PathVariable Long id) {
+//        try {
+//            return ResponseEntity.ok(scoreService.getScoresByAssignmentId(id));
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
+//
+//    @GetMapping("/exams/{id}")
+//    public ResponseEntity<?> getScoresByExamId(@PathVariable Long id) {
+//        try {
+//            return ResponseEntity.ok(scoreService.getScoresByExamId(id));
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
+//
+//    @GetMapping("/users/{id}")
+//    public ResponseEntity<?> getScoresByUserId(@PathVariable Long id) {
+//        try {
+//            return ResponseEntity.ok(scoreService.getScoresByUserId(id));
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
 }
