@@ -17,8 +17,11 @@ import { UserService } from '../../../../services/user.service';
   providers: [DatePipe]
 })
 export class TeacherListAssignmentComponent {
+  userId!: number;
   assignments: any[] = [];
-  teacherId!: number;
+  currentPage: number = 0;
+  pageSize: number = 10;
+  totalElements: number = 0;
 
   constructor(
     private assignmentService: AssignmentService,
@@ -29,21 +32,37 @@ export class TeacherListAssignmentComponent {
   }
 
   ngOnInit() {
-    this.teacherId = this.userService.getUserId() ?? 0;
+    this.userId = this.userService.getUserId() ?? 0;
     this.loadAssignments();
   }
 
-  loadAssignments() {
-    this.assignmentService.getAssignmentsByTeacherId(this.teacherId).subscribe({
+  loadAssignments(): void {
+    this.assignmentService.getAssignmentsByTeacherId(this.userId, this.currentPage, this.pageSize).subscribe({
       next: (response) => {
         debugger
-        this.assignments = response;
+        this.assignments = response.content;
+        this.totalElements = response.totalElements;
       },
-      error: (err) => {
+      error: (error) => {
         debugger
-        alert(`Lỗi khi lấy danh sách bài tập: ${err.error}`);
+        alert(error.error);
       }
-    });
+    })
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadAssignments();
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.currentPage = 0;
+    this.loadAssignments();
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalElements / this.pageSize);
   }
 
   formatDate(dateArray: number[]): string {

@@ -1,0 +1,17 @@
+<h2>Danh sách điểm</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Bài thi</th>
+      <th>Điểm</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let score of scores; let i = index">
+        <td>{{score.id}}</td>
+        <td>{{score.title}}</td>
+        <td>{{score.score}}</td>
+    </tr>
+  </tbody>
+</table>

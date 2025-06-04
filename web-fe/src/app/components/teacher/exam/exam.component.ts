@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ClassroomService } from '../../../services/classroom.service';
 import { ClassExamService } from '../../../services/class-exam.service';
 import { AssignExamDTO } from '../../../dtos/assign-exam.dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-exams',
@@ -28,13 +29,15 @@ export class ExamComponent {
   isPopupVisible: boolean = false;
   assignedDate!: Date;
   dueDate!: Date;
+  activeDropdownIndex: number = -1;
 
   constructor(
     private examService: ExamService,
     private activedRoute: ActivatedRoute,
     private userService: UserService, 
     private classroomService: ClassroomService,
-    private classExamService: ClassExamService
+    private classExamService: ClassExamService,
+    private router: Router
   ){
 
   }
@@ -74,15 +77,13 @@ export class ExamComponent {
     })
   }
 
-  deleteExam(id: number) {
-    if (confirm("Bạn có chắc muốn xóa đề thi này?")) {
-      this.examService.deleteExamById(id).subscribe({
+  deleteExam(examId: number) {
+    if (confirm('Bạn có chắc chắn muốn xóa bài kiểm tra này?')) {
+      this.examService.deleteExamById(examId).subscribe({
         next: (response) => {
-          debugger
           this.loadAllExams();
         },
         error: (error) => {
-          debugger
           alert(error.error);
         }
       });
@@ -141,5 +142,22 @@ export class ExamComponent {
         alert(error.error);
       }
     });
+  }
+
+  toggleDropdown(index: number) {
+    this.activeDropdownIndex = this.activeDropdownIndex === index ? -1 : index;
+  }
+
+  tryExam(examId: number) {
+    this.router.navigate(['/teacher/try-exam', examId]);
+  }
+
+  updateExam(examId: number) {
+    this.router.navigate(['/teacher/detail-exam', examId]);
+  }
+
+  assignExam(examId: number) {
+    this.examId = examId;
+    this.togglePopup();
   }
 }

@@ -21,8 +21,8 @@ export class AssignmentService {
       headers: this.httpUtilService.createHeaders(),
     };
   }
-  getAssignmentsByTeacherId(teacherId: number): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/assignments/teacher/${teacherId}`);
+  getAssignmentsByTeacherId(teacherId: number, page: number, size: number): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/assignments/teacher/${teacherId}?page=${page}&size=${size}`);
   }
 
 

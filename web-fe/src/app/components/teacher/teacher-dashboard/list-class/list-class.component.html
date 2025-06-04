@@ -1,0 +1,38 @@
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h2>Lớp học của tôi</h2>
+        <a class="btn-create-class" routerLink="/teacher/add-class">
+            <i class="fas fa-plus-circle me-2"></i>Tạo lớp mới
+        </a>
+    </div>
+    
+    <div class="course-container">
+        <div *ngIf="classes.length === 0" class="no-classes">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <p>Bạn chưa có lớp học nào</p>
+            <a class="btn-create-class" routerLink="/teacher/add-class">
+                <i class="fas fa-plus-circle me-2"></i>Tạo lớp học đầu tiên
+            </a>
+        </div>
+        <div *ngFor="let class of classes; let i = index" class="course-card" [style.background]="getCardBackground(i)">
+            <div class="card-header" [style.color]="getCardTitleColor(i)">
+                 <h3 class="course-title">{{ class.name }}</h3>
+                 <p class="course-code">{{ class.description }}</p>
+            </div>
+            <div class="card-body">
+                 <!-- Placeholder for student avatars/count -->
+                 <div class="student-section">
+                      <div class="student-avatars">
+                           <!-- Example avatars - replace with actual data -->
+                           <span class="student-count">Sĩ số lớp: {{ class.studentCount }}</span>
+                      </div>
+                 </div>
+                 <div class="separator"></div>
+                 <div class="view-result">
+                      <a routerLink="/teacher/detail-class/{{class.id}}">View Result</a>
+                      <i class="fas fa-arrow-right"></i>
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>

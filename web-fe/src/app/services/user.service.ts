@@ -50,7 +50,7 @@ export class UserService {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const userData = {
         id: payload.id,
-        phoneNumber: payload.phoneNumber,
+        name: payload.name,
         role: payload.role,
         token: token
       };

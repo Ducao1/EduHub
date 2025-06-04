@@ -1,27 +1,59 @@
-<h2>Danh sách bài tập</h2>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Lớp</th>
-      <th>Tiêu đề</th>
-      <th>Nội dung</th>
-      <th>Thời hạn</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let assignment of assignments; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td><a routerLink="/teacher/detail-class/{{assignment.classroom.id}}">{{assignment.classroom.name}}</a></td>
-        <td><a routerLink="/teacher/detail-assignment/{{assignment.id}}">{{ assignment.title }}</a></td>
-        <td>{{ assignment.content }}</td>
-        <!-- <td>{{formatDate(assignment.assignedDate)}} - {{formatDate(assignment.dueDate)}}</td> -->
-        <td>
-          <ng-container *ngIf="assignment.dueDate && assignment.dueDate[0] !== 9999; else noDeadline">
-            {{ formatDate(assignment.assignedDate) }} – {{ formatDate(assignment.dueDate) }}
-          </ng-container>
-          <ng-template #noDeadline>Không có thời hạn</ng-template>
-        </td>
-    </tr>
-  </tbody>
-</table>
+<div class="assignment-container">
+    <div class="assignment-header">
+        <h2><i class="fas fa-tasks me-2"></i>Danh sách bài tập</h2>
+        <a class="btn-create-assignment" routerLink="/teacher/create-assignment">
+            <i class="fas fa-plus-circle me-2"></i>Tạo bài tập mới
+        </a>
+    </div>
+
+    <div class="assignment-list">
+        <div *ngIf="assignments.length === 0" class="no-assignments">
+            <i class="fas fa-clipboard-list"></i>
+            <p>Bạn chưa có bài tập nào</p>
+            <a class="btn-create-assignment" routerLink="/teacher/create-assignment">
+                <i class="fas fa-plus-circle me-2"></i>Tạo bài tập đầu tiên
+            </a>
+        </div>
+
+        <div *ngFor="let assignment of assignments" class="assignment-card">
+            <div class="assignment-info">
+                <div class="assignment-title">
+                    <a routerLink="/teacher/detail-assignment/{{assignment.id}}">
+                        <i class="fas fa-file-alt me-2"></i>{{ assignment.title }}
+                    </a>
+                </div>
+                <div class="assignment-details">
+                    <span class="class-name">
+                        <i class="fas fa-chalkboard me-2"></i>{{ assignment.className }}
+                    </span>
+                    <span class="due-date" [class.no-deadline]="!assignment.dueDate || assignment.dueDate[0] === 9999">
+                        <i class="fas fa-clock me-2"></i>
+                        <ng-container *ngIf="assignment.dueDate && assignment.dueDate[0] !== 9999; else noDeadline">
+                            {{ formatDate(assignment.assignedDate) }} – {{ formatDate(assignment.dueDate) }}
+                        </ng-container>
+                        <ng-template #noDeadline>Không có thời hạn</ng-template>
+                    </span>
+                </div>
+                <div class="assignment-content">
+                    {{ assignment.content }}
+                </div>
+            </div>
+            <div class="assignment-actions">
+                <a class="btn-view" routerLink="/teacher/detail-assignment/{{assignment.id}}">
+                    <!-- <i class="fas fa-arrow-right"></i> -->
+                </a>
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div *ngIf="totalElements > pageSize" class="pagination-controls mt-3">
+            <button class="btn btn-secondary me-2" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">
+                Trước
+            </button>
+            <span>Trang {{ currentPage + 1 }} / {{ getTotalPages() }}</span>
+            <button class="btn btn-secondary ms-2" [disabled]="currentPage + 1 >= getTotalPages()" (click)="onPageChange(currentPage + 1)">
+                Sau
+            </button>
+        </div>
+    </div>
+</div>

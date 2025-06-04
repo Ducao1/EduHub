@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -9,27 +10,39 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+
+  isDropdownOpen: any;
+  currentUser: any;
+  email: string = 'abc@gmail.com';
+
   userName = 'Nguyễn Văn A';
   dropdownOpen = false;
 
-  handleAction(action: number) {
-    switch (action) {
-      case 0:
-        console.log('Đi tới trang thông tin tài khoản');
-        break;
-      case 1:
-        console.log('Đăng ký làm giáo viên');
-        break;
-      case 2:
-        console.log('Đăng xuất');
-        break;
+  constructor(
+    private router: Router
+  ) { }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('#userDropdown')) {
+      this.isDropdownOpen = false;
     }
   }
 
+  profile() {
+    this.router.navigate(['/profile']);
+  }
 
+  changePassword() {
+    this.router.navigate(['/change-password']);
+  }
 
-toggleDropdown() {
-  this.dropdownOpen = !this.dropdownOpen;
-}
-
+  logout() {
+    this.router.navigate(['/login']);
+  }
 }

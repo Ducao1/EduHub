@@ -8,20 +8,23 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #4d62e8;
+    background: linear-gradient(135deg, #4d62e8, #6e8efb);
     color: white;
     padding: 20px;
     border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
   .class-info {
     h2 {
       margin: 0;
       font-size: 24px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     }
     p {
       margin: 5px 0 0;
       font-size: 16px;
+      opacity: 0.9;
     }
   }
   
@@ -38,12 +41,18 @@
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+    
+    &:hover {
+        transform: translateY(-2px);
+    }
   }
   
   .avatar {
     width: 40px;
     height: 40px;
-    background: #007bff;
+    background: linear-gradient(135deg, #007bff, #00bfff);
     color: white;
     display: flex;
     align-items: center;
@@ -51,6 +60,7 @@
     font-weight: bold;
     border-radius: 50%;
     margin-right: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   input {
@@ -60,13 +70,20 @@
     font-size: 14px;
     border-radius: 5px;
     background: #f1f1f1;
+    transition: all 0.3s ease;
+    
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
   }
   
   .class-navbar {
     width: 100%;
-    border-bottom: 1px solid #ddd;
-    background: white;
+    background: linear-gradient(to right, #ffffff, #f8f9fa);
     padding: 5px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   }
   
   .class-navbar ul {
@@ -87,13 +104,20 @@
     font-weight: 500;
     padding: 8px 12px;
     display: inline-block;
-  }
-  
-  .class-navbar ul li a.active {
-    color: #1a73e8;
-    border-bottom: 3px solid #1a73e8;
-    font-weight: bold;
-    padding-bottom: 5px;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    
+    &:hover {
+        color: #1a73e8;
+        background: rgba(26, 115, 232, 0.05);
+    }
+    
+    &.active {
+        color: #1a73e8;
+        background: rgba(26, 115, 232, 0.1);
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(26, 115, 232, 0.1);
+    }
   }
   
   

@@ -95,4 +95,16 @@ export class DetailExamComponent {
     }
   }
   
+  getQuestionType(type: string): string {
+    switch (type) {
+      case 'SINGLE_CHOICE':
+        return 'Một lựa chọn';
+      case 'MULTI_CHOICE':
+        return 'Nhiều lựa chọn';
+      case 'ESSAY':
+        return 'Tự luận';
+      default:
+        return type;
+    }
+  }
 }

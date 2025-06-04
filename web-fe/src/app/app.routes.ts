@@ -27,12 +27,18 @@ import { ListAssignmentComponent } from './components/student/list-assignment/li
 import { TakeExamComponent } from './components/student/take-exam/take-exam.component';
 import { AssignExamComponent } from './components/teacher/exam/assign-exam/assign-exam.component';
 import { ListScoreComponent } from './components/teacher/teacher-dashboard/list-score/list-score.component';
+import { ScoreComponent } from './components/student/score/score.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { ListClassComponent } from './components/teacher/teacher-dashboard/list-class/list-class.component';
 
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'change-password', component: ChangePasswordComponent },
   { path: 'student', component: StudentSideBarComponent, children:[
     { path: 'dashboard', component: StudentDashboardComponent },
     { path: 'detail-class/:id', component: DetailStudentClassComponent },
@@ -41,6 +47,7 @@ export const routes: Routes = [
     { path: 'detail-assignment/:id', component: StudentDetailAssignmentComponent },
     { path: 'list-exam/:id', component: ListExamComponent },
     { path: 'take-exam/:id', component: TakeExamComponent },
+    { path: 'score', component: ScoreComponent },
     {
       path: 'result-exam/:id',
       loadComponent: () => import('./components/student/result-exam/result-exam.component').then(m => m.ResultExamComponent)
@@ -50,6 +57,7 @@ export const routes: Routes = [
   { path: 'teacher', component: TeacherSideBarComponent, children: [
     { path: 'dashboard', component: TeacherDashboardComponent },
 
+    { path: 'list-class', component: ListClassComponent },
     { path: 'add-class', component: AddClassComponent },
     { path: 'detail-class/:id', component: DetailTeacherClassComponent },
     { path: 'class/:id', component: ListStudentComponent },
