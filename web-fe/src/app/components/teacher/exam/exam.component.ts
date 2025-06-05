@@ -173,7 +173,7 @@ export class ExamComponent {
   }
 
   tryExam(examId: number) {
-    this.router.navigate(['/teacher/try-exam', examId]);
+    this.router.navigate(['/try-exam', examId]);
   }
 
   updateExam(examId: number) {

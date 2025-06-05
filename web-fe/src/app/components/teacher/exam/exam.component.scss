@@ -26,7 +26,8 @@
 }
 
 .btn-create-class {
-    background: linear-gradient(135deg, #4a5fd1, #7b2cbf);
+    // background: linear-gradient(135deg, #4a5fd1, #7b2cbf);
+    background: #0052B4;
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -150,7 +151,8 @@
 
     .exam-code,
     .exam-questions,
-    .exam-duration {
+    .exam-duration,
+    .exam-count {
         /* You can add specific styles here if they differ from the general span styles */
     }
 }
@@ -161,9 +163,9 @@
 
 .assignment-actions {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     position: relative;
-    gap: 10px;
+    // gap: 10px;
     z-index: 2;
 }
 

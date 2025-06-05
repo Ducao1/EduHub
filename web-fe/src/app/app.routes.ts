@@ -11,8 +11,6 @@ import { DetailStudentClassComponent } from './components/student/student-dashbo
 import { DetailTeacherClassComponent } from './components/teacher/teacher-dashboard/detail-teacher-class/detail-teacher-class.component';
 import { AddExamComponent } from './components/teacher/exam/add-exam/add-exam.component';
 import { AddAssignmentComponent } from './components/teacher/assignment/add-assignment/add-assignment.component';
-import { TeacherSideBarComponent } from './components/teacher/teacher-side-bar/teacher-side-bar.component';
-import { StudentSideBarComponent } from './components/student/student-side-bar/student-side-bar.component';
 import { AddStudentComponent } from './components/teacher/teacher-dashboard/add-student/add-student.component';
 import { ListStudentComponent } from './components/teacher/teacher-dashboard/list-student/list-student.component';
 import { TeacherListAssignmentComponent } from './components/teacher/assignment/teacher-list-assignment/teacher-list-assignment.component';
@@ -31,6 +29,8 @@ import { ScoreComponent } from './components/student/score/score.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { ListClassComponent } from './components/teacher/teacher-dashboard/list-class/list-class.component';
+import { TeacherLayoutComponent } from './components/teacher/teacher-layout/teacher-layout.component';
+import { StudentLayoutComponent } from './components/student/student-layout/student-layout.component';
 
 
 export const routes: Routes = [
@@ -39,43 +39,47 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'change-password', component: ChangePasswordComponent },
-  { path: 'student', component: StudentSideBarComponent, children:[
-    { path: 'dashboard', component: StudentDashboardComponent },
-    { path: 'detail-class/:id', component: DetailStudentClassComponent },
-    { path: 'join-class', component: JoinClassComponent },
-    { path: 'list-assignment/:id', component: ListAssignmentComponent },
-    { path: 'detail-assignment/:id', component: StudentDetailAssignmentComponent },
-    { path: 'list-exam/:id', component: ListExamComponent },
-    { path: 'take-exam/:id', component: TakeExamComponent },
-    { path: 'score', component: ScoreComponent },
-    {
-      path: 'result-exam/:id',
-      loadComponent: () => import('./components/student/result-exam/result-exam.component').then(m => m.ResultExamComponent)
-    }    
-  ]},
+  {
+    path: 'student', component: StudentLayoutComponent, children: [
+      { path: 'dashboard', component: StudentDashboardComponent },
+      { path: 'detail-class/:id', component: DetailStudentClassComponent },
+      { path: 'join-class', component: JoinClassComponent },
+      { path: 'list-assignment/:id', component: ListAssignmentComponent },
+      { path: 'detail-assignment/:id', component: StudentDetailAssignmentComponent },
+      { path: 'list-exam/:id', component: ListExamComponent },
+      { path: 'score', component: ScoreComponent },
+      {
+        path: 'result-exam/:id',
+        loadComponent: () => import('./components/student/result-exam/result-exam.component').then(m => m.ResultExamComponent)
+      }
+    ]
+  },
 
-  { path: 'teacher', component: TeacherSideBarComponent, children: [
-    { path: 'dashboard', component: TeacherDashboardComponent },
+  {
+    path: 'teacher', component: TeacherLayoutComponent, children: [
+      { path: 'dashboard', component: TeacherDashboardComponent },
 
-    { path: 'list-class', component: ListClassComponent },
-    { path: 'add-class', component: AddClassComponent },
-    { path: 'detail-class/:id', component: DetailTeacherClassComponent },
-    { path: 'class/:id', component: ListStudentComponent },
-    { path: 'class/:id/add-student', component: AddStudentComponent },
+      { path: 'list-class', component: ListClassComponent },
+      { path: 'add-class', component: AddClassComponent },
+      { path: 'detail-class/:id', component: DetailTeacherClassComponent },
+      { path: 'class/:id', component: ListStudentComponent },
+      { path: 'class/:id/add-student', component: AddStudentComponent },
 
-    { path: 'detail-exam/:id', component: DetailExamComponent },
-    { path: 'add-exam', component: AddExamComponent },
-    { path: 'exam', component: ExamComponent },
-    { path: 'add-question/:id', component: AddQuestionComponent },
-    { path: 'update-question/:id', component: UpdateQuestionComponent },
-    { path: 'try-exam/:id', component: TryExamComponent },
-    { path: 'assign-exam/:id', component: AssignExamComponent },
-    { path: 'list-score/:id', component: ListScoreComponent },
+      { path: 'detail-exam/:id', component: DetailExamComponent },
+      { path: 'add-exam', component: AddExamComponent },
+      { path: 'exam', component: ExamComponent },
+      { path: 'add-question/:id', component: AddQuestionComponent },
+      { path: 'update-question/:id', component: UpdateQuestionComponent },
 
-    { path: 'add-assignment/:id', component: AddAssignmentComponent },
-    { path: 'assignments', component: TeacherListAssignmentComponent },
-    { path: 'assignment/:id', component: ClassListAssignmentComponent },
-    { path: 'detail-assignment/:id', component: DetailAssignmentComponent },
-  ] 
-},
+      { path: 'assign-exam/:id', component: AssignExamComponent },
+      { path: 'list-score/:id', component: ListScoreComponent },
+
+      { path: 'add-assignment/:id', component: AddAssignmentComponent },
+      { path: 'assignments', component: TeacherListAssignmentComponent },
+      { path: 'assignment/:id', component: ClassListAssignmentComponent },
+      { path: 'detail-assignment/:id', component: DetailAssignmentComponent },
+    ]
+  },
+  { path: 'try-exam/:id', component: TryExamComponent },
+  { path: 'take-exam/:id', component: TakeExamComponent },
 ];
