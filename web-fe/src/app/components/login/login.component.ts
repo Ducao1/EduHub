@@ -5,13 +5,18 @@ import { HeaderComponent } from '../header/header.component';
 import { UserService } from '../../services/user.service';
 import { TokenService } from '../../services/token.service';
 import { LoginDTO } from '../../dtos/login.dto';
+import { FooterComponent } from "../footer/footer.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule,
+  imports: [
+    FormsModule,
     RouterModule,
-    HeaderComponent
+    HeaderComponent,
+    FooterComponent,
+    CommonModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
@@ -21,6 +26,7 @@ export class LoginComponent {
   @ViewChild('loginForm') loginForm!: NgForm;
   phoneNumber: string = '0943220886';
   password: string = '123456';
+  passwordVisible: boolean = false;
 
   constructor(
     private router: Router,
@@ -68,5 +74,9 @@ export class LoginComponent {
   createAccount() {
     debugger
     this.router.navigate(['/register']);
+  }
+
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
   }
 }

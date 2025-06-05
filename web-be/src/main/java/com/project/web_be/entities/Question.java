@@ -1,10 +1,9 @@
 package com.project.web_be.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.project.web_be.enums.QuestionType;
+import com.project.web_be.dtos.enums.QuestionType;
 import jakarta.persistence.*;
 import lombok.*;
 

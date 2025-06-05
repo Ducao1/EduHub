@@ -20,8 +20,10 @@ export class TeacherListAssignmentComponent {
   userId!: number;
   assignments: any[] = [];
   currentPage: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 9;
   totalElements: number = 0;
+  totalPages:number = 0;
+  visiblePages: number[] = [];
 
   constructor(
     private assignmentService: AssignmentService,
@@ -69,6 +71,21 @@ export class TeacherListAssignmentComponent {
     const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
     const jsDate = new Date(year, month - 1, day, hour, minute, second);
     return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
+  }
+
+  generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
+    const maxVisiblePages = 5;
+    const halfVisiblePages = Math.floor(maxVisiblePages / 2);
+
+    let startPage = Math.max(currentPage - halfVisiblePages, 1);
+    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+    }
+
+    return new Array(endPage - startPage + 1).fill(0)
+        .map((_, index) => startPage + index);
   }
   
 }

@@ -1,7 +1,7 @@
 package com.project.web_be.responses;
 
 import com.project.web_be.entities.Question;
-import com.project.web_be.enums.QuestionType;
+import com.project.web_be.dtos.enums.QuestionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

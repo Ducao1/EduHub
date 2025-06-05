@@ -21,15 +21,21 @@ import { Router } from '@angular/router';
   styleUrls: ['./exam.component.scss']
 })
 export class ExamComponent {
-  userId!:number;
-  exams : any[] = [];
-  classes : any[] = [];
+  userId!: number;
+  exams: any[] = [];
+  classes: any[] = [];
   examId: number = 0;
   selectedClassId: number = 0;
   isPopupVisible: boolean = false;
   assignedDate!: Date;
   dueDate!: Date;
   activeDropdownIndex: number = -1;
+
+  currentPage: number = 0;
+  pageSize: number = 9;
+  totalElements: number = 0;
+  totalPages: number = 0;
+  visiblePages: number[] = [];
 
   constructor(
     private examService: ExamService,
@@ -38,11 +44,9 @@ export class ExamComponent {
     private classroomService: ClassroomService,
     private classExamService: ClassExamService,
     private router: Router
-  ){
+  ) {}
 
-  }
-
-  ngOnInit(){
+  ngOnInit() {
     this.userId = this.userService.getUserId() ?? 0;
     const routeExamId = this.activedRoute.snapshot.paramMap.get('id');
     if (routeExamId) {
@@ -62,19 +66,41 @@ export class ExamComponent {
     this.examId = examId;
     this.togglePopup();
   }
-  
 
   loadAllExams() {
-    this.examService.getExams(this.userId).subscribe({
+    this.examService.getExams(this.userId, this.currentPage, this.pageSize).subscribe({
       next: (response) => {
         debugger
-        this.exams = response;
+        this.exams = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.updateVisiblePages();
       },
       error: (error) => {
         debugger
         alert(error.error);
       }
-    })
+    });
+  }
+
+  updateVisiblePages() {
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    this.visiblePages = Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.loadAllExams();
   }
 
   deleteExam(examId: number) {
@@ -110,7 +136,6 @@ export class ExamComponent {
   }
 
   assignExamToClass(examId: number) {
-    debugger
     if (this.selectedClassId === 0) {
       alert('Vui lòng chọn lớp học');
       return;
@@ -130,7 +155,6 @@ export class ExamComponent {
       due_date: this.dueDate
     };
     
-    // Call the ClassExamService to assign the exam to the class
     this.classExamService.assignExamtoClass(assignExamDTO).subscribe({
       next: (response: any) => {
         debugger

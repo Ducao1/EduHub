@@ -1,28 +1,38 @@
 <app-header></app-header>
-<div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-4 shadow-lg" style="width: 400px;">
-      <h3 class="text-center mb-3">Đăng nhập</h3>
-      <form #loginForm="ngForm">
-        <div class="mb-3">
-          <label for="text" class="form-label">SĐT</label>
-          <input type="text" class="form-control" id="phoneNumber" placeholder="Nhập SĐT"
-          name="phoneNumber"
-          [(ngModel)]="phoneNumber">
-        </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Mật khẩu</label>
-          <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu"
-          name="password"
-          [(ngModel)]="password">
-        </div>
-        <button type="submit" 
-        class="btn btn-primary w-100"
-        (click)="login()"
-        >Đăng nhập</button>
-        <p class="text-center mt-3">
-          Chưa có tài khoản?<span><a class="login-link" routerLink="/register">Đăng ký</a></span>
+<div class="login-page-container d-flex justify-content-center align-items-center vh-100">
+  <div class="login-card card p-4 shadow-lg">
+    <h3 class="text-center mb-4">Đăng nhập</h3>
+    <form #loginForm="ngForm" (ngSubmit)="login()">
+      <div class="form-group mb-3">
+        <input type="text" class="form-control" id="phoneNumber" placeholder="Nhập số điện thoại" name="phoneNumber"
+          [(ngModel)]="phoneNumber" required>
+      </div>
+      <div class="form-group mb-3 password-group">
+        <input [type]="passwordVisible ? 'text' : 'password'" class="form-control" id="password" placeholder="Mật khẩu" name="password"
+          [(ngModel)]="password" required>
+        <span class="password-toggle" (click)="togglePasswordVisibility()">
+          <i class="fas" [ngClass]="{'fa-eye': !passwordVisible, 'fa-eye-slash': passwordVisible}"></i>
+        </span>
+      </div>
+      <div class="forgot-password text-end mb-3">
+        <a href="#">Quên mật khẩu?</a>
+      </div>
+      <button type="submit" class="btn-login btn btn-primary w-100">Đăng nhập</button>
+    </form>
 
-        </p>
-      </form>
+    <div class="signup-link text-center mt-3">
+      <p>Bạn chưa có tài khoản? <a routerLink="/register">Tạo một tài khoản mới</a></p>
+    </div>
+
+    <div class="separator text-center">
+      <span>Hoặc</span>
+    </div>
+
+    <div class="social-login d-flex justify-content-center">
+      <button class="btn-social google-btn btn w-100">
+        <i class="fab fa-google me-2"></i> Google
+      </button>
     </div>
   </div>
+</div>
+<app-footer></app-footer>

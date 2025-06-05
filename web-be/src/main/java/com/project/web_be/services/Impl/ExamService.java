@@ -9,6 +9,8 @@ import com.project.web_be.repositories.UserRepository;
 import com.project.web_be.services.IExamService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,8 +55,8 @@ public class ExamService implements IExamService {
     }
 
     @Override
-    public List<Exam> getAllExamsByTeacherId(long teacherId){
-        return examRepository.findByTeacherId(teacherId);
+    public Page<Exam> getAllExamsByTeacherId(long teacherId, Pageable pageable){
+        return examRepository.findByTeacherId(teacherId, pageable);
     }
 
     @Override

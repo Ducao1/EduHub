@@ -5,7 +5,6 @@ import com.project.web_be.entities.Answer;
 import com.project.web_be.entities.Question;
 import com.project.web_be.entities.Submission;
 import com.project.web_be.entities.SubmissionAnswer;
-import com.project.web_be.enums.SubmissionType;
 import com.project.web_be.repositories.AnswerRepository;
 import com.project.web_be.repositories.QuestionRepository;
 import com.project.web_be.repositories.SubmissionAnswerRepository;

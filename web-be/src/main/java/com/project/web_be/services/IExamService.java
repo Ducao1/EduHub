@@ -2,6 +2,8 @@ package com.project.web_be.services;
 
 import com.project.web_be.dtos.ExamDTO;
 import com.project.web_be.entities.Exam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -10,7 +12,7 @@ public interface IExamService {
     Exam getExamById(long id) throws Exception;
     List<Exam> getAllExams();
 
-    List<Exam> getAllExamsByTeacherId(long teacherId);
+    Page<Exam> getAllExamsByTeacherId(long teacherId, Pageable pageable);
 
     Exam updateExam(ExamDTO examDTO, long id) throws Exception;
     void deleteExam(long id);

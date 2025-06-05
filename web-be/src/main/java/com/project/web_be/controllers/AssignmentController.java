@@ -5,6 +5,9 @@ import com.project.web_be.entities.Assignment;
 import com.project.web_be.responses.AssignmentResponse;
 import com.project.web_be.services.Impl.AssignmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,12 +52,14 @@ public class AssignmentController {
     }
 
     @GetMapping("/teacher/{id}")
-    public ResponseEntity<?> getAllAssignmentByTeacherId(@PathVariable Long id){
+    public ResponseEntity<?> getAllAssignmentByTeacherId(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         try {
-            List<Assignment> assignments = assignmentService.getAllAssignmentsByTeacherId(id);
-            List<AssignmentResponse> assignmentResponses = assignments.stream()
-                    .map(AssignmentResponse::fromAssignment)
-                    .toList();
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Assignment> assignments = assignmentService.getAllAssignmentsByTeacherId(id, pageable);
+            Page<AssignmentResponse> assignmentResponses = assignments.map(AssignmentResponse::fromAssignment);
             return ResponseEntity.ok(assignmentResponses);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

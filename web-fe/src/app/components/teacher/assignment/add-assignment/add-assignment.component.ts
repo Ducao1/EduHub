@@ -52,7 +52,7 @@ export class AddAssignmentComponent {
       next: (response)=>{
         debugger
         alert('Bài tập được tạo thành công!');
-        this.router.navigate(['/teacher/assignment']); 
+        this.router.navigate(['/teacher/assignments']); 
       },
       complete:()=> {
         debugger

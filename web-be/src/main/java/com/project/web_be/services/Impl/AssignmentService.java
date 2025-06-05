@@ -11,6 +11,8 @@ import com.project.web_be.repositories.UserRepository;
 import com.project.web_be.services.IAssignmentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,8 +92,8 @@ public class AssignmentService implements IAssignmentService {
     }
 
     @Override
-    public List<Assignment> getAllAssignmentsByTeacherId(Long teacherId){
-        return assignmentRepository.findByTeacherId(teacherId);
+    public Page<Assignment> getAllAssignmentsByTeacherId(Long teacherId, Pageable pageable) {
+        return assignmentRepository.findByTeacherId(teacherId, pageable);
     }
 
     @Override

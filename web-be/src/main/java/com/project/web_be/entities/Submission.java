@@ -1,7 +1,6 @@
 package com.project.web_be.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.project.web_be.enums.SubmissionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -3,7 +3,6 @@ package com.project.web_be.services.Impl;
 import com.project.web_be.entities.Score;
 import com.project.web_be.entities.Submission;
 import com.project.web_be.entities.User;
-import com.project.web_be.enums.SubmissionType;
 import com.project.web_be.repositories.ScoreRepository;
 import com.project.web_be.repositories.SubmissionAnswerRepository;
 import com.project.web_be.repositories.SubmissionRepository;
@@ -13,8 +12,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

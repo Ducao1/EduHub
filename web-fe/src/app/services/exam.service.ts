@@ -20,8 +20,9 @@ export class ExamService {
       headers: this.httpUtilService.createHeaders(),
     };
   }
-  getExams(teacherId: number): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/exams/teacher/${teacherId}`);
+
+  getExams(teacherId: number, page: number = 0, size: number = 5): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/exams/teacher/${teacherId}?page=${page}&size=${size}`);
   }
 
   addExam(examDTO: ExamDTO): Observable<any> {

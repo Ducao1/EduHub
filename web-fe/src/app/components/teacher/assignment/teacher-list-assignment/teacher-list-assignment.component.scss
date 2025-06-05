@@ -43,9 +43,12 @@
 
 .assignment-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     padding: 10px;
+    margin-top: 20px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .no-assignments {
@@ -106,7 +109,7 @@
 }
 
 .assignment-details {
-    display: flex;
+    display: block;
     flex-wrap: wrap;
     gap: 15px;
     margin-bottom: 15px;
@@ -124,6 +127,7 @@
     }
     
     .due-date {
+        padding-top: 10px;
         &.no-deadline {
             color: #999;
         }

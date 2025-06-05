@@ -1,21 +1,13 @@
 <div id="content-wrapper" class="d-flex flex-column">
-
-  <!-- Main Content -->
   <div id="content">
-
-    <!-- Topbar -->
-    <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top">
-      <!-- Brand -->
+    <nav class="navbar navbar-expand navbar-light topbar static-top">
       <div class="navbar-brand">
         <a class="d-flex align-items-center" routerLink="/">
           <i class="fas fa-graduation-cap brand-icon"></i>
           <span class="brand-text">EduHub</span>
         </a>
       </div>
-
-      <!-- Topbar Navbar -->
       <ul class="navbar-nav ml-auto">
-        <!-- Search -->
         <li class="nav-item dropdown no-arrow d-sm-none">
           <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
@@ -35,42 +27,5 @@
             </form>
           </div>
         </li>
-
-        <!-- User Information -->
-        <li class="nav-item dropdown no-arrow">
-          <a class="nav-link dropdown-toggle" id="userDropdown" role="button" (click)="toggleDropdown()"
-            [class.show]="isDropdownOpen" aria-haspopup="true" [attr.aria-expanded]="isDropdownOpen">
-            <div class="user-info">
-              <span class="user-email">{{email}}</span>
-            </div>
-            <div class="user-profile">
-              <img class="img-profile rounded-circle" src="/assets/img/undraw_profile.svg">
-            </div>
-          </a>
-          <!-- Dropdown Menu -->
-          <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" [class.show]="isDropdownOpen"
-            aria-labelledby="userDropdown">
-            <a class="dropdown-item" (click)="profile()">
-              <i class="fas fa-user fa-fw"></i>
-              Thông tin tài khoản
-            </a>
-            <a class="dropdown-item">
-              <i class="fas fa-chalkboard-teacher fa-fw"></i>
-              Đăng ký làm giáo viên
-            </a>
-            <a class="dropdown-item" (click)="changePassword()">
-              <i class="fas fa-key fa-fw"></i>
-              Đổi mật khẩu
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" (click)="logout()">
-              <i class="fas fa-sign-out-alt fa-fw"></i>
-              Đăng xuất
-            </a>
-          </div>
-        </li>
       </ul>
     </nav>
-
-
-    <!-- End of Topbar -->

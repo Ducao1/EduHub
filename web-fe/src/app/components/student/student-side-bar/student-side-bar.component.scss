@@ -1,75 +1,210 @@
-.course-container {
-    display: flex;
-    gap: 50px;
-    flex-wrap: wrap;
+.card-class {
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
   }
-.course-card {
-    border: 2px solid #007bff;
+}
+
+.sidebar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  z-index: 100;
+  background-color: #0052B4;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  color: white;
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar {
+  min-height: auto;
+  box-shadow: none;
+  padding: 0;
+
+  .sidebar-header {
+    margin-bottom: 30px;
+
+    .sidebar-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: white;
+      padding: 10px 0 10px;
+    }
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 12px 15px;
+    margin: 6px 0;
     border-radius: 8px;
-    padding: 16px;
-    width: 300px;
-    background: #fff;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .course-info {
-    margin-bottom: 8px;
-  }
-  
-  .course-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: #000;
-  }
-  
-  .course-instructor {
-    font-size: 14px;
-    color: gray;
-  }
-  
-  .progress-container {
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    margin: 10px 0;
+    font-weight: 500;
+
+    i {
+      width: 25px;
+      margin-right: 15px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    &.active {
+      background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      font-weight: 600;
+      color: #0a3d62 !important;
+
+      i {
+        color: #0a3d62 !important;
+      }
+    }
   }
-  
-  .progress-bar {
-    width: 80%;
-    height: 5px;
-    background: #ddd;
-    border-radius: 4px;
+
+  .staff-room-link {
     position: relative;
+    margin-top: 20px;
+
+    .notification-dot {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      width: 8px;
+      height: 8px;
+      background-color: #e74c3c;
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
   }
-  
-  .progress-fill {
-    height: 5px;
-    background: #007bff;
-    border-radius: 4px;
-    position: absolute;
-  }
-  
-  .progress-text {
-    margin-left: 8px;
-    font-size: 12px;
-    color: #007bff;
-  }
-  
-  .course-footer {
+
+  .sign-out-link {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+
+    i {
+      width: 25px;
+      margin-right: 15px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
   }
-  
-  .course-level {
-    color: #007bff;
-    font-size: 14px;
-    text-decoration: none;
-    font-weight: bold;
+}
+
+.content-area {
+  margin-left: 250px;
+  background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
-  
-  .course-arrow {
-    font-size: 18px;
-    color: #007bff;
-    text-decoration: none;
+
+  .topbar {
+    height: 90px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: transparent;
   }
-  
+
+  .divider {
+    height: 1px;
+    background-color: #dee2e6;
+    margin: 0 20px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .topbar-icons {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    gap: 20px;
+
+    i {
+      color: #a0abb9;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      font-size: 1.1rem;
+
+      &:hover {
+        color: #788492;
+      }
+    }
+
+    .notification-icon {
+      position: relative;
+
+      .notification-dot-topbar {
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        width: 5px;
+        height: 5px;
+        background-color: #e74c3c;
+        border-radius: 50%;
+        border: 1px solid #ffffff;
+      }
+    }
+
+    .profile-pic-container {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #d6eaff;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .profile-pic {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 0;
+      }
+
+      .user-text {
+        font-size: 0.6rem;
+        color: #555;
+      }
+    }
+  }
+}

@@ -1,16 +1,37 @@
-<div class="col-md-10" style="background-color: aliceblue;">
-    <div style="display: flex; justify-content: flex-end; padding: 10px;">
-        <a class="btn btn-primary" routerLink="/student/join-class">Tham gia lớp</a>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h2>Lớp học của tôi</h2>
+        <a class="btn-create-class" routerLink="/student/add-class">
+            <i class="fas fa-plus-circle me-2"></i>Tạo lớp mới
+        </a>
     </div>
+    
     <div class="course-container">
-        <div *ngIf="classes.length === 0">Bạn không có lớp học nào, nhấn tham gia để vào lớp</div>
-        <div *ngFor="let class of classes" class="course-card">
-            <div class="course-info">
-                <h3 class="course-title"><a routerLink="/student/detail-class/{{class.id}}">{{ class.name }}</a></h3>
-                <p class="course-instructor">{{ class.description }}</p>
+        <div *ngIf="classes.length === 0" class="no-classes">
+            <i class="fas fa-chalkboard-student"></i>
+            <p>Bạn chưa có lớp học nào</p>
+            <a class="btn-create-class" routerLink="/student/add-class">
+                <i class="fas fa-plus-circle me-2"></i>Tạo lớp học đầu tiên
+            </a>
+        </div>
+        <div *ngFor="let class of classes; let i = index" class="course-card" [style.background]="getCardBackground(i)">
+            <div class="card-header" [style.color]="getCardTitleColor(i)">
+                 <h3 class="course-title">{{ class.name }}</h3>
+                 <p class="course-code">{{ class.description }}</p>
             </div>
-            <div class="course-footer">
-                <a class="course-arrow" routerLink="/student/detail-class/{{class.id}}">→</a>
+            <div class="card-body">
+                 <!-- Placeholder for student avatars/count -->
+                 <div class="student-section">
+                      <div class="student-avatars">
+                           <!-- Example avatars - replace with actual data -->
+                           <span class="student-count">Sĩ số lớp: {{ class.studentCount }}</span>
+                      </div>
+                 </div>
+                 <div class="separator"></div>
+                 <div class="view-result">
+                      <a routerLink="/student/detail-class/{{class.id}}">View Result</a>
+                      <i class="fas fa-arrow-right"></i>
+                 </div>
             </div>
         </div>
     </div>

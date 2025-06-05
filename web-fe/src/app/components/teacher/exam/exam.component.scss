@@ -50,7 +50,7 @@
     gap: 20px;
     padding: 10px;
     margin-top: 20px;
-    overflow-y: auto;
+    // overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
 
@@ -379,6 +379,39 @@
 
         &:hover {
             background: #003d8f;
+        }
+    }
+}
+
+/* Pagination styles */
+.pagination {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 5px;
+
+    .page-item {
+        .page-link {
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            color: #4a5fd1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background-color: rgba(74, 95, 209, 0.1);
+                border-color: #4a5fd1;
+            }
+        }
+
+        &.active {
+            .page-link {
+                background-color: #4a5fd1;
+                border-color: #4a5fd1;
+                color: white;
+            }
         }
     }
 }

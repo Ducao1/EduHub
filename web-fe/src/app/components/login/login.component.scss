@@ -7,3 +7,128 @@
     border-radius: 10px;
   }
   
+.login-page-container {
+    /* Removed height and background from .container to use .login-page-container */
+}
+
+.login-card {
+    width: 400px; /* Fixed width as in the image */
+    max-width: 95%; /* Ensure responsiveness on smaller screens */
+    border-radius: 10px;
+    /* Shadow is already applied by Bootstrap's shadow-lg */
+}
+
+h3 {
+    color: #333; /* Darken title color */
+    font-weight: 600;
+}
+
+.form-group {
+    position: relative; /* Needed for absolute positioning of password toggle */
+}
+
+.form-control {
+    border-radius: 5px; /* Rounded corners for inputs */
+    padding: 10px 15px; /* Adjust padding */
+    font-size: 16px;
+    &:focus {
+        border-color: #4a5fd1; /* Highlight color on focus */
+        box-shadow: 0 0 0 0.25rem rgba(74, 95, 209, 0.25); /* Matching shadow */
+    }
+}
+
+.password-group {
+    .password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6c757d; /* Icon color */
+        &:hover {
+            color: #333; /* Darken icon on hover */
+        }
+    }
+}
+
+.forgot-password a {
+    color: #007bff; /* Blue link color */
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.btn-login {
+    background-color: #4a5fd1; /* Button background color */
+    border-color: #4a5fd1;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    &:hover {
+        background-color: #3a4dbd; /* Darker shade on hover */
+        border-color: #3a4dbd;
+    }
+}
+
+.signup-link a {
+    color: #007bff; /* Blue link color */
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #6c757d;
+    span {
+        padding: 0 10px;
+        background-color: #fff; /* Match card background */
+        position: relative;
+        z-index: 1;
+    }
+    &::before, &::after {
+        content: '';
+        flex-grow: 1;
+        height: 1px;
+        background-color: #dee2e6; /* Light grey line */
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.social-login {
+    .btn-social {
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1rem;
+
+        &.google-btn {
+            border: 1px solid #dee2e6;
+            color: #333;
+            background-color: #fff;
+            &:hover {
+                background-color: #f0f0f0;
+            }
+        }
+        &.qrcode-btn {
+             border: 1px solid #dee2e6;
+            color: #333;
+            background-color: #fff;
+            &:hover {
+                background-color: #f0f0f0;
+            }
+        }
+    }
+}
+  
