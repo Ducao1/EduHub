@@ -26,8 +26,8 @@ export class AssignmentService {
   }
 
 
-  getAssignmentsByClassId(classId: number): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/assignments/class/${classId}`);
+  getAssignmentsByClassId(classId: number, page: number, size: number): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/assignments/class/${classId}?page=${page}&size=${size}`);
   }
 
   addAssignment(assignmentDTO: AssignmentDTO): Observable<any> {

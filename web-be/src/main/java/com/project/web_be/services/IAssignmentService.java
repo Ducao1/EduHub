@@ -12,7 +12,7 @@ public interface IAssignmentService {
     Assignment addAssignment(AssignmentDTO assignmentDTO) throws Exception;
     Assignment getAssignmentById(long id) throws Exception;
 
-    List<Assignment> getAllAssignmentsByClassId(long classId);
+    Page<Assignment> getAllAssignmentsByClassId(long classId, Pageable pageable);
 
     Assignment updateAssignment(AssignmentDTO assignmentDTO, long id) throws Exception;
 

@@ -1,12 +1,299 @@
-.expired-box {
-    border: 1px dashed #ddd;
-    padding: 10px;
-    margin-top: 20px;
+.assignment-page-container {
+  display: flex;
+  gap: 30px;
+  padding: 30px;
+  max-width: 1200px;
+  margin: 20px auto;
+  font-family: 'Roboto', sans-serif;
+  align-items: flex-start;
+  background-color: #ffffff;
+}
+
+.assignment-main-content {
+  flex: 2;
+}
+
+.assignment-sidebar {
+  flex: 1;
+  min-width: 300px; /* Adjust as needed */
+}
+
+.assignment-header {
+  margin-bottom: 20px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.assignment-icon-wrapper {
+  background-color: #e8f0fe; /* Light blue background for the icon */
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
+.assignment-icon {
+  color: #1a73e8; /* Blue color for the icon */
+  font-size: 24px;
+}
+
+.assignment-title {
+  flex-grow: 1;
+  font-size: 32px;
+  font-weight: 500;
+  color: #3c4043;
+  margin: 0;
+}
+
+.three-dots-icon {
+  font-size: 20px;
+  color: #5f6368;
+  cursor: pointer;
+}
+
+.header-meta, .header-deadline {
+  color: #5f6368;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.header-meta .value {
+  font-weight: 500;
+}
+
+.score-display {
+  font-weight: bold;
+  color: #3c4043;
+}
+
+.assignment-divider {
+  border: none;
+  border-top: 1px solid #dadce0;
+  margin: 20px 0;
+}
+
+.content-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #3c4043;
+  margin-bottom: 20px;
+}
+
+.attachment-section {
+  margin-bottom: 30px;
+}
+
+.attachment-label {
+  font-size: 14px;
+  color: #5f6368;
+  margin-bottom: 10px;
+}
+
+.attachment-card {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+}
+
+.attachment-card i {
+  font-size: 20px;
+  color: #5f6368;
+  margin-right: 10px;
+}
+
+.attachment-card a {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.attachment-card span {
+  color: #5f6368;
+  font-size: 14px;
+}
+
+.comment-section {
+  margin-top: 30px;
+}
+
+.comment-label,
+.private-comment-label {
+  font-size: 18px;
+  font-weight: 500;
+  color: #3c4043;
+  margin-bottom: 10px;
+}
+
+.add-comment-link,
+.add-private-comment-link {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.your-work-card, .private-comment-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302), 0 1px 3px 1px rgba(60,64,67,0.149);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card-header-your-work {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.card-title-your-work {
+  font-size: 18px;
+  font-weight: 500;
+  color: #3c4043;
+  margin: 0;
+}
+
+.submission-status {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.submission-status.submitted {
+  color: #1e8e3e;
+  background-color: #e6f4ea;
+}
+
+.submission-status.not-submitted {
+  color: #d93025;
+  background-color: #fce8e6;
+}
+
+.submission-form .input-group-file {
+  margin-bottom: 15px;
+}
+
+.file-label {
+  display: block;
+  font-size: 14px;
+  color: #5f6368;
+  margin-bottom: 5px;
+}
+
+.form-control-file {
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  padding: 8px;
+  width: 100%;
+}
+
+.selected-file-name {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #3c4043;
+}
+
+.btn-add-create {
+  background-color: #1a73e8;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-add-create:hover {
+  background-color: #1764cc;
+}
+
+.submitted-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.submitted-file-display {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #3c4043;
+}
+
+.submitted-file-display i {
+  margin-right: 8px;
+  color: #5f6368;
+}
+
+.btn-cancel-submission {
+  background-color: #f8f9fa;
+  color: #1a73e8;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-cancel-submission:hover {
+  background-color: #e8f0fe;
+}
+
+.btn-mark-done {
+  background-color: #f8f9fa;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-mark-done:hover {
+  background-color: #e8eaed;
+}
+
+.private-comment-card {
+  margin-top: 20px;
+}
+
+.private-comment-card .private-comment-label {
+  margin-bottom: 10px;
+}
+
+.add-private-comment-link {
+  display: block;
+}
+
+/* Ensure responsiveness */
+@media (max-width: 768px) {
+  .assignment-page-container {
+    flex-direction: column;
+    padding: 15px;
   }
-  
-  .expired-text {
-    color: red;
-    font-weight: bold;
+
+  .assignment-main-content,
+  .assignment-sidebar {
+    flex: none;
+    width: 100%;
+    min-width: unset;
   }
-   
-  
+}

@@ -60,6 +60,11 @@ public class ExamService implements IExamService {
     }
 
     @Override
+    public Page<Exam> getAllExamsByClassId(Long classId, Pageable pageable) {
+        return examRepository.findByClassroomId(classId, pageable);
+    }
+
+    @Override
     @Transactional
     public Exam updateExam(ExamDTO examDTO, long id) throws Exception {
         Exam existingExam = getExamById(id);

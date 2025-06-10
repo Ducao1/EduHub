@@ -1,3 +1,329 @@
+.confirm-exam-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+.exam-info {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+
+  h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+  }
+}
+
+.info-item {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+
+  .label {
+    color: #6c757d;
+    font-weight: 500;
+  }
+
+  .value {
+    color: #2c3e50;
+    font-weight: 600;
+  }
+}
+
+.warning-box {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  border-radius: 5px;
+  padding: 15px;
+  margin: 20px 0;
+
+  h3 {
+    color: #856404;
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+  }
+
+  p {
+    color: #856404;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+.confirm-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}
+
+.confirmation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    background-color: #f0f2f5; /* Light grey background */
+}
+
+.confirmation-card {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px; /* Adjust max-width as per confirm-exam */
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.detail-group {
+    margin-bottom: 30px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    label {
+        font-size: 1.1em;
+        color: #555;
+        font-weight: 500;
+    }
+
+    span {
+        font-size: 1.1em;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .score-value-display {
+        color: #dc3545; /* Red color for the score */
+        font-weight: bold;
+    }
+}
+
+.note-section {
+    background-color: #fff3cd; /* Light yellow background */
+    border: 1px solid #ffeeba;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 30px;
+    text-align: left;
+
+    .note-text {
+        color: #856404; /* Dark yellow text */
+        font-size: 0.95em;
+        margin: 0;
+        line-height: 1.5;
+    }
+}
+
+.btn-primary-custom {
+    background-color: #007bff; /* Blue color for primary button */
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+
+    &:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+    }
+}
+
+.btn-secondary-custom {
+    background-color: #6c757d; /* Grey color for secondary button */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1em;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #5a6268;
+    }
+}
+
+.answer-details-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+    text-align: left;
+
+    h2 {
+        font-size: 1.8em;
+        color: #4a5fd1;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+}
+
+.question-card {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &.correct-answer {
+        border-color: #28a745;
+        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.1);
+    }
+
+    &.incorrect-answer {
+        border-color: #dc3545;
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.1);
+    }
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #e0e0e0;
+
+    h5 {
+        font-size: 1.3em;
+        color: #333;
+        margin: 0;
+    }
+
+    .question-type {
+        font-size: 0.9em;
+        color: #777;
+        background-color: #f1f1f1;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+}
+
+.answers-list {
+    p {
+        margin: 8px 0;
+        font-size: 1.05em;
+        color: #444;
+    }
+
+    strong {
+        color: #222;
+    }
+
+    .status {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        margin-top: 10px;
+
+        i {
+            margin-right: 8px;
+            font-size: 1.1em;
+        }
+
+        &.correct {
+            color: #28a745;
+        }
+
+        &.incorrect {
+            color: #dc3545;
+        }
+    }
+}
+
+.correct-solution {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #e0e0e0;
+
+    p {
+        color: #0052B4;
+        font-weight: bold;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .confirmation-card {
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .card-title {
+        font-size: 1.5em;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+
+        label,
+        span {
+            width: 100%;
+            text-align: left;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+    }
+
+    .btn-primary-custom {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
+
+    .answer-details-section h2 {
+        font-size: 1.5em;
+    }
+}
+
 .btn{
    justify-content: flex-end;
 }

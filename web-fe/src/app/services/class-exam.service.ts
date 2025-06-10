@@ -26,8 +26,8 @@ export class ClassExamService {
     };
   }
 
-  getExamByClass(classId: number): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/class/exams/${classId}`);
+  getExamByClass(classId: number, page: number, size: number): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/class/exams/${classId}?page=${page}&size=${size}`);
   }
 
   assignExamtoClass(assignExamDTO: AssignExamDTO): Observable<any> {

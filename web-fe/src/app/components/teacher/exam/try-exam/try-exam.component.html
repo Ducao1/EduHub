@@ -32,7 +32,10 @@
                         <label *ngFor="let answer of questions[currentQuestionIndex].answers" class="d-block">
                             <input type="checkbox" [value]="answer.answerText"
                                 (change)="onAnswerChange(questions[currentQuestionIndex].id, answer.answerText, $event)"
-                                [checked]="multipleAnswers[questions[currentQuestionIndex].id]?.includes(answer.answerText)">
+                                [checked]="multipleAnswers[questions[currentQuestionIndex].id].includes(answer.answerText)">
+
+                                <!-- [checked]="multipleAnswers[questions[currentQuestionIndex].id]?.includes(answer.answerText)"> -->
+                                
                             {{answer.answerText}}
                         </label>
                     </div>
@@ -43,6 +46,10 @@
                     </div> -->
                 </div>
             </form>
+            <div>
+                <button class="btn btn-primary" (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0"><</button>
+                <button class="btn btn-primary" (click)="nextQuestion()" [disabled]="currentQuestionIndex === questions.length - 1">></button>
+            </div>
         </div>
 
         <div class="navigation-panel">
@@ -56,15 +63,10 @@
                     (click)="goToQuestion(i)">
                     {{i + 1}}
                 </button>
+                <button class="btn btn-success" (click)="submitAnswers()">SUBMIT</button>
             </div>
         </div>
     </div>
 
-    <div class="exam-footer-buttons">
-        <button class="btn btn-primary" (click)="previousQuestion()"
-            [disabled]="currentQuestionIndex === 0">PREVIOUS</button>
-        <button class="btn btn-primary" (click)="nextQuestion()"
-            [disabled]="currentQuestionIndex === questions.length - 1">NEXT</button>
-        <button class="btn btn-success" (click)="submitAnswers()">SUBMIT</button>
-    </div>
+
 </div>

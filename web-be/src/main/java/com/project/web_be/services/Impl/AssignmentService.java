@@ -74,9 +74,8 @@ public class AssignmentService implements IAssignmentService {
 
 
     @Override
-    public List<Assignment> getAllAssignmentsByClassId(long classId) {
-
-        return assignmentRepository.findByClassroomId(classId);
+    public Page<Assignment> getAllAssignmentsByClassId(long classId, Pageable pageable) {
+        return assignmentRepository.findByClassroomId(classId, pageable);
     }
 
     @Override

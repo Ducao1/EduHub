@@ -1,16 +1,19 @@
 <nav class="class-navbar">
     <ul>
         <li><a routerLink="/teacher/detail-class/{{classId}}" routerLinkActive="active">
-            <i class="fas fa-newspaper me-2"></i>Bảng tin
+            Bảng tin
         </a></li>
         <li><a routerLink="/teacher/assignment/{{classId}}" routerLinkActive="active">
-            <i class="fas fa-tasks me-2"></i>Giao bài
+            Bài tập
+        </a></li>
+        <li><a routerLink="/teacher/class/exams/{{classId}}" routerLinkActive="active">
+            Bài thi
         </a></li>
         <li><a routerLink="/teacher/class/{{classId}}" routerLinkActive="active">
-            <i class="fas fa-users me-2"></i>Mọi người
+            Mọi người
         </a></li>
         <li><a routerLink="/teacher/grade" routerLinkActive="active">
-            <i class="fas fa-star me-2"></i>Điểm
+            Điểm
         </a></li>
     </ul>
 </nav>

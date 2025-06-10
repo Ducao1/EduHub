@@ -59,6 +59,21 @@ public class ExamController {
         }
     }
 
+    @GetMapping("/class/{id}")
+    public ResponseEntity<?> getAllExamsByClassId(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Exam> exams = examService.getAllExamsByClassId(id, pageable);
+            Page<ExamResponse> examResponses = exams.map(ExamResponse::fromExam);
+            return ResponseEntity.ok(examResponses);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateExam(@RequestBody ExamDTO examDTO, @PathVariable long id) {
         try {

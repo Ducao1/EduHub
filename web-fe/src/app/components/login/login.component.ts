@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
 
 export class LoginComponent {
   @ViewChild('loginForm') loginForm!: NgForm;
-  phoneNumber: string = '0943220886';
+  phoneNumber: string = '0943220885';
   password: string = '123456';
   passwordVisible: boolean = false;
 

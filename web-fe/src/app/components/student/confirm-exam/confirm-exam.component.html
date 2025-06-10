@@ -1,0 +1,29 @@
+<div class="confirm-exam-container">
+  <div class="exam-info">
+    <h2>Xác Nhận Bài Thi</h2>
+    
+    <div class="info-item">
+      <span class="label">Tên bài thi:</span>
+      <span class="value">{{exam.title}}</span>
+    </div>
+
+    <div class="info-item">
+      <span class="label">Thời gian làm bài:</span>
+      <span class="value">{{exam.duration}} phút</span>
+    </div>
+
+    <div class="info-item">
+      <span class="label">Số câu hỏi:</span>
+      <span class="value">{{exam.questions?.length || 0}} câu</span>
+    </div>
+
+    <div class="warning-box">
+      <h3>Lưu ý:</h3>
+      <p>Khi bắt đầu làm bài thi, thời gian sẽ được tính ngay lập tức và không thể tạm dừng.</p>
+    </div>
+
+    <button class="confirm-btn" (click)="confirm()">
+      Xác Nhận Làm Bài
+    </button>
+  </div>
+</div>

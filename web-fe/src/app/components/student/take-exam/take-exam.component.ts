@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, QueryList, ViewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExamService } from '../../../services/exam.service';
@@ -24,11 +24,15 @@ export class TakeExamComponent {
   studentId!: number;
   answers: any[] = [];
   questions: any[] = [];
+  currentQuestionIndex: number = 0;
   timeremaining!: number;
   timerInterval: any;
   singleAnswer: { [key: number]: string } = {};
-  essayAnswer: { [key: number]: string } = {};
   multipleAnswers: { [key: number]: string[] } = {};
+  isFullscreen: boolean = false;
+  showConfirmSubmitPopup: boolean = false;
+
+  @ViewChildren('questionElement') questionElements!: QueryList<ElementRef>;
 
   constructor(
     private examService: ExamService,
@@ -43,8 +47,7 @@ export class TakeExamComponent {
   ngOnInit() {
     this.examId = Number(this.route.snapshot.paramMap.get('id'));
     this.studentId = this.userService.getUserId() ?? 0;
-    this.LoadExam();
-    this.startTimer();
+    this.showConfirmationDialog();
   }
 
   ngOnDestroy() {
@@ -53,25 +56,54 @@ export class TakeExamComponent {
     }
   }
 
+  @HostListener('document:fullscreenchange', ['$event'])
+  onFullscreenChange() {
+    this.isFullscreen = !!document.fullscreenElement;
+  }
+
+  toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
+
+  showConfirmationDialog() {
+      this.LoadExam();
+      this.startTimer();
+      setTimeout(() => {
+        this.toggleFullscreen();
+      }, 500);
+  }
+
   LoadExam() {
     this.examService.getExamById(this.examId).subscribe({
       next: (response) => {
         debugger
         this.exam = response;
-        this.questions = response.questions || [];
+        this.questions = response.questions.map((q: any) => ({
+          ...q,
+          status: 'not-answered'
+        })) || [];
+        this.currentQuestionIndex = 0;
+
         this.timeremaining = response.duration;
         this.timeremaining = Math.floor(response.duration / 1000);
+
         this.questions.forEach(question => {
           if (question.type === 'SINGLE_CHOICE') {
             this.singleAnswer[question.id] = '';
-          } else if (question.type === 'ESSAY') {
-            this.essayAnswer[question.id] = '';
           } else if (question.type === 'MULTI_CHOICE') {
             this.multipleAnswers[question.id] = [];
           }
         });
 
-        console.log('Loaded questions:', this.questions);
+        console.log('Loaded questions with status:', this.questions);
       },
       error: (error) => {
         debugger
@@ -81,9 +113,28 @@ export class TakeExamComponent {
     });
   }
 
+  goToQuestion(index: number) {
+    if (index >= 0 && index < this.questions.length) {
+      this.currentQuestionIndex = index;
+    }
+  }
+
+  nextQuestion() {
+    if (this.currentQuestionIndex < this.questions.length - 1) {
+      this.goToQuestion(this.currentQuestionIndex + 1);
+    }
+  }
+
+  previousQuestion() {
+    if (this.currentQuestionIndex > 0) {
+      this.goToQuestion(this.currentQuestionIndex - 1);
+    }
+  }
+
   onSingleChoiceChange(questionId: number, answerText: string) {
     if (questionId) {
       this.singleAnswer[questionId] = answerText;
+      this.updateQuestionStatus(questionId);
       console.log('Selected answer for question', questionId, ':', answerText);
     }
   }
@@ -101,9 +152,40 @@ export class TakeExamComponent {
         this.multipleAnswers[questionId].splice(index, 1);
       }
     }
+    this.updateQuestionStatus(questionId);
   }
 
-  submitExam() {
+  updateQuestionStatus(questionId: number) {
+    const question = this.questions.find(q => q.id === questionId);
+    if (question) {
+      let isAnswered = false;
+      if (question.type === 'SINGLE_CHOICE') {
+        isAnswered = this.singleAnswer[questionId] !== '';
+      } else if (question.type === 'MULTI_CHOICE') {
+        isAnswered = this.multipleAnswers[questionId]?.length > 0;
+      }
+
+      if (question.status !== 'marked-for-review') {
+        question.status = isAnswered ? 'answered' : 'not-answered';
+      } else {
+        question.status = isAnswered ? 'marked-and-answered' : 'marked-for-review';
+      }
+    }
+  }
+
+  getQuestionStatusClass(question: any): string {
+    return question.status;
+  }
+
+  showConfirmSubmit(): void {
+    this.showConfirmSubmitPopup = true;
+  }
+
+  cancelSubmit(): void {
+    this.showConfirmSubmitPopup = false;
+  }
+
+  confirmSubmitExam() {
     const answers: SubmissionAnswerDTO[] = [];
   
     for (const questionId in this.singleAnswer) {
@@ -145,14 +227,21 @@ export class TakeExamComponent {
     this.submissionService.submitExam(submissionExamDTO).subscribe({
       next: (response) => {
         debugger
-        alert(`Điểm: ${response.score}`);
-        this.router.navigate(['/student/result-exam', response.id]);
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+        console.log(`Điểm: ${response.score}`);
+        this.router.navigate(['/result-exam', response.id]);
       },
       error: (error) => {
         debugger
         alert(error.error);
       }
     });
+  }
+
+  submitExam() {
+    this.showConfirmSubmit();
   }
 
   startTimer() {

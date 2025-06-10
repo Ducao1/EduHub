@@ -117,7 +117,7 @@
 
 .content-area {
   margin-left: 250px;
-  background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+  background-color: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -145,7 +145,7 @@
   }
 
   .main-content {
-    padding: 20px;
+    padding: 0px 20px 20px 20px;
   }
 
   .topbar-icons {

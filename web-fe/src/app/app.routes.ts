@@ -31,6 +31,10 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { ListClassComponent } from './components/teacher/teacher-dashboard/list-class/list-class.component';
 import { TeacherLayoutComponent } from './components/teacher/teacher-layout/teacher-layout.component';
 import { StudentLayoutComponent } from './components/student/student-layout/student-layout.component';
+import { ConfirmExamComponent } from './components/student/confirm-exam/confirm-exam.component';
+import { ResultExamComponent } from './components/student/result-exam/result-exam.component';
+import { ClassListExamComponent } from './components/teacher/exam/class-list-exam/class-list-exam.component';
+import { SessionExamComponent } from './components/teacher/exam/session-exam/session-exam.component';
 
 
 export const routes: Routes = [
@@ -48,10 +52,7 @@ export const routes: Routes = [
       { path: 'detail-assignment/:id', component: StudentDetailAssignmentComponent },
       { path: 'list-exam/:id', component: ListExamComponent },
       { path: 'score', component: ScoreComponent },
-      {
-        path: 'result-exam/:id',
-        loadComponent: () => import('./components/student/result-exam/result-exam.component').then(m => m.ResultExamComponent)
-      }
+      
     ]
   },
 
@@ -73,6 +74,8 @@ export const routes: Routes = [
 
       { path: 'assign-exam/:id', component: AssignExamComponent },
       { path: 'list-score/:id', component: ListScoreComponent },
+      { path: 'class/exams/:id', component: ClassListExamComponent },
+      { path: 'exam-scores/:id', component: ListScoreComponent },
 
       { path: 'add-assignment/:id', component: AddAssignmentComponent },
       { path: 'assignments', component: TeacherListAssignmentComponent },
@@ -82,4 +85,7 @@ export const routes: Routes = [
   },
   { path: 'try-exam/:id', component: TryExamComponent },
   { path: 'take-exam/:id', component: TakeExamComponent },
+  { path: 'confirm-exam/:id', component: ConfirmExamComponent },
+  { path: 'result-exam/:id', component: ResultExamComponent },
+  { path: 'session-exam/:id', component: SessionExamComponent },
 ];

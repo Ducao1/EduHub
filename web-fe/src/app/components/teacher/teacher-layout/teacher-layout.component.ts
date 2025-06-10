@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { TokenService } from '../../../services/token.service';
 
 @Component({
   selector: 'app-teacher-layout',
@@ -13,4 +14,13 @@ import { RouterModule } from '@angular/router';
 })
 export class TeacherLayoutComponent {
 
+  constructor(
+    private router: Router,
+    private tokenService: TokenService
+  ){}
+  ngOnInit(){}
+  logout() {
+    this.tokenService.clearToken();
+    this.router.navigate(['/login']);
+  }
 }

@@ -11,42 +11,42 @@
           <ul class="nav flex-column">
             <li class="nav-item">
               <a class="nav-link" routerLink="/teacher/dashboard" routerLinkActive="active">
-                <i class="fas fa-home me-3"></i>
+                <!-- <i class="fas fa-home me-3"></i> -->
                 Màn hình chính
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" routerLink="/teacher/assignments" routerLinkActive="active">
-                <i class="fas fa-tasks me-3"></i>
+                <!-- <i class="fas fa-tasks me-3"></i> -->
                 Bài tập
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" routerLink="/teacher/exam" routerLinkActive="active">
-                <i class="fas fa-file-alt me-3"></i>
+                <!-- <i class="fas fa-file-alt me-3"></i> -->
                 Đề thi
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" routerLink="/teacher/list-class" routerLinkActive="active">
-                <i class="fas fa-chalkboard-teacher me-3"></i>
+                <!-- <i class="fas fa-chalkboard-teacher me-3"></i> -->
                 Quản lý lớp học
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link staff-room-link" routerLink="/teacher/staff-room" routerLinkActive="active">
-                <i class="fas fa-users me-3"></i>
-                Hoạt động
+            <!-- <li class="nav-item">
+              <a class="nav-link staff-room-link" routerLink="/teacher/staff-room" routerLinkActive="active"> -->
+                <!-- <i class="fas fa-users me-3"></i> -->
+                <!-- Hoạt động -->
                 <!-- <span class="notification-dot"></span> -->
-              </a>
-            </li>
+              <!-- </a>
+            </li> -->
           </ul>
         </div>
 
         <!-- Sign Out -->
         <ul class="nav flex-column mt-3">
           <li class="nav-item">
-            <a class="nav-link sign-out-link" routerLink="/login">
+            <a class="nav-link sign-out-link" (click)="logout()">
               <i class="fas fa-sign-out-alt me-3"></i>
               Đăng xuất
             </a>

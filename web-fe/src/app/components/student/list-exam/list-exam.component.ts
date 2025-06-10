@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { StudentNavBarComponent } from '../student-nav-bar/student-nav-bar.component';
 import { ClassExamService } from '../../../services/class-exam.service';
@@ -16,9 +16,14 @@ import { ClassExamService } from '../../../services/class-exam.service';
   styleUrl: './list-exam.component.scss',
   providers: [DatePipe]
 })
-export class ListExamComponent {
+export class ListExamComponent implements OnInit {
   classId!: number;
   exams: any[] = [];
+  pageSize: number = 9; // Adjust as needed
+  totalPages: number = 0;
+  currentPage: number = 1; // Start with page 1 for display, 0 for API
+  totalElements: number = 0; // Added for total elements
+  visiblePages: number[] = []; // Added for visible pages
   
     constructor(
       private classExamService: ClassExamService,
@@ -31,26 +36,45 @@ export class ListExamComponent {
       this.loadExams();
     }
   
-    loadExams() {
-      this.classExamService.getExamByClass(this.classId).subscribe({
+    loadExams(): void {
+      this.classExamService.getExamByClass(this.classId, this.currentPage - 1, this.pageSize).subscribe({
         next: (response) => {
           debugger
-          this.exams = response;
+          this.exams = response.content; // Get content from response
+          this.totalElements = response.totalElements; // Get total elements
+          this.totalPages = response.totalPages; // Get total pages
+          this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages); // Generate visible pages
         },
         error: (err) => {
           debugger
-          alert(err.error);
+          alert(`Lỗi khi lấy danh sách bài thi: ${err.error}`);
         }
       });
     }
+
+    onPageChange(page: number): void {
+      this.currentPage = page;
+      this.loadExams();
+    }
   
-    // formatDate(date: string): string {
-    //   return this.datePipe.transform(date, 'HH:mm dd/MM/yyyy') || '';
-    // }
+    generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
+      const maxVisiblePages = 5;
+      const halfVisiblePages = Math.floor(maxVisiblePages / 2);
+  
+      let startPage = Math.max(currentPage - halfVisiblePages, 1);
+      let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+  
+      if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+      }
+  
+      return new Array(endPage - startPage + 1).fill(0)
+          .map((_, index) => startPage + index);
+    }
+  
     formatDate(dateArray: number[]): string {
       const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
       const jsDate = new Date(year, month - 1, day, hour, minute, second);
       return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
     }
-    
 }

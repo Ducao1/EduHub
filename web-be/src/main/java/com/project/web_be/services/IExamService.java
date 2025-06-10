@@ -14,6 +14,8 @@ public interface IExamService {
 
     Page<Exam> getAllExamsByTeacherId(long teacherId, Pageable pageable);
 
+    Page<Exam> getAllExamsByClassId(Long classId, Pageable pageable);
+
     Exam updateExam(ExamDTO examDTO, long id) throws Exception;
     void deleteExam(long id);
 }

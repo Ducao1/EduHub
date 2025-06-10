@@ -1,59 +1,60 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule, ActivatedRoute } from '@angular/router';
-import { AssignmentService } from '../../../services/assignment.service';
-import { StudentNavBarComponent } from '../student-nav-bar/student-nav-bar.component';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { ClassExamService } from '../../../../services/class-exam.service';
 
 @Component({
-  selector: 'app-list-assignment',
+  selector: 'app-class-list-exam',
+  standalone: true,
   imports: [
-      CommonModule,
-      RouterModule,
-      StudentNavBarComponent
+    CommonModule,
+    RouterModule
   ],
-  templateUrl: './list-assignment.component.html',
-  styleUrl: './list-assignment.component.scss',
+  templateUrl: './class-list-exam.component.html',
+  styleUrl: './class-list-exam.component.scss',
   providers: [DatePipe]
 })
-export class ListAssignmentComponent implements OnInit {
+export class ClassListExamComponent implements OnInit {
   classId!: number;
-  assignments: any[] = [];
-  pageSize: number = 9;
-  totalPages: number = 0;
+  exams: any[] = [];
   currentPage: number = 1;
+  pageSize: number = 9;
   totalElements: number = 0;
+  totalPages: number = 0;
   visiblePages: number[] = [];
+  activeDropdownIndex: number = -1;
 
   constructor(
-    private assignmentService: AssignmentService,
+    private classExamService: ClassExamService,
     private route: ActivatedRoute,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.classId = Number(this.route.snapshot.paramMap.get('id'));
-    this.loadAssignments();
+    this.loadExams();
   }
 
-  loadAssignments(): void {
-    this.assignmentService.getAssignmentsByClassId(this.classId, this.currentPage - 1, this.pageSize).subscribe({
+  loadExams(): void {
+    this.classExamService.getExamByClass(this.classId, this.currentPage - 1, this.pageSize).subscribe({
       next: (response) => {
         debugger
-        this.assignments = response.content;
+        this.exams = response.content;
         this.totalElements = response.totalElements;
         this.totalPages = response.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
       error: (err) => {
         debugger
-        alert(`Lỗi khi lấy danh sách bài tập: ${err.error}`);
+        alert(`Lỗi khi lấy danh sách bài thi: ${err.error}`);
       }
     });
   }
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.loadAssignments();
+    this.loadExams();
   }
 
   generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
@@ -75,5 +76,17 @@ export class ListAssignmentComponent implements OnInit {
     const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
     const jsDate = new Date(year, month - 1, day, hour, minute, second);
     return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
+  }
+
+  toggleDropdown(index: number) {
+    this.activeDropdownIndex = this.activeDropdownIndex === index ? -1 : index;
+  }
+
+  monitorExam(examId: number) {
+    this.router.navigate(['/session-exam', examId]);
+  }
+
+  viewScores(examId: number) {
+    alert('Xem điểm bài thi: ' + examId);
   }
 }

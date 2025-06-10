@@ -12,6 +12,8 @@ import com.project.web_be.repositories.ExamRepository;
 import com.project.web_be.services.IClassroomExamService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +46,8 @@ public class ClassroomExamService implements IClassroomExamService {
     }
 
     @Override
-    public List<ClassExam> getExamByClassroomId(Long id){
-        return classExamRepository.findByClassroomId(id);
+    public Page<ClassExam> getExamByClassroomId(Long id, Pageable pageable){
+        return classExamRepository.findByClassroomId(id, pageable);
     }
 
     @Override

@@ -17,6 +17,8 @@ import { CommonModule, DatePipe } from '@angular/common';
 export class ResultExamComponent implements OnInit {
   submission: any= {};
   submissionId!: number;
+  correctAnswersCount: number = 0;
+  totalQuestionsCount: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,9 +36,12 @@ export class ResultExamComponent implements OnInit {
       next: (response) => {
         debugger
         this.submission = response;
+        this.totalQuestionsCount = this.submission.submissionAnswers.length;
+        this.correctAnswersCount = this.submission.submissionAnswers.filter((a: any) => a.answer.correct).length;
         console.log('Kết quả bài làm:', response.score);
       },
       error: (error) => {
+        debugger
         alert(error.error);
       }
     });

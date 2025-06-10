@@ -1,20 +1,27 @@
-<div class="container mt-4" *ngIf="submission">
-  <div class="text-end mt-3">
-        <button class="btn btn-primary" routerLink="/student/dashboard">Trở lại</button>
-      </div>
-    <h3>Bài thi: {{ submission.exam.title }}</h3>
-    <p>Thời gian nộp: {{ formatDate(submission.submittedAt)  }}</p>
-    <p>Điểm: {{ submission.score?.score ?? 'Chưa chấm điểm' }}</p>
-  
-    <div *ngFor="let answer of submission.submissionAnswers; let i = index" class="card mt-3 p-3">
-      <h5>{{i+1}}. {{ answer.question.questionText }}</h5>
-      <p>Loại câu hỏi: {{ answer.question.type }}</p>
-      <ul>
-        <li>Đáp án chọn: {{ answer.answer.answerText }}</li>
-        <li *ngIf="answer.answer.correct">Đúng</li>
-        <li *ngIf="!answer.answer.correct">Sai</li>
-      </ul>
+<div class="confirm-exam-container">
+  <div class="exam-info">
+    <h2>Kết Quả Bài Thi</h2>
+    <div class="info-item">
+      <span class="label">Thời gian làm bài:</span>
+      <span class="value">{{ formatDate(submission.submittedAt) }}</span>
     </div>
-      
+    <div class="info-item">
+      <span class="label">Số câu đúng:</span>
+      <span class="value" style="color: red; font-size: 1.2em;"></span>
+    </div>
+    <div class="info-item">
+      <span class="label">Điểm:</span>
+      <span class="value" style="color: red; font-size: 1.2em;">{{ submission.score?.score ?? 'Chưa chấm điểm' }}</span>
+    </div>
+
+    <div class="warning-box">
+      <h3>Lưu ý:</h3>
+      <p>Nhấn để trở về trang chủ</p>
+    </div>
+
+    <button class="confirm-btn" routerLink="/student/dashboard">
+      Trở Lại Trang Chủ
+    </button>
   </div>
+</div>
   

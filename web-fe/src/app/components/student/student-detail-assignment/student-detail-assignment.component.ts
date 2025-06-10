@@ -52,6 +52,9 @@ export class StudentDetailAssignmentComponent implements OnInit {
       next: (response) => {
         debugger
         this.assignment = response;
+        this.assignment.teacherName = response.teacher.fullName;
+        this.assignment.totalPoints = response.totalPoints;
+        this.assignment.attachment = response.attachment;
         this.getStudentInfo();
         // if (response.classroom) {
         //   this.getClassDetails(response.classId);

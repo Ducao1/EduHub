@@ -113,7 +113,7 @@ public class WebSecurityConfig {
                             .requestMatchers(GET,
                                     String.format("%s/submissions/exam/**", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(GET,
-                                    String.format("%s/submissions/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                                    String.format("%s/submissions/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)
 
                             .requestMatchers(GET,
                                     String.format("%s/submissionAnswers", apiPrefix)).hasAnyAuthority(Role.STUDENT,Role.TEACHER)
@@ -138,11 +138,12 @@ public class WebSecurityConfig {
             @Override
             public void customize(CorsConfigurer<HttpSecurity> httpSecurityCorsConfigurer) {
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("*"));
+                 configuration.setAllowedOrigins(List.of("*"));
                 configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
                 configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
                 configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
                 configuration.setExposedHeaders(List.of("x-auth-token"));
+                configuration.setAllowCredentials(true);
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                 source.registerCorsConfiguration("/**", configuration);
                 httpSecurityCorsConfigurer.configurationSource(source);

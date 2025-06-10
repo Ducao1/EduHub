@@ -1,4 +1,4 @@
-<div *ngIf="questions && questions.length > 0"
+<!-- <div *ngIf="questions && questions.length > 0"
     style="margin: auto; width: 80%; padding: 20px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
     <div class="time-container" style="text-align: center; margin-bottom: 20px;">
         <div class="timer" style="font-size: 1.5em; font-weight: bold; color: #007bff;">
@@ -30,12 +30,6 @@
                     {{answer.answerText}}
                 </label>
             </div>
-
-            <!-- <div *ngIf="question.type === 'ESSAY'">
-                <input type="text" class="form-control" [(ngModel)]="essayAnswer[question.id]"
-                    placeholder="Nhập câu trả lời...">
-            </div> -->
-
         </div>
         <div style="margin-top: 20px; text-align: right;">
             <button class="btn btn-primary" type="submit"
@@ -44,4 +38,78 @@
             </button>
         </div>
     </form>
+</div> -->
+<div *ngIf="questions && questions.length > 0" [class.fullscreen-mode]="isFullscreen" class="exam-container">
+
+    <div class="exam-content">
+        <div class="question-panel">
+            <div class="time-container">
+                <div class="timer">
+                    Thời gian làm bài: {{getFormattedTime()}}
+                </div>
+                <!-- <button class="btn btn-outline-primary" (click)="toggleFullscreen()">
+                    <i class="fas" [class.fa-expand]="!isFullscreen" [class.fa-compress]="isFullscreen"></i>
+                    {{isFullscreen ? 'Thoát Toàn Màn Hình' : 'Toàn Màn Hình'}}
+                </button> -->
+            </div>
+            <form (ngSubmit)="submitExam()">
+                <div *ngIf="questions.length > 0" class="card p-3 mb-3">
+                    <h5 style="font-weight: bold; margin-bottom: 10px;">
+                        {{currentQuestionIndex + 1}}. {{questions[currentQuestionIndex].questionText}}
+                    </h5>
+                    <div *ngIf="questions[currentQuestionIndex].type === 'SINGLE_CHOICE'">
+                        <div *ngFor="let answer of questions[currentQuestionIndex].answers" class="d-block mb-2">
+                            <label class="d-flex align-items-center">
+                                <input type="radio" [name]="'question_' + questions[currentQuestionIndex].id"
+                                    [value]="answer.answerText"
+                                    (change)="onSingleChoiceChange(questions[currentQuestionIndex].id, answer.answerText)"
+                                    [checked]="singleAnswer[questions[currentQuestionIndex].id] === answer.answerText">
+                                <span class="ms-2">{{answer.answerText}}</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div *ngIf="questions[currentQuestionIndex].type === 'MULTI_CHOICE'">
+                        <label *ngFor="let answer of questions[currentQuestionIndex].answers" class="d-block">
+                            <input type="checkbox" [value]="answer.answerText"
+                                (change)="onAnswerChange(questions[currentQuestionIndex].id, answer.answerText, $event)"
+                                [checked]="multipleAnswers[questions[currentQuestionIndex].id].includes(answer.answerText)">
+                            {{answer.answerText}}
+                        </label>
+                    </div>
+                </div>
+            </form>
+            <div class="question-navigation-buttons">
+                <button class="btn btn-primary" (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0"><</button>
+                <button class="btn btn-primary" (click)="nextQuestion()" [disabled]="currentQuestionIndex === questions.length - 1">></button>
+            </div>
+        </div>
+
+        <div class="navigation-panel">
+            <div class="navigation-status-key">
+                <div class="status-item"><span class="status-color answered"></span>Đã Trả Lời</div>
+                <div class="status-item"><span class="status-color not-answered"></span> Chưa Trả Lời</div>
+            </div>
+            <div class="question-numbers">
+                <button *ngFor="let question of questions; let i = index" class="question-number-btn"
+                    [ngClass]="getQuestionStatusClass(question)" [class.active]="currentQuestionIndex === i"
+                    (click)="goToQuestion(i)">
+                    {{i + 1}}
+                </button>
+            </div>
+            <button class="btn btn-success submit-button" (click)="submitExam()">NỘP BÀI</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Popup -->
+<div class="confirmation-popup-overlay" *ngIf="showConfirmSubmitPopup">
+  <div class="confirmation-popup-card">
+    <h3 class="popup-title">Xác Nhận Nộp Bài</h3>
+    <p class="popup-message">Bạn có chắc chắn muốn nộp bài thi?</p>
+    <div class="popup-actions">
+      <button class="btn btn-secondary" (click)="cancelSubmit()">Hủy</button>
+      <button class="btn btn-primary" (click)="confirmSubmitExam()">Xác Nhận</button>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,18 @@
+<div class="session-exam-container">
+  <div class="exam-details-panel">
+    <h2>Exam Session: {{ examName }}</h2>
+    <p>Class: {{ className }}</p>
+    <p>Teacher: {{ teacherName }}</p>
+    <p>Time Remaining: {{ timeRemaining }}</p>
+  </div>
+
+  <div class="student-activity-panel">
+    <h3>Student Activity Log</h3>
+    <div class="activity-log-container">
+      <div *ngFor="let activity of activities" class="activity-item">
+        <span class="timestamp">[{{ activity.timestamp | date:'HH:mm:ss' }}]</span>
+        <span class="message">{{ activity.message }}</span>
+      </div>
+    </div>
+  </div>
+</div>
