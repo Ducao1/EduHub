@@ -1,6 +1,17 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ExamStatus, ExamStatusType, ExamStatusService } from '../../../../services/exam-status.service';
+import { ExamService } from '../../../../services/exam.service';
+
+interface Exam {
+  id: number;
+  title: string;
+  duration: number;
+  class?: { name: string };
+}
 
 @Component({
   selector: 'app-session-exam',
@@ -10,18 +21,33 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './session-exam.component.scss',
   providers: [DatePipe]
 })
-export class SessionExamComponent implements OnInit {
-  examName: string = 'Lập trình Web nâng cao';
-  className: string = 'CNPM3';
+export class SessionExamComponent implements OnInit, OnDestroy {
+  examId: number = 0;
+  examName: string = '';
+  className: string = '';
   teacherName: string = 'Cù Việt Dũng';
   timeRemaining: string = '01:30:00'; // Example, will be dynamic
-  activities: any[] = [];
+  activities: { message: string, timestamp: Date }[] = [];
   students: { id: number, name: string, status: string, time: string }[] = [];
   selectedTab: string = 'students';
+  examStatuses: ExamStatus[] = [];
+  private statusSubscription: Subscription;
+  ExamStatusType = ExamStatusType;
 
-  constructor(private datePipe: DatePipe) {}
+  constructor(
+    private datePipe: DatePipe,
+    private route: ActivatedRoute,
+    private examStatusService: ExamStatusService,
+    private examService: ExamService
+  ) {
+    this.statusSubscription = new Subscription();
+  }
 
   ngOnInit(): void {
+    this.examId = Number(this.route.snapshot.paramMap.get('id'));
+    this.loadExamDetails();
+    this.initializeStatusMonitoring();
+
     // Simulate real-time activity updates
     this.addActivity('Sinh viên Nguyễn Văn A đã tham gia bài thi.', new Date());
     setTimeout(() => {
@@ -51,8 +77,67 @@ export class SessionExamComponent implements OnInit {
     ];
   }
 
+  ngOnDestroy() {
+    this.statusSubscription.unsubscribe();
+    this.examStatusService.disconnect();
+  }
+
+  private loadExamDetails() {
+    this.examService.getExamById(this.examId).subscribe({
+      next: (exam: Exam) => {
+        this.examName = exam.title;
+        this.className = exam.class?.name || '';
+      },
+      error: (err: any) => {
+        console.error('Error loading exam details:', err);
+      }
+    });
+  }
+
+  private initializeStatusMonitoring() {
+    this.statusSubscription = this.examStatusService
+      .subscribeToExamStatus(this.examId)
+      .subscribe((statuses: ExamStatus[]) => {
+        console.log('SessionExamComponent: Received exam statuses:', statuses);
+        this.examStatuses = statuses;
+      });
+
+    console.log('SessionExamComponent: Requesting initial exam statuses for examId:', this.examId);
+    this.examStatusService.getExamStatuses(this.examId);
+  }
+
+  getStatusCount(status: ExamStatusType): number {
+    return this.examStatuses.filter(s => s.status === status).length;
+  }
+
+  getStatusClass(status: ExamStatusType): string {
+    switch (status) {
+      case ExamStatusType.NOT_STARTED:
+        return 'status-not-started';
+      case ExamStatusType.IN_PROGRESS:
+        return 'status-in-progress';
+      case ExamStatusType.SUBMITTED:
+        return 'status-submitted';
+      default:
+        return '';
+    }
+  }
+
+  getStatusText(status: ExamStatusType): string {
+    switch (status) {
+      case ExamStatusType.NOT_STARTED:
+        return 'Chưa bắt đầu';
+      case ExamStatusType.IN_PROGRESS:
+        return 'Đang làm bài';
+      case ExamStatusType.SUBMITTED:
+        return 'Đã nộp bài';
+      default:
+        return '';
+    }
+  }
+
   addActivity(message: string, timestamp: Date) {
-    this.activities.push({ message, timestamp });
+    this.activities.unshift({ message, timestamp });
   }
 
   selectTab(tabName: string) {

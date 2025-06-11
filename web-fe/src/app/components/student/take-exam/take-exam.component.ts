@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, HostListener, QueryList, ViewChildren, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExamService } from '../../../services/exam.service';
@@ -7,6 +7,8 @@ import { SubmissionService } from '../../../services/submission.service';
 import { SubmissionExamDTO } from '../../../dtos/submission-exam.dto';
 import { UserService } from '../../../services/user.service';
 import { SubmissionAnswerDTO } from '../../../dtos/submission-answer.dto';
+import { ExamStatusService, ExamStatusType } from '../../../services/exam-status.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-take-exam',
@@ -18,7 +20,7 @@ import { SubmissionAnswerDTO } from '../../../dtos/submission-answer.dto';
   templateUrl: './take-exam.component.html',
   styleUrl: './take-exam.component.scss'
 })
-export class TakeExamComponent {
+export class TakeExamComponent implements OnInit, OnDestroy {
   exam: any = {};
   examId!: number;
   studentId!: number;
@@ -31,6 +33,9 @@ export class TakeExamComponent {
   multipleAnswers: { [key: number]: string[] } = {};
   isFullscreen: boolean = false;
   showConfirmSubmitPopup: boolean = false;
+  timeLeft: number = 0;
+  timer: any;
+  private statusSubscription: Subscription;
 
   @ViewChildren('questionElement') questionElements!: QueryList<ElementRef>;
 
@@ -39,21 +44,29 @@ export class TakeExamComponent {
     private route: ActivatedRoute,
     private submissionService: SubmissionService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private examStatusService: ExamStatusService
   ) {
-
+    this.statusSubscription = new Subscription();
   }
 
   ngOnInit() {
     this.examId = Number(this.route.snapshot.paramMap.get('id'));
     this.studentId = this.userService.getUserId() ?? 0;
     this.showConfirmationDialog();
+    this.loadExam();
+    this.initializeExamStatus();
   }
 
   ngOnDestroy() {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
     }
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    this.statusSubscription.unsubscribe();
+    this.examStatusService.disconnect();
   }
 
   @HostListener('document:fullscreenchange', ['$event'])
@@ -245,19 +258,61 @@ export class TakeExamComponent {
   }
 
   startTimer() {
-    this.timerInterval = setInterval(() => {
-      if (this.timeremaining > 0) {
-        this.timeremaining--;
+    this.timeLeft = this.exam.duration * 60; // Convert minutes to seconds
+    this.timer = setInterval(() => {
+      if (this.timeLeft > 0) {
+        this.timeLeft--;
       } else {
-        clearInterval(this.timerInterval);
         this.submitExam();
       }
     }, 1000);
   }
 
   getFormattedTime(): string {
-    const minutes = Math.floor(this.timeremaining / 60);
-    const seconds = this.timeremaining % 60;
+    const minutes = Math.floor(this.timeLeft / 60);
+    const seconds = this.timeLeft % 60;
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  }
+
+  private loadExam() {
+    this.examService.getExamById(this.examId).subscribe({
+      next: (response) => {
+        this.exam = response;
+        this.initializeAnswers();
+        this.startTimer();
+        this.updateExamStatus(ExamStatusType.IN_PROGRESS);
+      },
+      error: (error) => {
+        console.error('Error loading exam:', error);
+      }
+    });
+  }
+
+  private initializeAnswers() {
+    this.answers = this.exam.questions.map((question: any) => ({
+      questionId: question.id,
+      selectedAnswerId: null
+    }));
+  }
+
+  private initializeExamStatus() {
+    const userId = this.userService.getUserId();
+    if (userId) {
+      this.examStatusService.updateStatus(this.examId, userId, ExamStatusType.IN_PROGRESS);
+    }
+  }
+
+  private updateExamStatus(status: ExamStatusType) {
+    const userId = this.userService.getUserId();
+    if (userId) {
+      this.examStatusService.updateStatus(this.examId, userId, status);
+    }
+  }
+
+  onAnswerSelect(questionId: number, answerId: number) {
+    const answer = this.answers.find(a => a.questionId === questionId);
+    if (answer) {
+      answer.selectedAnswerId = answerId;
+    }
   }
 }

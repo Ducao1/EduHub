@@ -1,37 +1,63 @@
-<div class="session-exam-container">
-  <div class="exam-details-panel">
-    <h2>Exam Session: {{ examName }}</h2>
-    <p>Class: {{ className }}</p>
-    <p>Teacher: {{ teacherName }}</p>
-    <p>Time Remaining: {{ timeRemaining }}</p>
-  </div>
-
-  <div class="main-content-panel">
-    <div class="tabs">
-      <button [class.active]="selectedTab === 'students'" (click)="selectTab('students')">Danh sách sinh viên</button>
-      <button [class.active]="selectedTab === 'activityLog'" (click)="selectTab('activityLog')">Theo dõi bài thi</button>
+<div class="session-container">
+    <div class="session-header">
+        <h2>{{ examName }}</h2>
+        <div class="class-info">{{ className }}</div>
     </div>
 
-    <div *ngIf="selectedTab === 'students'" class="students-list-panel">
-      <div class="student-cards-container">
-        <div *ngFor="let student of students" class="student-card">
-          <div class="student-avatar">{{ student.name | slice:0:2 | uppercase }}</div>
-          <div class="student-info">
-            <span class="student-name">{{ student.name }}</span>
-            <span class="student-status">{{ student.status }}</span>
-            <span class="student-time">Thời gian làm bài: {{ student.time }}</span>
-          </div>
+    <div class="status-summary">
+        <div class="status-card" [ngClass]="getStatusClass(ExamStatusType.NOT_STARTED)">
+            <div class="status-count">{{ getStatusCount(ExamStatusType.NOT_STARTED) }}</div>
+            <div class="status-label">{{ getStatusText(ExamStatusType.NOT_STARTED) }}</div>
         </div>
-      </div>
+        <div class="status-card" [ngClass]="getStatusClass(ExamStatusType.IN_PROGRESS)">
+            <div class="status-count">{{ getStatusCount(ExamStatusType.IN_PROGRESS) }}</div>
+            <div class="status-label">{{ getStatusText(ExamStatusType.IN_PROGRESS) }}</div>
+        </div>
+        <div class="status-card" [ngClass]="getStatusClass(ExamStatusType.SUBMITTED)">
+            <div class="status-count">{{ getStatusCount(ExamStatusType.SUBMITTED) }}</div>
+            <div class="status-label">{{ getStatusText(ExamStatusType.SUBMITTED) }}</div>
+        </div>
     </div>
 
-    <div *ngIf="selectedTab === 'activityLog'" class="activity-log-panel">
-      <div class="activity-log-container">
-        <div *ngFor="let activity of activities" class="activity-item">
-          <span class="timestamp">[{{ activity.timestamp | date:'HH:mm:ss' }}]</span>
-          <span class="message">{{ activity.message }}</span>
+    <div class="session-content">
+        <div class="tab-container">
+            <div class="tab-header">
+                <button [class.active]="selectedTab === 'students'" (click)="selectedTab = 'students'">
+                    Danh sách sinh viên
+                </button>
+                <button [class.active]="selectedTab === 'activity'" (click)="selectedTab = 'activity'">
+                    Hoạt động
+                </button>
+            </div>
+
+            <div class="tab-content" *ngIf="selectedTab === 'students'">
+                <div class="student-list">
+                    <div class="student-item" *ngFor="let status of examStatuses">
+                        <div class="student-info">
+                            <span class="student-name">{{ status.student.name }}</span>
+                            <span class="student-id">MSSV: {{ status.student.id }}</span>
+                        </div>
+                        <div class="student-status" [ngClass]="getStatusClass(status.status)">
+                            {{ getStatusText(status.status) }}
+                        </div>
+                        <div class="student-time" *ngIf="status.startTime">
+                            Bắt đầu: {{ status.startTime | date:'HH:mm:ss' }}
+                        </div>
+                        <div class="student-time" *ngIf="status.submitTime">
+                            Nộp bài: {{ status.submitTime | date:'HH:mm:ss' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" *ngIf="selectedTab === 'activity'">
+                <div class="activity-list">
+                    <div class="activity-item" *ngFor="let activity of activities">
+                        <div class="activity-message">{{ activity.message }}</div>
+                        <div class="activity-time">{{ activity.timestamp | date:'HH:mm:ss' }}</div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
