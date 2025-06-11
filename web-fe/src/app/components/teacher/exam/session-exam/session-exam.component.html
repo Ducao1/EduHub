@@ -6,12 +6,31 @@
     <p>Time Remaining: {{ timeRemaining }}</p>
   </div>
 
-  <div class="student-activity-panel">
-    <h3>Student Activity Log</h3>
-    <div class="activity-log-container">
-      <div *ngFor="let activity of activities" class="activity-item">
-        <span class="timestamp">[{{ activity.timestamp | date:'HH:mm:ss' }}]</span>
-        <span class="message">{{ activity.message }}</span>
+  <div class="main-content-panel">
+    <div class="tabs">
+      <button [class.active]="selectedTab === 'students'" (click)="selectTab('students')">Danh sách sinh viên</button>
+      <button [class.active]="selectedTab === 'activityLog'" (click)="selectTab('activityLog')">Theo dõi bài thi</button>
+    </div>
+
+    <div *ngIf="selectedTab === 'students'" class="students-list-panel">
+      <div class="student-cards-container">
+        <div *ngFor="let student of students" class="student-card">
+          <div class="student-avatar">{{ student.name | slice:0:2 | uppercase }}</div>
+          <div class="student-info">
+            <span class="student-name">{{ student.name }}</span>
+            <span class="student-status">{{ student.status }}</span>
+            <span class="student-time">Thời gian làm bài: {{ student.time }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="selectedTab === 'activityLog'" class="activity-log-panel">
+      <div class="activity-log-container">
+        <div *ngFor="let activity of activities" class="activity-item">
+          <span class="timestamp">[{{ activity.timestamp | date:'HH:mm:ss' }}]</span>
+          <span class="message">{{ activity.message }}</span>
+        </div>
       </div>
     </div>
   </div>

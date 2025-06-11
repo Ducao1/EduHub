@@ -87,6 +87,6 @@ export class ClassListExamComponent implements OnInit {
   }
 
   viewScores(examId: number) {
-    alert('Xem điểm bài thi: ' + examId);
+    this.router.navigate(['/teacher/list-score', examId]);
   }
 }
