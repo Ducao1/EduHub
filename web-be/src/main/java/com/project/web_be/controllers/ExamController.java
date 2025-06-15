@@ -3,7 +3,7 @@ package com.project.web_be.controllers;
 
 import com.project.web_be.dtos.ExamDTO;
 import com.project.web_be.entities.Exam;
-import com.project.web_be.responses.ExamResponse;
+import com.project.web_be.dtos.responses.ExamResponse;
 import com.project.web_be.services.Impl.ExamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController

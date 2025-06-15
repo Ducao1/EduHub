@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
-import { AddClassDTO } from '../dtos/add-class.dto';
+import { AddClassDTO } from '../dtos/requests/add-class.dto';
 
 @Injectable({
   providedIn: 'root'

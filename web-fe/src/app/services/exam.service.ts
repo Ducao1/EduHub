@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { HttpUtilService } from './http.util.service';
-import { ExamDTO } from '../dtos/exam.dto';
+import { ExamDTO } from '../dtos/requests/exam.dto';
 
 @Injectable({
   providedIn: 'root'

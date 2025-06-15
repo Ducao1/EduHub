@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { AssignmentDTO } from '../dtos/assignment.dto';
+import { AssignmentDTO } from '../dtos/requests/assignment.dto';
 import { HttpUtilService } from './http.util.service';
 
 @Injectable({

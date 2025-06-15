@@ -1,118 +1,144 @@
 import { Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { environment } from '../environments/environment';
+import { BehaviorSubject, filter, Observable, take } from 'rxjs';
+import { map } from 'rxjs/operators';
 import SockJS from 'sockjs-client';
-
-export enum ExamStatusType {
-  NOT_STARTED = 'NOT_STARTED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  SUBMITTED = 'SUBMITTED'
-}
-
-export interface ExamStatus {
-  id: number;
-  exam: {
-    id: number;
-    title: string;
-  };
-  studentId: number;
-  student: {
-    id: number;
-    name: string;
-  };
-  status: ExamStatusType;
-  startTime?: number;
-  submitTime?: number;
-}
+import { environment } from '../environments/environment';
+import { ExamStatusType } from '../dtos/enums/exam-status-type.enum';
+import { ExamStatus } from '../interfaces/exam-status';
+import { StudentExamStatusDTO } from '../dtos/responses/student-exam-status.dto';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExamStatusService {
-  private stompClient: Client = new Client();
-  private statusSubject = new BehaviorSubject<ExamStatus[]>([]);
-  private connected = false;
+  private stompClient: Client | null = null;
+  private statusSubject: BehaviorSubject<ExamStatus[]> = new BehaviorSubject<ExamStatus[]>([]);
+  private studentStatusSubject: BehaviorSubject<StudentExamStatusDTO[]> = new BehaviorSubject<StudentExamStatusDTO[]>([]);
+  private connectionSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  
+  public statuses$: Observable<ExamStatus[]> = this.statusSubject.asObservable();
+  public studentStatuses$: Observable<StudentExamStatusDTO[]> = this.studentStatusSubject.asObservable();
+  public connectionStatus$: Observable<boolean> = this.connectionSubject.asObservable();
 
   constructor() {
-    this.initializeWebSocketConnection();
+    this.initializeWebSocket();
   }
 
-  private initializeWebSocketConnection() {
+  private initializeWebSocket() {
     this.stompClient = new Client({
-      webSocketFactory: () => new SockJS(`http://localhost:8080/ws`),
+      webSocketFactory: () => new SockJS(environment.wsUrl),
       onConnect: () => {
-        this.connected = true;
         console.log('Connected to WebSocket');
+        this.connectionSubject.next(true);
       },
       onDisconnect: () => {
-        this.connected = false;
         console.log('Disconnected from WebSocket');
+        this.connectionSubject.next(false);
+      },
+      onStompError: (frame) => {
+        console.error('Broker reported error: ' + frame.headers['message']);
+        console.error('Additional details: ' + frame.body);
+      },
+      debug: (str) => {
+        // console.log(new Date(), str); // Uncomment for detailed STOMP debugging
       }
     });
 
     this.stompClient.activate();
   }
 
-  subscribeToExamStatus(examId: number): Observable<ExamStatus[]> {
-    if (this.connected) {
-      console.log(`Subscribing to /topic/exam/${examId}/status`);
-      this.stompClient.subscribe(`/topic/exam/${examId}/status`, (message) => {
-        console.log('Received message from WebSocket:', message.body);
-        try {
-          const payload = JSON.parse(message.body);
-          console.log('Parsed payload:', payload);
+  // Cập nhật trạng thái bài thi
+  updateStatus(examId: number, studentId: number, status: ExamStatusType): void {
+    this.connectionStatus$.pipe(filter(connected => connected), take(1)).subscribe(() => {
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.publish({
+          destination: '/app/exam/status/update',
+          body: JSON.stringify({ examId, studentId, status }),
+        });
+      }
+    });
+  }
 
-          if (Array.isArray(payload)) {
-            // Initial load or full list update
-            this.statusSubject.next(payload);
-          } else {
-            // Single status update
-            const currentStatuses = this.statusSubject.getValue();
-            const updatedStatuses = currentStatuses.map(status =>
-              status.id === payload.id ? payload : status
-            );
-            // If the payload is a new status (not in the current list), add it
-            if (!updatedStatuses.some(status => status.id === payload.id)) {
-              updatedStatuses.push(payload);
-            }
-            this.statusSubject.next(updatedStatuses);
-          }
-        } catch (e) {
-          console.error('Error parsing WebSocket message:', e, 'Message body:', message.body);
-        }
-      });
+  // Lấy danh sách trạng thái của bài thi
+  getExamStatuses(examId: number): Observable<ExamStatus[]> {
+    this.connectionStatus$.pipe(filter(connected => connected), take(1)).subscribe(() => {
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.publish({
+          destination: '/app/exam/status/get',
+          body: JSON.stringify({ examId }),
+        });
+      }
+    });
+    return this.statuses$;
+  }
+
+  // Lấy danh sách sinh viên và trạng thái bài thi trong lớp
+  getClassStudentsWithExamStatus(examId: number, classId: number): void {
+    this.connectionStatus$.pipe(filter(connected => connected), take(1)).subscribe(() => {
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.publish({
+          destination: '/app/exam/class/students/status',
+          body: JSON.stringify({ examId, classId }),
+        });
+      }
+    });
+  }
+
+  // Cập nhật trạng thái cục bộ
+  private updateLocalStatus(examStatus: ExamStatus): void {
+    const currentStatuses = this.statusSubject.value;
+    const index = currentStatuses.findIndex(s => s.student?.id === examStatus.student?.id);
+    if (index !== -1) {
+      currentStatuses[index] = examStatus;
     } else {
-      console.warn('STOMP client not connected. Cannot subscribe to exam status.');
+      currentStatuses.push(examStatus);
     }
+    this.statusSubject.next([...currentStatuses]);
+  }
+
+  // Cập nhật trạng thái sinh viên cục bộ
+  private updateLocalStudentStatus(studentStatus: StudentExamStatusDTO): void {
+    const currentStatuses = this.studentStatusSubject.value;
+    const index = currentStatuses.findIndex(s => s.studentId === studentStatus.studentId);
+    if (index !== -1) {
+      currentStatuses[index] = studentStatus;
+    } else {
+      currentStatuses.push(studentStatus);
+    }
+    this.studentStatusSubject.next([...currentStatuses]);
+  }
+
+  // Đăng ký nhận cập nhật trạng thái bài thi
+  subscribeToExamStatus(examId: number): Observable<ExamStatus[]> {
+    this.connectionStatus$.pipe(filter(connected => connected), take(1)).subscribe(() => {
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.subscribe(`/topic/exam/${examId}/status`, (message) => {
+          const statuses: ExamStatus[] = JSON.parse(message.body);
+          this.statusSubject.next(statuses);
+        });
+      }
+    });
     return this.statusSubject.asObservable();
   }
 
-  updateStatus(examId: number, studentId: number, status: ExamStatusType) {
-    if (this.connected) {
-      const messageBody = JSON.stringify({ examId, studentId, status });
-      console.log('Publishing update status:', messageBody);
-      this.stompClient.publish({
-        destination: '/app/exam/status/update',
-        body: messageBody
-      });
-    }
+  // Đăng ký nhận cập nhật trạng thái sinh viên trong lớp
+  subscribeToClassStudentsStatus(examId: number, classId: number): void {
+    this.connectionStatus$.pipe(filter(connected => connected), take(1)).subscribe(() => {
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.subscribe(`/topic/exam/${examId}/class/${classId}/students`, (message) => {
+          const studentStatuses: StudentExamStatusDTO[] = JSON.parse(message.body)
+            .map((data: any) => new StudentExamStatusDTO(data));
+          this.studentStatusSubject.next(studentStatuses);
+        });
+      }
+    });
   }
 
-  getExamStatuses(examId: number) {
-    if (this.connected) {
-      const messageBody = JSON.stringify({ examId });
-      console.log('Publishing get exam statuses:', messageBody);
-      this.stompClient.publish({
-        destination: '/app/exam/status/get',
-        body: messageBody
-      });
-    }
-  }
-
-  disconnect() {
+  // Ngắt kết nối WebSocket
+  disconnect(): void {
     if (this.stompClient) {
       this.stompClient.deactivate();
     }
   }
-} 
+}

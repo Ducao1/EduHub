@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { HttpUtilService } from './http.util.service';
-import { SubmissionExamDTO } from '../dtos/submission-exam.dto';
+import { SubmissionExamDTO } from '../dtos/requests/submission-exam.dto';
 
 @Injectable({
   providedIn: 'root'

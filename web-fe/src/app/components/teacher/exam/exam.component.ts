@@ -6,7 +6,7 @@ import { UserService } from '../../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { ClassroomService } from '../../../services/classroom.service';
 import { ClassExamService } from '../../../services/class-exam.service';
-import { AssignExamDTO } from '../../../dtos/assign-exam.dto';
+import { AssignExamDTO } from '../../../dtos/requests/assign-exam.dto';
 import { Router } from '@angular/router';
 
 @Component({

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { UserService } from '../../services/user.service';
 import { TokenService } from '../../services/token.service';
-import { LoginDTO } from '../../dtos/login.dto';
+import { LoginDTO } from '../../dtos/requests/login.dto';
 import { FooterComponent } from "../footer/footer.component";
 import { CommonModule } from '@angular/common';
 

@@ -3,9 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuestionService } from '../../../../services/question.service';
-import { QuestionDTO } from '../../../../dtos/question.dto';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AnswerService } from '../../../../services/answer.service';
+import { QuestionDTO } from '../../../../dtos/requests/question.dto';
 
 @Component({
   selector: 'app-add-question',

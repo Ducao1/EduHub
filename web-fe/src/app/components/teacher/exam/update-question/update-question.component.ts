@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { QuestionService } from '../../../../services/question.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { QuestionDTO } from '../../../../dtos/question.dto';
+import { QuestionDTO } from '../../../../dtos/requests/question.dto';
 
 @Component({
   selector: 'app-update-question',

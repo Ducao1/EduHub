@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { QuestionService } from '../../../../services/question.service';
-import { QuestionDTO } from '../../../../dtos/question.dto';
+import { QuestionDTO } from '../../../../dtos/requests/question.dto';
 
 @Component({
   selector: 'app-detail-exam',

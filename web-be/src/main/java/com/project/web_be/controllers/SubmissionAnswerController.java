@@ -2,7 +2,7 @@ package com.project.web_be.controllers;
 
 import com.project.web_be.dtos.SubmissionAnswerDTO;
 import com.project.web_be.entities.SubmissionAnswer;
-import com.project.web_be.responses.SubmissionAnswerResponse;
+import com.project.web_be.dtos.responses.SubmissionAnswerResponse;
 import com.project.web_be.services.Impl.SubmissionAnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

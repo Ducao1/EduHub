@@ -3,9 +3,8 @@ package com.project.web_be.controllers;
 import com.project.web_be.dtos.SubmissionExamDTO;
 import com.project.web_be.entities.Submission;
 import com.project.web_be.exceptions.DataNotFoundException;
-import com.project.web_be.responses.AssignedExamResponse;
-import com.project.web_be.responses.ListSubmissionResponse;
-import com.project.web_be.responses.SubmitExamResponse;
+import com.project.web_be.dtos.responses.ListSubmissionResponse;
+import com.project.web_be.dtos.responses.SubmitExamResponse;
 import com.project.web_be.services.Impl.SubmissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.prefix}/submissions")

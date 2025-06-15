@@ -3,15 +3,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ExamStatus, ExamStatusType, ExamStatusService } from '../../../../services/exam-status.service';
 import { ExamService } from '../../../../services/exam.service';
-
-interface Exam {
-  id: number;
-  title: string;
-  duration: number;
-  class?: { name: string };
-}
+import { EnrollmentService } from '../../../../services/enrollment.service';
+import { ExamStatusType } from '../../../../dtos/enums/exam-status-type.enum';
+import { Exam } from '../../../../interfaces/exam';
+import { ExamStatus } from '../../../../interfaces/exam-status';
+import { ExamStatusService } from '../../../../services/exam-status.service';
+import { StudentExamStatus } from '../../../../interfaces/student-exam-status';
 
 @Component({
   selector: 'app-session-exam',
@@ -19,95 +17,80 @@ interface Exam {
   imports: [CommonModule, FormsModule],
   templateUrl: './session-exam.component.html',
   styleUrl: './session-exam.component.scss',
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class SessionExamComponent implements OnInit, OnDestroy {
   examId: number = 0;
   examName: string = '';
   className: string = '';
+  classId: number = 0;
   teacherName: string = 'Cù Việt Dũng';
-  timeRemaining: string = '01:30:00'; // Example, will be dynamic
-  activities: { message: string, timestamp: Date }[] = [];
-  students: { id: number, name: string, status: string, time: string }[] = [];
+  timeRemaining: string = '01:30:00';
+  activities: { message: string; timestamp: Date }[] = [];
   selectedTab: string = 'students';
   examStatuses: ExamStatus[] = [];
   private statusSubscription: Subscription;
   ExamStatusType = ExamStatusType;
+  students: StudentExamStatus[] = [];
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private datePipe: DatePipe,
     private route: ActivatedRoute,
     private examStatusService: ExamStatusService,
-    private examService: ExamService
+    private examService: ExamService,
   ) {
     this.statusSubscription = new Subscription();
+    this.examId = Number(this.route.snapshot.paramMap.get('examId'));
+    this.classId = Number(this.route.snapshot.paramMap.get('classId'));
   }
 
   ngOnInit(): void {
-    this.examId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadExamDetails();
     this.initializeStatusMonitoring();
+    this.examStatusService.subscribeToClassStudentsStatus(this.examId, this.classId);
+    
+    // Request initial list of students
+    this.examStatusService.getClassStudentsWithExamStatus(this.examId, this.classId);
 
-    // Simulate real-time activity updates
-    this.addActivity('Sinh viên Nguyễn Văn A đã tham gia bài thi.', new Date());
-    setTimeout(() => {
-      this.addActivity('Sinh viên Trần Thị B đã nộp bài.', new Date());
-    }, 5000);
-    setTimeout(() => {
-      this.addActivity('Sinh viên Lê Văn C đã thoát màn hình.', new Date());
-    }, 10000);
-    setTimeout(() => {
-      this.addActivity('Sinh viên Phạm Thị D đã chuyển tab.', new Date());
-    }, 15000);
-
-    // Simulate student data
-    this.students = [
-      { id: 1, name: 'Nguyễn Ngọc Quỳnh Anh', status: 'Đang thi', time: '1 phút' },
-      { id: 2, name: 'Đinh Ngọc Cẩm Tiên', status: 'Đang thi', time: '57 giây' },
-      { id: 3, name: 'Nguyễn Ngọc Thanh Vân', status: 'Đang thi', time: '56 giây' },
-      { id: 4, name: 'Nguyễn Ngọc Quỳnh Như', status: 'Đang thi', time: '34 giây' },
-      { id: 5, name: 'Nguyễn Ngọc Tuyết Nhi', status: 'Đang thi', time: '42 giây' },
-      { id: 6, name: 'Anh Thư', status: 'Đang thi', time: '1 phút' },
-      { id: 7, name: 'Nguyễn Thanh Giang', status: 'Đang thi', time: '30 giây' },
-      { id: 8, name: '26 Đỗ thành tâm 8/7', status: 'Đang thi', time: '1 phút' },
-      { id: 9, name: 'Trần Kiều Mi', status: 'Đang thi', time: '35 giây' },
-      { id: 10, name: 'Phạm Minh Phước', status: 'Đang thi', time: '44 giây' },
-      { id: 11, name: '28.Nguyễn Hoàng Phi', status: 'Đang thi', time: '1 phút' },
-      { id: 12, name: 'tống vũ khánh vân', status: 'Đang thi', time: '1 phút' },
-    ];
+    this.subscriptions.push(
+      this.examStatusService.studentStatuses$
+        .subscribe(students => {
+          this.students = students;
+        })
+    );
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.statusSubscription.unsubscribe();
     this.examStatusService.disconnect();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  private loadExamDetails() {
+  private loadExamDetails(): void {
     this.examService.getExamById(this.examId).subscribe({
       next: (exam: Exam) => {
         this.examName = exam.title;
-        this.className = exam.class?.name || '';
+        const classExam = exam.classExams?.find(ce => ce.classroom?.id === this.classId);
+        this.className = classExam?.classroom?.name || '';
+        this.classId = classExam?.classroom?.id || 0;
       },
       error: (err: any) => {
         console.error('Error loading exam details:', err);
-      }
+      },
     });
   }
 
-  private initializeStatusMonitoring() {
+  private initializeStatusMonitoring(): void {
     this.statusSubscription = this.examStatusService
       .subscribeToExamStatus(this.examId)
       .subscribe((statuses: ExamStatus[]) => {
-        console.log('SessionExamComponent: Received exam statuses:', statuses);
         this.examStatuses = statuses;
       });
-
-    console.log('SessionExamComponent: Requesting initial exam statuses for examId:', this.examId);
-    this.examStatusService.getExamStatuses(this.examId);
   }
 
   getStatusCount(status: ExamStatusType): number {
-    return this.examStatuses.filter(s => s.status === status).length;
+    return this.students.filter(s => s.status === status).length;
   }
 
   getStatusClass(status: ExamStatusType): string {
@@ -136,11 +119,13 @@ export class SessionExamComponent implements OnInit, OnDestroy {
     }
   }
 
-  addActivity(message: string, timestamp: Date) {
-    this.activities.unshift({ message, timestamp });
+  selectTab(tabName: string): void {
+    this.selectedTab = tabName;
   }
 
-  selectTab(tabName: string) {
-    this.selectedTab = tabName;
+  getTimeString(timestamp: number | null): string {
+    if (!timestamp) return '-';
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('vi-VN');
   }
 }

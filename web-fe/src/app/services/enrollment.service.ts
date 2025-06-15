@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { EnrollmentDTO } from '../dtos/enrollment.dto';
+import { EnrollmentDTO } from '../dtos/requests/enrollment.dto';
 import { HttpUtilService } from './http.util.service';
-import { JoinClassDTO } from '../dtos/join-class.dto';
+import { JoinClassDTO } from '../dtos/requests/join-class.dto';
 
 @Injectable({
   providedIn: 'root'

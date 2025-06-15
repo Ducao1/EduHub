@@ -2,7 +2,7 @@ package com.project.web_be.controllers;
 
 import com.project.web_be.dtos.AssignmentDTO;
 import com.project.web_be.entities.Assignment;
-import com.project.web_be.responses.AssignmentResponse;
+import com.project.web_be.dtos.responses.AssignmentResponse;
 import com.project.web_be.services.Impl.AssignmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

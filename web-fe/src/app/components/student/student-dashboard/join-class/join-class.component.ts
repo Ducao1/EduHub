@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EnrollmentService } from '../../../../services/enrollment.service';
-import { JoinClassDTO } from '../../../../dtos/join-class.dto';
+import { JoinClassDTO } from '../../../../dtos/requests/join-class.dto';
 import { UserService } from '../../../../services/user.service';
 
 @Component({

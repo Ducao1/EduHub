@@ -43,6 +43,7 @@ public class WebSecurityConfig {
                                     String.format("%s/users/register", apiPrefix),
                                     String.format("%s/users/login", apiPrefix),
                                     String.format("%s/ws/**", apiPrefix),
+                                    String.format("%s/ws/**", apiPrefix),
                                     "ws/**"
                             )
                             .permitAll()

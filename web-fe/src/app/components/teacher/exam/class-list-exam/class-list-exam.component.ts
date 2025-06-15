@@ -83,7 +83,8 @@ export class ClassListExamComponent implements OnInit {
   }
 
   monitorExam(examId: number) {
-    this.router.navigate(['/session-exam', examId]);
+    debugger
+    this.router.navigate(['/session-exam', examId, 'class', this.classId]);
   }
 
   viewScores(examId: number) {

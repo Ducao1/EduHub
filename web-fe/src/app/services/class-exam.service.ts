@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { HttpUtilService } from './http.util.service';
-import { AssignExamDTO } from '../dtos/assign-exam.dto';
-import { JoinClassDTO } from '../dtos/join-class.dto';
+import { AssignExamDTO } from '../dtos/requests/assign-exam.dto';
+import { JoinClassDTO } from '../dtos/requests/join-class.dto';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 

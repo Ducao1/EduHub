@@ -2,7 +2,6 @@ package com.project.web_be.controllers;
 
 import com.project.web_be.dtos.QuestionDTO;
 import com.project.web_be.entities.Question;
-import com.project.web_be.responses.QuestionResponse;
 import com.project.web_be.services.Impl.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

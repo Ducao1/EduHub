@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ExamService } from '../../../../services/exam.service';
-import { ExamDTO } from '../../../../dtos/exam.dto';
+import { ExamDTO } from '../../../../dtos/requests/exam.dto';
 import { UserService } from '../../../../services/user.service';
 import { FormsModule } from '@angular/forms';
 

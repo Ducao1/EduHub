@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExamService } from '../../../services/exam.service';
 import { SubmissionService } from '../../../services/submission.service';
-import { SubmissionExamDTO } from '../../../dtos/submission-exam.dto';
 import { UserService } from '../../../services/user.service';
-import { SubmissionAnswerDTO } from '../../../dtos/submission-answer.dto';
-import { ExamStatusService, ExamStatusType } from '../../../services/exam-status.service';
+import { SubmissionAnswerDTO } from '../../../dtos/requests/submission-answer.dto';
 import { Subscription } from 'rxjs';
+import { ExamStatusType } from '../../../dtos/enums/exam-status-type.enum';
+import { SubmissionExamDTO } from '../../../dtos/requests/submission-exam.dto';
+import { ExamStatusService } from '../../../services/exam-status.service';
 
 @Component({
   selector: 'app-take-exam',

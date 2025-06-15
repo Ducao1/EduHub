@@ -3,7 +3,7 @@ import { Component, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { EnrollmentService } from '../../../../services/enrollment.service';
-import { EnrollmentDTO } from '../../../../dtos/enrollment.dto';
+import { EnrollmentDTO } from '../../../../dtos/requests/enrollment.dto';
 
 @Component({
   selector: 'app-add-student',

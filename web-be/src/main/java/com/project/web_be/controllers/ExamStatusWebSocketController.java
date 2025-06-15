@@ -1,6 +1,10 @@
 package com.project.web_be.controllers;
 
 import com.project.web_be.dtos.enums.ExamStatusType;
+import com.project.web_be.dtos.requests.ExamClassRequest;
+import com.project.web_be.dtos.requests.ExamGetStatusRequest;
+import com.project.web_be.dtos.requests.ExamStatusUpdateRequest;
+import com.project.web_be.dtos.responses.StudentExamStatusResponse;
 import com.project.web_be.entities.ExamStatus;
 import com.project.web_be.services.IExamStatusService;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +24,21 @@ public class ExamStatusWebSocketController {
 
     @MessageMapping("/exam/status/update")
     @SendTo("/topic/exam/{examId}/status")
-    public ExamStatus updateStatus(Long examId, Long studentId, ExamStatusType status) {
-        ExamStatus examStatus = examStatusService.updateStatus(examId, studentId, status);
-        messagingTemplate.convertAndSend("/topic/exam/" + examId + "/status", examStatus);
+    public ExamStatus updateStatus(ExamStatusUpdateRequest request) {
+        ExamStatus examStatus = examStatusService.updateStatus(request.getExamId(), request.getStudentId(), request.getStatus());
+        messagingTemplate.convertAndSend("/topic/exam/" + request.getExamId() + "/status", examStatus);
         return examStatus;
     }
 
     @MessageMapping("/exam/status/get")
     @SendTo("/topic/exam/{examId}/status")
-    public List<ExamStatus> getExamStatuses(Long examId) {
-        return examStatusService.getExamStatuses(examId);
+    public List<ExamStatus> getExamStatuses(ExamGetStatusRequest request) {
+        return examStatusService.getExamStatuses(request.getExamId());
+    }
+
+    @MessageMapping("/exam/class/students/status")
+    @SendTo("/topic/exam/{examId}/class/{classId}/students")
+    public List<StudentExamStatusResponse> getClassStudentsWithExamStatus(ExamClassRequest request) {
+        return examStatusService.getClassStudentsWithExamStatus(request.getExamId(), request.getClassId());
     }
 } 

@@ -87,5 +87,5 @@ export const routes: Routes = [
   { path: 'take-exam/:id', component: TakeExamComponent },
   { path: 'confirm-exam/:id', component: ConfirmExamComponent },
   { path: 'result-exam/:id', component: ResultExamComponent },
-  { path: 'session-exam/:id', component: SessionExamComponent },
+  { path: 'session-exam/:examId/class/:classId', component: SessionExamComponent },
 ];

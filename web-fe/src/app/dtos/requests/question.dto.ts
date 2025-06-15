@@ -1,5 +1,6 @@
 import { AnswerDTO } from "./answer.dto";
 
+
 export class QuestionDTO {
     question_text!: string;
     type!: string;
