@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
 import { BehaviorSubject, filter, Observable, take } from 'rxjs';
-import { map } from 'rxjs/operators';
 import SockJS from 'sockjs-client';
 import { environment } from '../environments/environment';
 import { ExamStatusType } from '../dtos/enums/exam-status-type.enum';
@@ -16,7 +15,11 @@ export class ExamStatusService {
   private statusSubject: BehaviorSubject<ExamStatus[]> = new BehaviorSubject<ExamStatus[]>([]);
   private studentStatusSubject: BehaviorSubject<StudentExamStatusDTO[]> = new BehaviorSubject<StudentExamStatusDTO[]>([]);
   private connectionSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  
+  private reconnectAttempts: number = 0;
+  private readonly maxReconnectAttempts: number = 5;
+  private readonly reconnectInterval: number = 5000; // 5 seconds
+  private pendingStatusUpdates: { examId: number, studentId: number, status: ExamStatusType, classId: number }[] = [];
+
   public statuses$: Observable<ExamStatus[]> = this.statusSubject.asObservable();
   public studentStatuses$: Observable<StudentExamStatusDTO[]> = this.studentStatusSubject.asObservable();
   public connectionStatus$: Observable<boolean> = this.connectionSubject.asObservable();
@@ -29,40 +32,86 @@ export class ExamStatusService {
     this.stompClient = new Client({
       webSocketFactory: () => new SockJS(environment.wsUrl),
       onConnect: () => {
-        console.log('Connected to WebSocket');
+        console.log('Kết nối WebSocket thành công');
         this.connectionSubject.next(true);
+        this.reconnectAttempts = 0;
+        this.processPendingUpdates(); // Xử lý các cập nhật trạng thái đang chờ
       },
       onDisconnect: () => {
-        console.log('Disconnected from WebSocket');
+        console.log('Ngắt kết nối WebSocket');
         this.connectionSubject.next(false);
+        this.attemptReconnect();
       },
       onStompError: (frame) => {
-        console.error('Broker reported error: ' + frame.headers['message']);
-        console.error('Additional details: ' + frame.body);
+        console.error('Lỗi từ broker: ' + frame.headers['message']);
+        console.error('Chi tiết: ' + frame.body);
+        this.attemptReconnect();
       },
       debug: (str) => {
         // console.log(new Date(), str); // Uncomment for detailed STOMP debugging
-      }
+      },
+      reconnectDelay: 5000
     });
 
     this.stompClient.activate();
   }
 
-  // Cập nhật trạng thái bài thi
-  updateStatus(examId: number, studentId: number, status: ExamStatusType): void {
-    this.connectionStatus$.pipe(filter(connected => connected), take(1)).subscribe(() => {
-      if (this.stompClient && this.stompClient.connected) {
-        this.stompClient.publish({
-          destination: '/app/exam/status/update',
-          body: JSON.stringify({ examId, studentId, status }),
-        });
-      }
-    });
+  private attemptReconnect() {
+    if (this.reconnectAttempts < this.maxReconnectAttempts) {
+      this.reconnectAttempts++;
+      console.log(`Thử kết nối lại lần ${this.reconnectAttempts}/${this.maxReconnectAttempts}`);
+      setTimeout(() => {
+        if (this.stompClient && !this.stompClient.connected) {
+          this.stompClient.activate();
+        }
+      }, this.reconnectInterval);
+    } else {
+      console.error('Đã đạt số lần thử kết nối lại tối đa');
+    }
   }
 
-  // Lấy danh sách trạng thái của bài thi
+  private processPendingUpdates() {
+    if (this.pendingStatusUpdates.length > 0) {
+      this.pendingStatusUpdates.forEach(update => {
+        this.stompClient?.publish({
+          destination: '/app/exam/status/update',
+          body: JSON.stringify({
+            examId: update.examId,
+            studentId: update.studentId,
+            status: update.status,
+            classId: update.classId
+          }),
+        });
+      });
+      this.pendingStatusUpdates = [];
+    }
+  }
+
+  private executeWhenConnected(action: () => void) {
+    if (this.stompClient && this.stompClient.connected) {
+      action();
+    } else {
+      this.connectionStatus$.pipe(
+        filter(connected => connected),
+        take(1)
+      ).subscribe(() => action());
+    }
+  }
+
+  updateStatus(examId: number, studentId: number, status: ExamStatusType, classId: number): void {
+    if (this.stompClient && this.stompClient.connected) {
+      this.stompClient.publish({
+        destination: '/app/exam/status/update',
+        body: JSON.stringify({ examId, studentId, status, classId }),
+      });
+    } else {
+      console.warn('WebSocket chưa kết nối, lưu trạng thái vào hàng đợi');
+      this.pendingStatusUpdates.push({ examId, studentId, status, classId });
+    }
+  }
+
   getExamStatuses(examId: number): Observable<ExamStatus[]> {
-    this.connectionStatus$.pipe(filter(connected => connected), take(1)).subscribe(() => {
+    this.executeWhenConnected(() => {
       if (this.stompClient && this.stompClient.connected) {
         this.stompClient.publish({
           destination: '/app/exam/status/get',
@@ -73,9 +122,9 @@ export class ExamStatusService {
     return this.statuses$;
   }
 
-  // Lấy danh sách sinh viên và trạng thái bài thi trong lớp
   getClassStudentsWithExamStatus(examId: number, classId: number): void {
-    this.connectionStatus$.pipe(filter(connected => connected), take(1)).subscribe(() => {
+    this.studentStatusSubject.next([]);
+    this.executeWhenConnected(() => {
       if (this.stompClient && this.stompClient.connected) {
         this.stompClient.publish({
           destination: '/app/exam/class/students/status',
@@ -85,7 +134,6 @@ export class ExamStatusService {
     });
   }
 
-  // Cập nhật trạng thái cục bộ
   private updateLocalStatus(examStatus: ExamStatus): void {
     const currentStatuses = this.statusSubject.value;
     const index = currentStatuses.findIndex(s => s.student?.id === examStatus.student?.id);
@@ -97,7 +145,6 @@ export class ExamStatusService {
     this.statusSubject.next([...currentStatuses]);
   }
 
-  // Cập nhật trạng thái sinh viên cục bộ
   private updateLocalStudentStatus(studentStatus: StudentExamStatusDTO): void {
     const currentStatuses = this.studentStatusSubject.value;
     const index = currentStatuses.findIndex(s => s.studentId === studentStatus.studentId);
@@ -109,9 +156,8 @@ export class ExamStatusService {
     this.studentStatusSubject.next([...currentStatuses]);
   }
 
-  // Đăng ký nhận cập nhật trạng thái bài thi
   subscribeToExamStatus(examId: number): Observable<ExamStatus[]> {
-    this.connectionStatus$.pipe(filter(connected => connected), take(1)).subscribe(() => {
+    this.executeWhenConnected(() => {
       if (this.stompClient && this.stompClient.connected) {
         this.stompClient.subscribe(`/topic/exam/${examId}/status`, (message) => {
           const statuses: ExamStatus[] = JSON.parse(message.body);
@@ -122,9 +168,9 @@ export class ExamStatusService {
     return this.statusSubject.asObservable();
   }
 
-  // Đăng ký nhận cập nhật trạng thái sinh viên trong lớp
   subscribeToClassStudentsStatus(examId: number, classId: number): void {
-    this.connectionStatus$.pipe(filter(connected => connected), take(1)).subscribe(() => {
+    this.studentStatusSubject.next([]);
+    this.executeWhenConnected(() => {
       if (this.stompClient && this.stompClient.connected) {
         this.stompClient.subscribe(`/topic/exam/${examId}/class/${classId}/students`, (message) => {
           const studentStatuses: StudentExamStatusDTO[] = JSON.parse(message.body)
@@ -135,7 +181,6 @@ export class ExamStatusService {
     });
   }
 
-  // Ngắt kết nối WebSocket
   disconnect(): void {
     if (this.stompClient) {
       this.stompClient.deactivate();

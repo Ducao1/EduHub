@@ -5,7 +5,8 @@ import com.project.web_be.dtos.SubmissionExamDTO;
 import com.project.web_be.entities.*;
 import com.project.web_be.exceptions.DataNotFoundException;
 import com.project.web_be.repositories.*;
-import com.project.web_be.services.ISubmissionService;
+import com.project.web_be.services.EnrollmentService;
+import com.project.web_be.services.SubmissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class SubmissionService implements ISubmissionService {
+public class SubmissionServiceImpl implements SubmissionService {
     private final UserRepository userRepository;
     private final SubmissionRepository submissionRepository;
     private final AssignmentRepository assignmentRepository;

@@ -5,6 +5,6 @@ export interface StudentExamStatus {
     studentName: string;
     phoneNumber: string;
     status: ExamStatusType;
-    startTime: number | null;
-    submitTime: number | null;
+    startTime: Date | null;
+    submitTime: Date | null;
 } 

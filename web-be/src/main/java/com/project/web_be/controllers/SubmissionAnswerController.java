@@ -3,7 +3,7 @@ package com.project.web_be.controllers;
 import com.project.web_be.dtos.SubmissionAnswerDTO;
 import com.project.web_be.entities.SubmissionAnswer;
 import com.project.web_be.dtos.responses.SubmissionAnswerResponse;
-import com.project.web_be.services.Impl.SubmissionAnswerService;
+import com.project.web_be.services.SubmissionAnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

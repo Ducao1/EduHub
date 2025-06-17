@@ -4,7 +4,7 @@ import com.project.web_be.dtos.AssignExamDTO;
 import com.project.web_be.dtos.UpdateExamDateDTO;
 import com.project.web_be.entities.ClassExam;
 import com.project.web_be.dtos.responses.AssignedExamResponse;
-import com.project.web_be.services.Impl.ClassroomExamService;
+import com.project.web_be.services.ClassroomExamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

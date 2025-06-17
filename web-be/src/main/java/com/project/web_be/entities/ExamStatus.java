@@ -4,8 +4,16 @@ import com.project.web_be.dtos.enums.ExamStatusType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "exam_status")
+@Table(name = "exam_status",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"exam_id", "student_id"})
+        },
+        indexes = {
+                @Index(name = "idx_exam_status_status", columnList = "status")
+        })
 @Builder
 @Getter
 @Setter
@@ -24,9 +32,8 @@ public class ExamStatus extends BaseEntity {
     private ExamStatusType status;
 
     @Column(name = "start_time")
-    private Long startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "submit_time")
-    private Long submitTime;
+    private LocalDateTime submitTime;
 }
-

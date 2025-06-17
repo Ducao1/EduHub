@@ -8,7 +8,7 @@ import com.project.web_be.entities.User;
 import com.project.web_be.exceptions.DataNotFoundException;
 import com.project.web_be.repositories.RoleRepository;
 import com.project.web_be.repositories.UserRepository;
-import com.project.web_be.services.IUserService;
+import com.project.web_be.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;

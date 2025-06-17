@@ -1,7 +1,8 @@
 package com.project.web_be.controllers;
 
 import com.project.web_be.entities.Score;
-import com.project.web_be.services.Impl.ScoreService;
+import com.project.web_be.services.Impl.ScoreServiceImpl;
+import com.project.web_be.services.ScoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/scores")
 @RequiredArgsConstructor
 public class ScoreController {
-    private final ScoreService scoreService;
+    private final ScoreServiceImpl scoreService;
 
     @PostMapping("/auto-grade/{submissionId}")
     public ResponseEntity<?> autoGrade(@PathVariable Long submissionId) {

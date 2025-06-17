@@ -16,7 +16,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "users",
+        indexes = {
+                @Index(name = "idx_user_role_id", columnList = "role_id")
+        })
 public class User extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +49,7 @@ public class User extends BaseEntity implements UserDetails {
     public String getUsername() {
         return phoneNumber;
     }
+
     @Override
     public String getPassword() {
         return password;
@@ -54,7 +58,7 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         return true;
-            }
+    }
 
     @Override
     public boolean isAccountNonLocked() {

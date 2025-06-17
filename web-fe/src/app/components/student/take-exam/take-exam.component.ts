@@ -10,20 +10,19 @@ import { Subscription } from 'rxjs';
 import { ExamStatusType } from '../../../dtos/enums/exam-status-type.enum';
 import { SubmissionExamDTO } from '../../../dtos/requests/submission-exam.dto';
 import { ExamStatusService } from '../../../services/exam-status.service';
+import { ExamCacheService } from '../../../services/exam-cache.service';
 
 @Component({
   selector: 'app-take-exam',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './take-exam.component.html',
   styleUrl: './take-exam.component.scss'
 })
 export class TakeExamComponent implements OnInit, OnDestroy {
   exam: any = {};
   examId!: number;
+  classId!: number;
   studentId!: number;
   answers: any[] = [];
   questions: any[] = [];
@@ -46,17 +45,24 @@ export class TakeExamComponent implements OnInit, OnDestroy {
     private submissionService: SubmissionService,
     private userService: UserService,
     private router: Router,
-    private examStatusService: ExamStatusService
+    private examStatusService: ExamStatusService,
+    private examCacheService: ExamCacheService
   ) {
     this.statusSubscription = new Subscription();
   }
 
   ngOnInit() {
-    this.examId = Number(this.route.snapshot.paramMap.get('id'));
+    debugger
+    this.examId = Number(this.route.snapshot.paramMap.get('examId'));
+    this.classId = Number(this.route.snapshot.paramMap.get('classId'));
     this.studentId = this.userService.getUserId() ?? 0;
+    if (!this.examId || !this.classId) {
+      console.error('examId hoặc classId không hợp lệ:', { examId: this.examId, classId: this.classId });
+      alert('Thiếu examId hoặc classId trong URL. Vui lòng kiểm tra lại.');
+      this.router.navigate(['/student/dashboard']);
+      return;
+    }
     this.showConfirmationDialog();
-    this.loadExam();
-    this.initializeExamStatus();
   }
 
   ngOnDestroy() {
@@ -78,7 +84,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
   toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(err => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        console.error(`Lỗi khi bật chế độ toàn màn hình: ${err.message}`);
       });
     } else {
       if (document.exitFullscreen) {
@@ -88,43 +94,54 @@ export class TakeExamComponent implements OnInit, OnDestroy {
   }
 
   showConfirmationDialog() {
-      this.LoadExam();
-      this.startTimer();
-      setTimeout(() => {
-        this.toggleFullscreen();
-      }, 500);
+    this.loadExam();
+    setTimeout(() => {
+      this.toggleFullscreen();
+    }, 500);
   }
 
-  LoadExam() {
-    this.examService.getExamById(this.examId).subscribe({
+  loadExam() {
+    const cachedExam = this.examCacheService.getExam(this.examId);
+    if (cachedExam) {
+      this.processExamData(cachedExam);
+      this.initializeExamStatus();
+      return;
+    }
+
+    this.examService.getExamById(this.examId, { classId: this.classId }).subscribe({
       next: (response) => {
-        debugger
-        this.exam = response;
-        this.questions = response.questions.map((q: any) => ({
-          ...q,
-          status: 'not-answered'
-        })) || [];
-        this.currentQuestionIndex = 0;
-
-        this.timeremaining = response.duration;
-        this.timeremaining = Math.floor(response.duration / 1000);
-
-        this.questions.forEach(question => {
-          if (question.type === 'SINGLE_CHOICE') {
-            this.singleAnswer[question.id] = '';
-          } else if (question.type === 'MULTI_CHOICE') {
-            this.multipleAnswers[question.id] = [];
-          }
-        });
-
-        console.log('Loaded questions with status:', this.questions);
+        this.examCacheService.setExam(this.examId, response);
+        this.processExamData(response);
+        this.initializeExamStatus();
       },
       error: (error) => {
-        debugger
-        console.error('Error loading exam:', error);
-        alert(error.error);
+        console.error('Lỗi khi tải bài thi:', error);
+        alert('Không thể tải bài thi. Vui lòng thử lại.');
       }
     });
+  }
+
+  private processExamData(response: any) {
+    this.exam = response;
+    this.questions = response.questions.map((q: any) => ({
+      ...q,
+      status: 'not-answered'
+    })) || [];
+    this.currentQuestionIndex = 0;
+    this.timeremaining = response.duration || 0;
+    this.timeLeft = (response.duration || 0) * 60;
+    this.initializeAnswers();
+
+    this.questions.forEach(question => {
+      if (question.type === 'SINGLE_CHOICE') {
+        this.singleAnswer[question.id] = '';
+      } else if (question.type === 'MULTI_CHOICE') {
+        this.multipleAnswers[question.id] = [];
+      }
+    });
+
+    console.log('Đã tải danh sách câu hỏi:', this.questions);
+    this.startTimer();
   }
 
   goToQuestion(index: number) {
@@ -149,7 +166,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
     if (questionId) {
       this.singleAnswer[questionId] = answerText;
       this.updateQuestionStatus(questionId);
-      console.log('Selected answer for question', questionId, ':', answerText);
+      console.log('Đã chọn đáp án cho câu hỏi', questionId, ':', answerText);
     }
   }
 
@@ -201,7 +218,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
 
   confirmSubmitExam() {
     const answers: SubmissionAnswerDTO[] = [];
-  
+
     for (const questionId in this.singleAnswer) {
       const selectedText = this.singleAnswer[questionId];
       const question = this.questions.find(q => q.id === +questionId);
@@ -215,7 +232,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
         });
       }
     }
-  
+
     for (const questionId in this.multipleAnswers) {
       const selectedTexts = this.multipleAnswers[questionId];
       const question = this.questions.find(q => q.id === +questionId);
@@ -231,25 +248,26 @@ export class TakeExamComponent implements OnInit, OnDestroy {
         }
       });
     }
-  
+
     const submissionExamDTO: SubmissionExamDTO = {
       exam_id: this.examId,
       student_id: this.studentId,
       answers: answers
     };
-  
+
     this.submissionService.submitExam(submissionExamDTO).subscribe({
       next: (response) => {
-        debugger
         if (document.fullscreenElement) {
           document.exitFullscreen();
         }
+        this.examStatusService.updateStatus(this.examId, this.studentId, ExamStatusType.SUBMITTED, this.classId);
+        this.examCacheService.clearExam(this.examId);
         console.log(`Điểm: ${response.score}`);
         this.router.navigate(['/result-exam', response.id]);
       },
       error: (error) => {
-        debugger
-        alert(error.error);
+        console.error('Lỗi khi nộp bài:', error);
+        alert('Không thể nộp bài. Vui lòng thử lại.');
       }
     });
   }
@@ -259,7 +277,6 @@ export class TakeExamComponent implements OnInit, OnDestroy {
   }
 
   startTimer() {
-    this.timeLeft = this.exam.duration * 60; // Convert minutes to seconds
     this.timer = setInterval(() => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
@@ -275,20 +292,6 @@ export class TakeExamComponent implements OnInit, OnDestroy {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
 
-  private loadExam() {
-    this.examService.getExamById(this.examId).subscribe({
-      next: (response) => {
-        this.exam = response;
-        this.initializeAnswers();
-        this.startTimer();
-        this.updateExamStatus(ExamStatusType.IN_PROGRESS);
-      },
-      error: (error) => {
-        console.error('Error loading exam:', error);
-      }
-    });
-  }
-
   private initializeAnswers() {
     this.answers = this.exam.questions.map((question: any) => ({
       questionId: question.id,
@@ -297,16 +300,8 @@ export class TakeExamComponent implements OnInit, OnDestroy {
   }
 
   private initializeExamStatus() {
-    const userId = this.userService.getUserId();
-    if (userId) {
-      this.examStatusService.updateStatus(this.examId, userId, ExamStatusType.IN_PROGRESS);
-    }
-  }
-
-  private updateExamStatus(status: ExamStatusType) {
-    const userId = this.userService.getUserId();
-    if (userId) {
-      this.examStatusService.updateStatus(this.examId, userId, status);
+    if (this.studentId) {
+      this.examStatusService.updateStatus(this.examId, this.studentId, ExamStatusType.IN_PROGRESS, this.classId);
     }
   }
 

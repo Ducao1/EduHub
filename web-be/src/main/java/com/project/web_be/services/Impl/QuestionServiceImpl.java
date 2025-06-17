@@ -10,7 +10,7 @@ import com.project.web_be.exceptions.DataNotFoundException;
 import com.project.web_be.exceptions.InvalidParamException;
 import com.project.web_be.repositories.ExamRepository;
 import com.project.web_be.repositories.QuestionRepository;
-import com.project.web_be.services.IQuestionService;
+import com.project.web_be.services.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class QuestionService implements IQuestionService {
+public class QuestionServiceImpl implements QuestionService {
     private final ExamRepository examRepository;
     private final QuestionRepository questionRepository;
 

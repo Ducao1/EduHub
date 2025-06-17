@@ -14,4 +14,5 @@ public class ExamStatusUpdateRequest {
     private Long examId;
     private Long studentId;
     private ExamStatusType status;
+    private Long classId;
 } 

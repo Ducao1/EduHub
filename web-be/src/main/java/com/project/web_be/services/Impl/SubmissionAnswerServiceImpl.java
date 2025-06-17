@@ -9,14 +9,14 @@ import com.project.web_be.repositories.AnswerRepository;
 import com.project.web_be.repositories.QuestionRepository;
 import com.project.web_be.repositories.SubmissionAnswerRepository;
 import com.project.web_be.repositories.SubmissionRepository;
-import com.project.web_be.services.ISubmissionAnswerService;
+import com.project.web_be.services.SubmissionAnswerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SubmissionAnswerService implements ISubmissionAnswerService {
+public class SubmissionAnswerServiceImpl implements SubmissionAnswerService {
     private final SubmissionRepository submissionRepository;
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;

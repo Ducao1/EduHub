@@ -3,7 +3,7 @@ package com.project.web_be.controllers;
 import com.project.web_be.dtos.ClassroomDTO;
 import com.project.web_be.entities.Classroom;
 import com.project.web_be.dtos.responses.ClassResponse;
-import com.project.web_be.services.Impl.ClassroomService;
+import com.project.web_be.services.ClassroomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

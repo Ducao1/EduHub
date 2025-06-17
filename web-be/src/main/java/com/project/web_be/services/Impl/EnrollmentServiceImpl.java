@@ -10,7 +10,7 @@ import com.project.web_be.exceptions.InvalidParamException;
 import com.project.web_be.repositories.ClassroomRepository;
 import com.project.web_be.repositories.EnrollmentRepository;
 import com.project.web_be.repositories.UserRepository;
-import com.project.web_be.services.IEnrollmentService;
+import com.project.web_be.services.EnrollmentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EnrollmentService implements IEnrollmentService {
+public class EnrollmentServiceImpl implements EnrollmentService {
     private final ClassroomRepository classroomRepository;
     private final UserRepository userRepository;
     private final EnrollmentRepository enrollmentRepository;
@@ -61,14 +61,17 @@ public class EnrollmentService implements IEnrollmentService {
         return enrollmentRepository.save(newEnrollment);
     }
 
+    @Override
     public List<Classroom> getListClassByStudentId(Long studentId) {
         return enrollmentRepository.findClassesByStudentId(studentId);
     }
 
+    @Override
     public List<User> getAllStudentInClass(Long id){
         return enrollmentRepository.findStudentsByClassroomId(id);
     }
 
+    @Override
     public List<User> getStudentsByClassId(Long classId) {
         return enrollmentRepository.findStudentsByClassroomId(classId);
     }

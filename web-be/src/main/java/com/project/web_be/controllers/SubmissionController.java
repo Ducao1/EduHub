@@ -5,7 +5,8 @@ import com.project.web_be.entities.Submission;
 import com.project.web_be.exceptions.DataNotFoundException;
 import com.project.web_be.dtos.responses.ListSubmissionResponse;
 import com.project.web_be.dtos.responses.SubmitExamResponse;
-import com.project.web_be.services.Impl.SubmissionService;
+import com.project.web_be.services.Impl.SubmissionServiceImpl;
+import com.project.web_be.services.SubmissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SubmissionController {
 
-    private final SubmissionService submissionService;
+    private final SubmissionServiceImpl submissionService;
 
     @PostMapping(value = "/assignment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> submitAssignment(

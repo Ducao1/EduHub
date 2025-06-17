@@ -7,7 +7,7 @@ import com.project.web_be.entities.Enrollment;
 import com.project.web_be.entities.User;
 import com.project.web_be.dtos.responses.ClassResponse;
 import com.project.web_be.dtos.responses.StudentResponse;
-import com.project.web_be.services.Impl.EnrollmentService;
+import com.project.web_be.services.EnrollmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

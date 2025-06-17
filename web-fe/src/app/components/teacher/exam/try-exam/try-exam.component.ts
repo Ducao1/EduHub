@@ -48,7 +48,7 @@ export class TryExamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.examId = Number(this.route.snapshot.paramMap.get('id'));
+    this.examId = Number(this.route.snapshot.paramMap.get('examId'));
     this.showConfirmationDialog();
   }
 

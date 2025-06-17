@@ -5,8 +5,8 @@ export class StudentExamStatusDTO {
     studentName!: string;
     phoneNumber!: string;
     status!: ExamStatusType;
-    startTime: number | null = null;
-    submitTime: number | null = null;
+    startTime: Date | null = null;
+    submitTime: Date | null = null;
 
     constructor(data: Partial<StudentExamStatusDTO>) {
         Object.assign(this, data);

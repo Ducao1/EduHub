@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-public interface IQuestionService {
+public interface QuestionService {
     Question addQuestion(QuestionDTO questionDTO) throws Exception;
 
     Question updateQuestion(long id, QuestionDTO questionDTO) throws DataNotFoundException;

@@ -94,7 +94,7 @@ public class WebSecurityConfig {
                             .requestMatchers(PUT,
                                     String.format("%s/questions/**", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(DELETE,
-                                    String.format("%s/questions/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                                    String.format("%s/questions/**", apiPrefix)).hasAnyAuthority(Role.TEACHER)
 
                             .requestMatchers(GET,
                                     String.format("%s/class/exams/**", apiPrefix)).hasAnyAuthority(Role.TEACHER,Role.STUDENT)

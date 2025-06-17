@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface IClassroomService {
+public interface ClassroomService {
     Classroom addClassroom(ClassroomDTO classroomDTO) throws Exception;
     Classroom getClassroomById(long id) throws Exception;
     List<Classroom> getAllClassrooms();

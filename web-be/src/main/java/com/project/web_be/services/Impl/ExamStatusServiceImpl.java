@@ -9,18 +9,19 @@ import com.project.web_be.repositories.EnrollmentRepository;
 import com.project.web_be.repositories.ExamRepository;
 import com.project.web_be.repositories.ExamStatusRepository;
 import com.project.web_be.repositories.UserRepository;
-import com.project.web_be.services.IExamStatusService;
+import com.project.web_be.services.ExamStatusService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ExamStatusServiceImpl implements IExamStatusService {
+public class ExamStatusServiceImpl implements ExamStatusService {
     private static final Logger logger = LoggerFactory.getLogger(ExamStatusServiceImpl.class);
     private final ExamStatusRepository examStatusRepository;
     private final ExamRepository examRepository;
@@ -42,10 +43,12 @@ public class ExamStatusServiceImpl implements IExamStatusService {
                         .build());
 
         examStatus.setStatus(status);
-        if (status == ExamStatusType.IN_PROGRESS) {
-            examStatus.setStartTime(System.currentTimeMillis());
+        if (status == ExamStatusType.PENDING || status == ExamStatusType.IN_PROGRESS) {
+            if (examStatus.getStartTime() == null) {
+                examStatus.setStartTime(LocalDateTime.now());
+            }
         } else if (status == ExamStatusType.SUBMITTED) {
-            examStatus.setSubmitTime(System.currentTimeMillis());
+            examStatus.setSubmitTime(LocalDateTime.now());
         }
 
         return examStatusRepository.save(examStatus);
@@ -75,7 +78,6 @@ public class ExamStatusServiceImpl implements IExamStatusService {
     @Override
     public List<StudentExamStatusResponse> getClassStudentsWithExamStatus(Long examId, Long classId) {
         logger.info("Received request for examId: {} and classId: {}", examId, classId);
-        // Kiểm tra bài thi tồn tại
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> {
                     logger.error("Exam not found with ID: {}", examId);
@@ -83,7 +85,6 @@ public class ExamStatusServiceImpl implements IExamStatusService {
                 });
         logger.info("Found exam: {}", exam.getTitle());
 
-        // Lấy danh sách sinh viên trong lớp
         List<User> students = enrollmentRepository.findStudentsByClassroomId(classId);
         logger.info("Found {} students in classId: {}", students.size(), classId);
 
@@ -92,7 +93,6 @@ public class ExamStatusServiceImpl implements IExamStatusService {
             throw new RuntimeException("Không tìm thấy sinh viên nào trong lớp");
         }
 
-        // Lấy trạng thái bài thi của từng sinh viên và chuyển đổi sang DTO
         List<StudentExamStatusResponse> responses = students.stream()
                 .map(student -> {
                     ExamStatus status = examStatusRepository.findByExamAndStudent(exam, student)
@@ -101,13 +101,11 @@ public class ExamStatusServiceImpl implements IExamStatusService {
                                     .student(student)
                                     .status(ExamStatusType.NOT_STARTED)
                                     .build());
-                    StudentExamStatusResponse response = StudentExamStatusResponse.fromUserAndExamStatus(student, status);
-                    logger.debug("Mapped student {} to status: {}", student.getFullName(), response.getStatus());
-                    return response;
+                    return StudentExamStatusResponse.fromUserAndExamStatus(student, status);
                 })
                 .collect(Collectors.toList());
 
-        logger.info("Returning {} student exam status responses.", responses.size());
+        logger.info("Returning {} student exam status responses for examId={} classId={}", responses.size(), examId, classId);
         return responses;
     }
-} 
+}

@@ -6,7 +6,7 @@ import com.project.web_be.entities.Question;
 import com.project.web_be.exceptions.DataNotFoundException;
 import com.project.web_be.repositories.AnswerRepository;
 import com.project.web_be.repositories.QuestionRepository;
-import com.project.web_be.services.IAnswerService;
+import com.project.web_be.services.AnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AnswerService implements IAnswerService {
+public class AnswerServiceImpl implements AnswerService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
 

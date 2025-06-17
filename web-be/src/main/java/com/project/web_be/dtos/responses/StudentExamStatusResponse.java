@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -17,8 +19,8 @@ public class StudentExamStatusResponse {
     private String studentName;
     private String phoneNumber;
     private ExamStatusType status;
-    private Long startTime;
-    private Long submitTime;
+    private LocalDateTime startTime;
+    private LocalDateTime submitTime;
 
     public static StudentExamStatusResponse fromUserAndExamStatus(User user, ExamStatus examStatus) {
         return StudentExamStatusResponse.builder()

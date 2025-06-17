@@ -9,7 +9,7 @@ import com.project.web_be.exceptions.DataNotFoundException;
 import com.project.web_be.repositories.ClassExamRepository;
 import com.project.web_be.repositories.ClassroomRepository;
 import com.project.web_be.repositories.ExamRepository;
-import com.project.web_be.services.IClassroomExamService;
+import com.project.web_be.services.ClassroomExamService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ClassroomExamService implements IClassroomExamService {
+public class ClassroomExamServiceImpl implements ClassroomExamService {
     private final ClassExamRepository classExamRepository;
     private final ClassroomRepository classroomRepository;
     private final ExamRepository examRepository;

@@ -9,7 +9,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "assignments")
+@Table(name = "assignments",
+        indexes = {
+                @Index(name = "idx_assignment_teacher_id", columnList = "teacher_id"),
+                @Index(name = "idx_assignment_class_id", columnList = "class_id"),
+                @Index(name = "idx_assignment_due_date", columnList = "due_date")
+        })
 @Getter
 @Setter
 @NoArgsConstructor

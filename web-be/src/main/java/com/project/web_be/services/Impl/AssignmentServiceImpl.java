@@ -8,7 +8,7 @@ import com.project.web_be.exceptions.DataNotFoundException;
 import com.project.web_be.repositories.AssignmentRepository;
 import com.project.web_be.repositories.ClassroomRepository;
 import com.project.web_be.repositories.UserRepository;
-import com.project.web_be.services.IAssignmentService;
+import com.project.web_be.services.AssignmentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AssignmentService implements IAssignmentService {
+public class AssignmentServiceImpl implements AssignmentService {
     private final UserRepository userRepository;
     private final AssignmentRepository assignmentRepository;
     private final ClassroomRepository classroomRepository;

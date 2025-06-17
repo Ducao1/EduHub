@@ -1,10 +1,9 @@
 package com.project.web_be.controllers;
 
-
 import com.project.web_be.dtos.ExamDTO;
 import com.project.web_be.entities.Exam;
 import com.project.web_be.dtos.responses.ExamResponse;
-import com.project.web_be.services.Impl.ExamService;
+import com.project.web_be.services.ExamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,18 +24,24 @@ public class ExamController {
     public ResponseEntity<?> addExam(@RequestBody ExamDTO examDTO) {
         try {
             Exam exam = examService.addExam(examDTO);
-            return ResponseEntity.ok(exam);
+            return ResponseEntity.ok(ExamResponse.fromExam(exam, null));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getExamById(@PathVariable("id") long id) {
+    public ResponseEntity<?> getExamById(@PathVariable("id") long id, @RequestParam(required = false) Long classId) {
         try {
             Exam exam = examService.getExamById(id);
-//            return ResponseEntity.ok(ExamResponse.fromExam(exam));
-            return ResponseEntity.ok(exam);
+            if (classId != null) {
+                boolean validClass = exam.getClassExams().stream()
+                        .anyMatch(ce -> ce.getClassroom().getId().equals(classId));
+                if (!validClass) {
+                    return ResponseEntity.badRequest().body("Class ID không hợp lệ cho bài thi");
+                }
+            }
+            return ResponseEntity.ok(ExamResponse.fromExam(exam, classId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -50,8 +55,7 @@ public class ExamController {
         try {
             Pageable pageable = PageRequest.of(page, size);
             Page<Exam> exams = examService.getAllExamsByTeacherId(id, pageable);
-            Page<ExamResponse> examResponses = exams
-                    .map(ExamResponse::fromExam);
+            Page<ExamResponse> examResponses = exams.map(exam -> ExamResponse.fromExam(exam, null));
             return ResponseEntity.ok(examResponses);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -66,7 +70,7 @@ public class ExamController {
         try {
             Pageable pageable = PageRequest.of(page, size);
             Page<Exam> exams = examService.getAllExamsByClassId(id, pageable);
-            Page<ExamResponse> examResponses = exams.map(ExamResponse::fromExam);
+            Page<ExamResponse> examResponses = exams.map(exam -> ExamResponse.fromExam(exam, id));
             return ResponseEntity.ok(examResponses);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -77,7 +81,7 @@ public class ExamController {
     public ResponseEntity<?> updateExam(@RequestBody ExamDTO examDTO, @PathVariable long id) {
         try {
             Exam exam = examService.updateExam(examDTO, id);
-            return ResponseEntity.ok(exam);
+            return ResponseEntity.ok(ExamResponse.fromExam(exam, null));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -85,9 +89,13 @@ public class ExamController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteExam(@PathVariable long id) {
-        examService.deleteExam(id);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Delete exam successfully");
-        return ResponseEntity.ok(response);
+        try {
+            examService.deleteExam(id);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Delete exam successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

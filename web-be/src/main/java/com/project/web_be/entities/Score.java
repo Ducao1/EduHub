@@ -2,17 +2,17 @@ package com.project.web_be.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "scores")
+@Table(name = "scores",
+        indexes = {
+                @Index(name = "idx_score_graded_by", columnList = "graded_by")
+        })
 public class Score {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

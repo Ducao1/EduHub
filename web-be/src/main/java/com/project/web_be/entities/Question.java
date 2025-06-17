@@ -10,7 +10,10 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "questions")
+@Table(name = "questions",
+        indexes = {
+                @Index(name = "idx_question_exam_id", columnList = "exam_id")
+        })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,6 +34,7 @@ public class Question {
     @JoinColumn(name = "exam_id", nullable = false)
     @JsonBackReference
     private Exam exam;
+
     private float point;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -42,4 +46,3 @@ public class Question {
         return exam != null ? exam.getId() : null;
     }
 }
-

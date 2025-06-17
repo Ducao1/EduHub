@@ -1,17 +1,17 @@
 package com.project.web_be.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "roles")
+@Table(name = "roles",
+        indexes = {
+                @Index(name = "idx_role_name", columnList = "name")
+        })
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

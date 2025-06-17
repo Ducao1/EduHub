@@ -4,23 +4,21 @@ import com.project.web_be.dtos.UserDTO;
 import com.project.web_be.dtos.UserLoginDTO;
 import com.project.web_be.entities.Submission;
 import com.project.web_be.entities.User;
-import com.project.web_be.services.Impl.UserService;
+import com.project.web_be.services.Impl.UserServiceImpl;
+import com.project.web_be.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("${api.prefix}/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO){

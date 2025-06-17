@@ -1,44 +1,55 @@
 package com.project.web_be.controllers;
 
-import com.project.web_be.dtos.enums.ExamStatusType;
 import com.project.web_be.dtos.requests.ExamClassRequest;
 import com.project.web_be.dtos.requests.ExamGetStatusRequest;
 import com.project.web_be.dtos.requests.ExamStatusUpdateRequest;
 import com.project.web_be.dtos.responses.StudentExamStatusResponse;
 import com.project.web_be.entities.ExamStatus;
-import com.project.web_be.services.IExamStatusService;
+import com.project.web_be.services.ExamStatusService;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class ExamStatusWebSocketController {
-    private final IExamStatusService examStatusService;
+    private final ExamStatusService examStatusService;
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/exam/status/update")
-    @SendTo("/topic/exam/{examId}/status")
-    public ExamStatus updateStatus(ExamStatusUpdateRequest request) {
+    public void updateStatus(ExamStatusUpdateRequest request) {
+        // Kiểm tra classId
+        if (request.getClassId() == null) {
+            throw new IllegalArgumentException("Class ID is required");
+        }
         ExamStatus examStatus = examStatusService.updateStatus(request.getExamId(), request.getStudentId(), request.getStatus());
         messagingTemplate.convertAndSend("/topic/exam/" + request.getExamId() + "/status", examStatus);
-        return examStatus;
+
+        // Gửi cập nhật trạng thái cho lớp cụ thể
+        List<StudentExamStatusResponse> studentStatuses = examStatusService.getClassStudentsWithExamStatus(
+                request.getExamId(), request.getClassId());
+        messagingTemplate.convertAndSend(
+                "/topic/exam/" + request.getExamId() + "/class/" + request.getClassId() + "/students",
+                studentStatuses
+        );
     }
 
     @MessageMapping("/exam/status/get")
-    @SendTo("/topic/exam/{examId}/status")
-    public List<ExamStatus> getExamStatuses(ExamGetStatusRequest request) {
-        return examStatusService.getExamStatuses(request.getExamId());
+    public void getExamStatuses(ExamGetStatusRequest request) {
+        List<ExamStatus> statuses = examStatusService.getExamStatuses(request.getExamId());
+        messagingTemplate.convertAndSend("/topic/exam/" + request.getExamId() + "/status", statuses);
     }
 
     @MessageMapping("/exam/class/students/status")
-    @SendTo("/topic/exam/{examId}/class/{classId}/students")
-    public List<StudentExamStatusResponse> getClassStudentsWithExamStatus(ExamClassRequest request) {
-        return examStatusService.getClassStudentsWithExamStatus(request.getExamId(), request.getClassId());
+    public void getClassStudentsWithExamStatus(ExamClassRequest request) {
+        List<StudentExamStatusResponse> studentStatuses = examStatusService.getClassStudentsWithExamStatus(
+                request.getExamId(), request.getClassId());
+        messagingTemplate.convertAndSend(
+                "/topic/exam/" + request.getExamId() + "/class/" + request.getClassId() + "/students",
+                studentStatuses
+        );
     }
-} 
+}

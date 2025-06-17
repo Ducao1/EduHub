@@ -8,7 +8,7 @@ import com.project.web_be.entities.User;
 import com.project.web_be.exceptions.DataNotFoundException;
 import com.project.web_be.repositories.ClassroomRepository;
 import com.project.web_be.repositories.UserRepository;
-import com.project.web_be.services.IClassroomService;
+import com.project.web_be.services.ClassroomService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ClassroomService implements IClassroomService {
+public class ClassroomServiceImpl implements ClassroomService {
     private final ClassroomRepository classroomRepository;
     private final UserRepository userRepository;
     private final ClassCodeGenerator classCodeGenerator;

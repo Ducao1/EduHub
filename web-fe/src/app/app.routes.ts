@@ -58,9 +58,10 @@ export const routes: Routes = [
 
   {
     path: 'teacher', component: TeacherLayoutComponent, children: [
-      { path: 'dashboard', component: TeacherDashboardComponent },
+      // { path: 'dashboard', component: TeacherDashboardComponent },
+      // { path: 'list-class', component: ListClassComponent },
 
-      { path: 'list-class', component: ListClassComponent },
+      { path: 'dashboard', component: ListClassComponent },
       { path: 'add-class', component: AddClassComponent },
       { path: 'detail-class/:id', component: DetailTeacherClassComponent },
       { path: 'class/:id', component: ListStudentComponent },
@@ -83,9 +84,9 @@ export const routes: Routes = [
       { path: 'detail-assignment/:id', component: DetailAssignmentComponent },
     ]
   },
-  { path: 'try-exam/:id', component: TryExamComponent },
-  { path: 'take-exam/:id', component: TakeExamComponent },
-  { path: 'confirm-exam/:id', component: ConfirmExamComponent },
+  { path: 'try-exam/:examId', component: TryExamComponent },
+  { path: 'take-exam/:examId/class/:classId', component: TakeExamComponent },
+  { path: 'confirm-exam/:examId/class/:classId', component: ConfirmExamComponent },
   { path: 'result-exam/:id', component: ResultExamComponent },
   { path: 'session-exam/:examId/class/:classId', component: SessionExamComponent },
 ];
