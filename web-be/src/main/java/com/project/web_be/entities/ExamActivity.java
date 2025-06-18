@@ -1,19 +1,25 @@
 package com.project.web_be.entities;
 
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
-import com.project.web_be.dtos.enums.ActivityType;
-
+//@Entity(name = "exam_activities")
+@Entity
 @Data
+@Builder
 public class ExamActivity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "exam_id")
     private Long examId;
+    @Column(name = "class_id")
+    private Long classId;
+    @Column(name = "student_id")
     private Long studentId;
-    private String studentName;
-    private ActivityType activityType;
-    private String description;
+    private String activityType;
     private LocalDateTime timestamp;
-    private String ipAddress;
-    private String browserInfo;
-} 
+}

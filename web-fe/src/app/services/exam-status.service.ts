@@ -186,4 +186,21 @@ export class ExamStatusService {
       this.stompClient.deactivate();
     }
   }
+
+  // Gửi sự kiện hoạt động của sinh viên (chuyển tab, thoát fullscreen, rời trang)
+  sendExamActivity(activityType: 'FULLSCREEN_EXIT' | 'TAB_CHANGE' | 'EXAM_LEFT', examId: number, classId: number, studentId: number) {
+    const activity = {
+      examId,
+      classId,
+      studentId,
+      activityType,
+      timestamp: new Date().toISOString()
+    };
+    if (this.stompClient && this.stompClient.connected) {
+      this.stompClient.publish({
+        destination: '/app/exam/activity',
+        body: JSON.stringify(activity)
+      });
+    }
+  }
 }

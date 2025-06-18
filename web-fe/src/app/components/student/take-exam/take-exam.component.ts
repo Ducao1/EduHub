@@ -76,9 +76,21 @@ export class TakeExamComponent implements OnInit, OnDestroy {
     this.examStatusService.disconnect();
   }
 
+  @HostListener('window:blur', ['$event'])
+  onBlur(event: any) {
+    this.sendExamActivity('TAB_CHANGE');
+  }
+
   @HostListener('document:fullscreenchange', ['$event'])
   onFullscreenChange() {
-    this.isFullscreen = !!document.fullscreenElement;
+    if (!document.fullscreenElement) {
+      this.sendExamActivity('FULLSCREEN_EXIT');
+    }
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(event: any) {
+    this.sendExamActivity('EXAM_LEFT');
   }
 
   toggleFullscreen() {
@@ -341,5 +353,14 @@ export class TakeExamComponent implements OnInit, OnDestroy {
       }
       question.status = isAnswered ? 'answered' : 'not-answered';
     });
+  }
+
+  private sendExamActivity(activityType: 'FULLSCREEN_EXIT' | 'TAB_CHANGE' | 'EXAM_LEFT') {
+    this.examStatusService.sendExamActivity(
+      activityType,
+      this.examId,
+      this.classId,
+      this.studentId
+    );
   }
 }
