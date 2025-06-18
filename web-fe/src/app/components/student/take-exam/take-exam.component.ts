@@ -101,20 +101,25 @@ export class TakeExamComponent implements OnInit, OnDestroy {
   }
 
   loadExam() {
+    debugger
     const cachedExam = this.examCacheService.getExam(this.examId);
     if (cachedExam) {
       this.processExamData(cachedExam);
+      this.restoreAnswersFromCache();
       this.initializeExamStatus();
       return;
     }
 
     this.examService.getExamById(this.examId, { classId: this.classId }).subscribe({
       next: (response) => {
+        debugger
         this.examCacheService.setExam(this.examId, response);
         this.processExamData(response);
+        this.restoreAnswersFromCache();
         this.initializeExamStatus();
       },
       error: (error) => {
+        debugger
         console.error('Lỗi khi tải bài thi:', error);
         alert('Không thể tải bài thi. Vui lòng thử lại.');
       }
@@ -167,6 +172,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
       this.singleAnswer[questionId] = answerText;
       this.updateQuestionStatus(questionId);
       console.log('Đã chọn đáp án cho câu hỏi', questionId, ':', answerText);
+      this.saveAnswersToCache();
     }
   }
 
@@ -184,6 +190,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
       }
     }
     this.updateQuestionStatus(questionId);
+    this.saveAnswersToCache();
   }
 
   updateQuestionStatus(questionId: number) {
@@ -191,16 +198,11 @@ export class TakeExamComponent implements OnInit, OnDestroy {
     if (question) {
       let isAnswered = false;
       if (question.type === 'SINGLE_CHOICE') {
-        isAnswered = this.singleAnswer[questionId] !== '';
+        isAnswered = !!this.singleAnswer[questionId] && this.singleAnswer[questionId] !== '';
       } else if (question.type === 'MULTI_CHOICE') {
-        isAnswered = this.multipleAnswers[questionId]?.length > 0;
+        isAnswered = Array.isArray(this.multipleAnswers[questionId]) && this.multipleAnswers[questionId].length > 0;
       }
-
-      if (question.status !== 'marked-for-review') {
-        question.status = isAnswered ? 'answered' : 'not-answered';
-      } else {
-        question.status = isAnswered ? 'marked-and-answered' : 'marked-for-review';
-      }
+      question.status = isAnswered ? 'answered' : 'not-answered';
     }
   }
 
@@ -262,6 +264,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
         }
         this.examStatusService.updateStatus(this.examId, this.studentId, ExamStatusType.SUBMITTED, this.classId);
         this.examCacheService.clearExam(this.examId);
+        this.examCacheService.clearAnswers(this.examId);
         console.log(`Điểm: ${response.score}`);
         this.router.navigate(['/result-exam', response.id]);
       },
@@ -310,5 +313,33 @@ export class TakeExamComponent implements OnInit, OnDestroy {
     if (answer) {
       answer.selectedAnswerId = answerId;
     }
+  }
+
+  private saveAnswersToCache() {
+    this.examCacheService.setAnswers(this.examId, {
+      single: this.singleAnswer,
+      multiple: this.multipleAnswers
+    });
+  }
+
+  private restoreAnswersFromCache() {
+    const cached = this.examCacheService.getAnswers(this.examId);
+    if (cached) {
+      this.singleAnswer = cached.single || {};
+      this.multipleAnswers = cached.multiple || {};
+      this.updateAllQuestionStatuses();
+    }
+  }
+
+  private updateAllQuestionStatuses() {
+    this.questions.forEach(question => {
+      let isAnswered = false;
+      if (question.type === 'SINGLE_CHOICE') {
+        isAnswered = !!this.singleAnswer[question.id] && this.singleAnswer[question.id] !== '';
+      } else if (question.type === 'MULTI_CHOICE') {
+        isAnswered = Array.isArray(this.multipleAnswers[question.id]) && this.multipleAnswers[question.id].length > 0;
+      }
+      question.status = isAnswered ? 'answered' : 'not-answered';
+    });
   }
 }

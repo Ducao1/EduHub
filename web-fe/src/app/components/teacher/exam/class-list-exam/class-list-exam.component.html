@@ -37,7 +37,7 @@
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                     <div class="dropdown-menu" [class.show]="activeDropdownIndex === i">
-                        <a class="dropdown-item" (click)="monitorExam(exam.id)">
+                        <a class="dropdown-item" (click)="monitorExam(exam.exam_id)">
                             <i class="fas fa-eye me-2"></i>Theo dõi bài thi
                         </a>
                         <a class="dropdown-item" (click)="viewScores(exam.id)">
@@ -45,7 +45,7 @@
                         </a>
                     </div>
                 </div>
-                <a class="btn-view" routerLink="/teacher/detail-exam/{{exam.id}}">
+                <a class="btn-view" routerLink="/teacher/detail-exam/{{exam.exam_id}}">
                 </a>
             </div>
         </div>
