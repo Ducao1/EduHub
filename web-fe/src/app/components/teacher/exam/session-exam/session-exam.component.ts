@@ -65,6 +65,18 @@ export class SessionExamComponent implements OnInit, OnDestroy {
         this.students = students;
       })
     );
+
+    // Đăng ký nhận log hoạt động sinh viên
+    this.examStatusService.subscribeToStudentActivityLog(
+      this.examId,
+      this.classId,
+      (activity: any) => {
+        this.activities.unshift({
+          message: this.getActivityMessage(activity),
+          timestamp: new Date(activity.timestamp)
+        });
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -135,5 +147,18 @@ export class SessionExamComponent implements OnInit, OnDestroy {
     if (!timestamp) return '-';
     const date = new Date(timestamp);
     return date.toLocaleTimeString('vi-VN');
+  }
+
+  private getActivityMessage(activity: any): string {
+    switch (activity.activityType) {
+      case 'FULLSCREEN_EXIT':
+        return `Sinh viên ${activity.studentId} thoát chế độ toàn màn hình`;
+      case 'TAB_CHANGE':
+        return `Sinh viên ${activity.studentId} chuyển tab hoặc thu nhỏ cửa sổ`;
+      case 'EXAM_LEFT':
+        return `Sinh viên ${activity.studentId} rời khỏi trang làm bài`;
+      default:
+        return `Hoạt động không xác định từ sinh viên ${activity.studentId}`;
+    }
   }
 }

@@ -23,14 +23,11 @@ public class ExamStatusWebSocketController {
 
     @MessageMapping("/exam/status/update")
     public void updateStatus(ExamStatusUpdateRequest request) {
-        // Kiểm tra classId
         if (request.getClassId() == null) {
             throw new IllegalArgumentException("Class ID is required");
         }
         ExamStatus examStatus = examStatusService.updateStatus(request.getExamId(), request.getStudentId(), request.getStatus());
         messagingTemplate.convertAndSend("/topic/exam/" + request.getExamId() + "/status", examStatus);
-
-        // Gửi cập nhật trạng thái cho lớp cụ thể
         List<StudentExamStatusResponse> studentStatuses = examStatusService.getClassStudentsWithExamStatus(
                 request.getExamId(), request.getClassId());
         messagingTemplate.convertAndSend(

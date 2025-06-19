@@ -214,7 +214,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
       } else if (question.type === 'MULTI_CHOICE') {
         isAnswered = Array.isArray(this.multipleAnswers[questionId]) && this.multipleAnswers[questionId].length > 0;
       }
-      question.status = isAnswered ? 'answered' : 'not-answered';
+        question.status = isAnswered ? 'answered' : 'not-answered';
     }
   }
 

@@ -19,6 +19,7 @@ export class ExamStatusService {
   private readonly maxReconnectAttempts: number = 5;
   private readonly reconnectInterval: number = 5000; // 5 seconds
   private pendingStatusUpdates: { examId: number, studentId: number, status: ExamStatusType, classId: number }[] = [];
+  private activitySubscriptions: { [key: string]: boolean } = {};
 
   public statuses$: Observable<ExamStatus[]> = this.statusSubject.asObservable();
   public studentStatuses$: Observable<StudentExamStatusDTO[]> = this.studentStatusSubject.asObservable();
@@ -200,6 +201,32 @@ export class ExamStatusService {
       this.stompClient.publish({
         destination: '/app/exam/activity',
         body: JSON.stringify(activity)
+      });
+    }
+  }
+
+  /**
+   * Đăng ký nhận log hoạt động sinh viên qua WebSocket
+   * @param examId
+   * @param classId
+   * @param callback Hàm xử lý khi nhận được activity
+   */
+  subscribeToStudentActivityLog(examId: number, classId: number, callback: (activity: any) => void) {
+    const topic = `/topic/exam-activity/${examId}/${classId}`;
+    if (this.stompClient && this.stompClient.connected) {
+      if (!this.activitySubscriptions[topic]) {
+        this.stompClient.subscribe(topic, (message: any) => {
+          const activity = JSON.parse(message.body);
+          callback(activity);
+        });
+        this.activitySubscriptions[topic] = true;
+      }
+    } else {
+      // Nếu chưa kết nối, đợi kết nối xong rồi subscribe
+      this.connectionStatus$.subscribe(connected => {
+        if (connected) {
+          this.subscribeToStudentActivityLog(examId, classId, callback);
+        }
       });
     }
   }

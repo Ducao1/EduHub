@@ -22,22 +22,13 @@ public class ExamActivityWebSocketController {
 
     @MessageMapping("/exam/activity")
     public void handleExamActivity(@Payload ExamActivityEventDTO dto) {
-        // 1. Kiểm tra tính hợp lệ của dữ liệu
         if (dto == null || dto.getExamId() == null || dto.getClassId() == null || dto.getStudentId() == null ||
                 dto.getActivityType() == null || dto.getTimestamp() == null) {
             throw new IllegalArgumentException("Dữ liệu sự kiện không hợp lệ");
         }
-
-        // 2. Xử lý logic trước khi lưu
         ExamActivity activity = preProcessActivity(dto);
-
-        // 3. Lưu hoạt động vào cơ sở dữ liệu
         ExamActivity savedActivity = examActivityService.saveActivity(activity);
-
-        // 4. Gửi thông báo realtime đến giáo viên
         sendRealTimeNotification(savedActivity);
-
-        // 5. Kiểm tra và gửi cảnh báo nếu có hành vi đáng ngờ
         checkActivity(savedActivity);
     }
 
@@ -50,9 +41,8 @@ public class ExamActivityWebSocketController {
                 .timestamp(dto.getTimestamp())
                 .build();
 
-        // Thêm xử lý bổ sung (ví dụ: kiểm tra timestamp hợp lệ)
-        LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")); // Múi giờ +07
-        if (activity.getTimestamp().isAfter(currentTime.plusMinutes(5))) { // Kiểm tra thời gian trong tương lai quá 5 phút
+        LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        if (activity.getTimestamp().isAfter(currentTime.plusMinutes(5))) {
             activity.setTimestamp(currentTime);
         }
 
