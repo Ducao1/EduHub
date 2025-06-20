@@ -28,8 +28,9 @@ public class ExamStatus extends BaseEntity {
     @JoinColumn(name = "student_id")
     private User student;
 
+    @Column(name = "status", length = 32)
     @Enumerated(EnumType.STRING)
-    private ExamStatusType status;
+    private ExamStatusType status;;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;

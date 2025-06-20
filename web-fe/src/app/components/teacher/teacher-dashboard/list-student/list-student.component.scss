@@ -1,10 +1,11 @@
-.class-container {
+  .class-container {
     width: 100%;
     padding: 20px;
     font-family: Arial, sans-serif;
-  }
-  
-  .class-banner {
+    background-color: #fff;
+}
+
+.class-banner {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -12,9 +13,9 @@
     color: white;
     padding: 20px;
     border-radius: 10px;
-  }
-  
-  .class-info {
+}
+
+.class-info {
     h2 {
       margin: 0;
       font-size: 24px;
@@ -23,24 +24,23 @@
       margin: 5px 0 0;
       font-size: 16px;
     }
-  }
-  
-  
-  .main-panel {
+}
+
+.main-panel {
     flex: 1;
     padding: 15px;
-  }
-  
-  .announcement {
+}
+
+.announcement {
     display: flex;
     align-items: center;
     background: white;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
-  }
-  
-  .avatar {
+}
+
+.avatar {
     width: 40px;
     height: 40px;
     background: #007bff;
@@ -51,49 +51,47 @@
     font-weight: bold;
     border-radius: 50%;
     margin-right: 10px;
-  }
-  
-  input {
+}
+
+input {
     width: 100%;
     border: none;
     padding: 10px;
     font-size: 14px;
     border-radius: 5px;
     background: #f1f1f1;
-  }
-  
-  .class-navbar {
+}
+
+.class-navbar {
     width: 100%;
     border-bottom: 1px solid #ddd;
     background: white;
     padding: 5px 0;
-  }
-  
-  .class-navbar ul {
+}
+
+.class-navbar ul {
     list-style: none;
     display: flex;
     padding: 0;
     margin: 0;
-  }
-  
-  .class-navbar ul li {
+}
+
+.class-navbar ul li {
     padding: 10px 15px;
-  }
-  
-  .class-navbar ul li a {
+}
+
+.class-navbar ul li a {
     text-decoration: none;
     color: #5f6368;
     font-size: 14px;
     font-weight: 500;
     padding: 8px 12px;
     display: inline-block;
-  }
-  
-  .class-navbar ul li a.active {
+}
+
+.class-navbar ul li a.active {
     color: #1a73e8;
     border-bottom: 3px solid #1a73e8;
     font-weight: bold;
     padding-bottom: 5px;
-  }
-  
-  
+}

@@ -10,15 +10,24 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import java.util.List;
+import com.project.web_be.repositories.ExamActivityRepository;
+import com.project.web_be.dtos.ExamActivityDTO;
+import java.util.stream.Collectors;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Controller
+@RequestMapping("${api.prefix}")
 @RequiredArgsConstructor
 public class ExamActivityWebSocketController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ExamActivityService examActivityService;
+    private final ExamActivityRepository examActivityRepository;
 
     @MessageMapping("/exam/activity")
     public void handleExamActivity(@Payload ExamActivityEventDTO dto) {
@@ -37,7 +46,7 @@ public class ExamActivityWebSocketController {
                 .examId(dto.getExamId())
                 .classId(dto.getClassId())
                 .studentId(dto.getStudentId())
-                .activityType(dto.getActivityType())
+                .activityType(ActivityType.valueOf(dto.getActivityType()))
                 .timestamp(dto.getTimestamp())
                 .build();
 
@@ -57,7 +66,7 @@ public class ExamActivityWebSocketController {
     }
 
     private void checkActivity(ExamActivity activity) {
-        ActivityType type = ActivityType.valueOf(activity.getActivityType());
+        ActivityType type = ActivityType.valueOf(String.valueOf(activity.getActivityType()));
         switch (type) {
             case FULLSCREEN_EXIT:
             case TAB_CHANGE:
@@ -78,5 +87,16 @@ public class ExamActivityWebSocketController {
                 "/topic/exam-alert/" + examId + "/" + classId,
                 new AlertMessage(studentId, message)
         );
+    }
+
+    @GetMapping("/exam-activity")
+    public List<ExamActivityDTO> getExamActivity(
+            @RequestParam Long examId,
+            @RequestParam Long classId
+    ) {
+        return examActivityRepository.findByExamIdAndClassIdOrderByTimestampDesc(examId, classId)
+                .stream()
+                .map(ExamActivityDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }

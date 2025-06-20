@@ -66,6 +66,9 @@ export class SessionExamComponent implements OnInit, OnDestroy {
       })
     );
 
+    // Lấy lại toàn bộ log hoạt động khi vào trang
+    this.fetchActivityLog();
+
     // Đăng ký nhận log hoạt động sinh viên
     this.examStatusService.subscribeToStudentActivityLog(
       this.examId,
@@ -141,6 +144,9 @@ export class SessionExamComponent implements OnInit, OnDestroy {
 
   selectTab(tabName: string): void {
     this.selectedTab = tabName;
+    if (tabName === 'activity') {
+      this.fetchActivityLog();
+    }
   }
 
   getTimeString(timestamp: number | null): string {
@@ -160,5 +166,15 @@ export class SessionExamComponent implements OnInit, OnDestroy {
       default:
         return `Hoạt động không xác định từ sinh viên ${activity.studentId}`;
     }
+  }
+
+  private fetchActivityLog() {
+    this.examStatusService.fetchActivityLog(this.examId, this.classId)
+      .subscribe(logs => {
+        this.activities = logs.map(activity => ({
+          message: this.getActivityMessage(activity),
+          timestamp: new Date(activity.timestamp)
+        }));
+      });
   }
 }

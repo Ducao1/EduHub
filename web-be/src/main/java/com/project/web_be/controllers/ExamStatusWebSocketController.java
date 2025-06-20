@@ -11,6 +11,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
+import com.project.web_be.dtos.responses.ExamStatusDTO;
+import java.util.stream.Collectors;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class ExamStatusWebSocketController {
             throw new IllegalArgumentException("Class ID is required");
         }
         ExamStatus examStatus = examStatusService.updateStatus(request.getExamId(), request.getStudentId(), request.getStatus());
-        messagingTemplate.convertAndSend("/topic/exam/" + request.getExamId() + "/status", examStatus);
+        messagingTemplate.convertAndSend("/topic/exam/" + request.getExamId() + "/status", ExamStatusDTO.fromEntity(examStatus));
         List<StudentExamStatusResponse> studentStatuses = examStatusService.getClassStudentsWithExamStatus(
                 request.getExamId(), request.getClassId());
         messagingTemplate.convertAndSend(
@@ -39,7 +41,8 @@ public class ExamStatusWebSocketController {
     @MessageMapping("/exam/status/get")
     public void getExamStatuses(ExamGetStatusRequest request) {
         List<ExamStatus> statuses = examStatusService.getExamStatuses(request.getExamId());
-        messagingTemplate.convertAndSend("/topic/exam/" + request.getExamId() + "/status", statuses);
+        List<ExamStatusDTO> statusDTOs = statuses.stream().map(ExamStatusDTO::fromEntity).collect(Collectors.toList());
+        messagingTemplate.convertAndSend("/topic/exam/" + request.getExamId() + "/status", statusDTOs);
     }
 
     @MessageMapping("/exam/class/students/status")

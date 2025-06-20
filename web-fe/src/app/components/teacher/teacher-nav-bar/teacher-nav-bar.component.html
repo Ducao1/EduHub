@@ -1,19 +1,39 @@
 <nav class="class-navbar">
-    <ul>
-        <li><a routerLink="/teacher/detail-class/{{classId}}" routerLinkActive="active">
-            Bảng tin
-        </a></li>
-        <li><a routerLink="/teacher/assignment/{{classId}}" routerLinkActive="active">
-            Bài tập
-        </a></li>
-        <li><a routerLink="/teacher/class/exams/{{classId}}" routerLinkActive="active">
-            Bài thi
-        </a></li>
-        <li><a routerLink="/teacher/class/{{classId}}" routerLinkActive="active">
-            Mọi người
-        </a></li>
-        <li><a routerLink="/teacher/grade" routerLinkActive="active">
-            Điểm
-        </a></li>
-    </ul>
+  <ul>
+    <li>
+      <a routerLink="/teacher/detail-class/{{classId}}" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{ exact: true }">
+        Bảng tin
+      </a>
+    </li>
+    <li>
+      <a routerLink="/teacher/assignment/{{classId}}" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{ exact: true }">
+        Bài tập
+      </a>
+    </li>
+    <li>
+      <a routerLink="/teacher/class/exams/{{classId}}" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{ exact: true }">
+        Bài thi
+      </a>
+    </li>
+    <li>
+      <a routerLink="/teacher/class/{{classId}}" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{ exact: true }">
+        Mọi người
+      </a>
+    </li>
+    <li>
+      <a routerLink="/teacher/grade" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{ exact: true }">
+        Điểm
+      </a>
+    </li>
+  </ul>
 </nav>

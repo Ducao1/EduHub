@@ -2,14 +2,16 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { ClassExamService } from '../../../../services/class-exam.service';
+import { TeacherNavBarComponent } from "../../teacher-nav-bar/teacher-nav-bar.component";
 
 @Component({
   selector: 'app-class-list-exam',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
-  ],
+    RouterModule,
+    TeacherNavBarComponent
+],
   templateUrl: './class-list-exam.component.html',
   styleUrl: './class-list-exam.component.scss',
   providers: [DatePipe]

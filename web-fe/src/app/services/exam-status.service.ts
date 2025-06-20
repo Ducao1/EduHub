@@ -6,6 +6,7 @@ import { environment } from '../environments/environment';
 import { ExamStatusType } from '../dtos/enums/exam-status-type.enum';
 import { ExamStatus } from '../interfaces/exam-status';
 import { StudentExamStatusDTO } from '../dtos/responses/student-exam-status.dto';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,9 @@ export class ExamStatusService {
   public studentStatuses$: Observable<StudentExamStatusDTO[]> = this.studentStatusSubject.asObservable();
   public connectionStatus$: Observable<boolean> = this.connectionSubject.asObservable();
 
-  constructor() {
+  constructor(
+    private http: HttpClient,
+  ) {
     this.initializeWebSocket();
   }
 
@@ -229,5 +232,12 @@ export class ExamStatusService {
         }
       });
     }
+  }
+
+  /**
+   * Lấy toàn bộ log hoạt động sinh viên từ backend
+   */
+  fetchActivityLog(examId: number, classId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiBaseUrl}/exam-activity?examId=${examId}&classId=${classId}`);
   }
 }
