@@ -1,94 +1,97 @@
-<div class="dashboard-container">
-    <div class="dashboard-header">
-        <h2>Danh sách bài kiểm tra</h2>
-        <a class="btn-create-class" routerLink="/teacher/add-exam">
-            <i class="fas fa-plus-circle me-2"></i>Tạo bài kiểm tra mới
-        </a>
-    </div>
-
-    <div class="assignment-list">
-        <div *ngIf="exams.length === 0" class="no-assignments">
-            <i class="fas fa-file-alt"></i>
-            <p>Bạn chưa có bài kiểm tra nào</p>
+<div class="component-container">
+    <div class="main-content">
+        <div class="header">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Tìm kiếm bài thi...">
+            </div>
             <a class="btn-create-class" routerLink="/teacher/add-exam">
-                <i class="fas fa-plus-circle me-2"></i>Tạo bài kiểm tra đầu tiên
+                <i class="fas fa-plus-circle me-2"></i>Tạo bài kiểm tra mới
             </a>
         </div>
 
-        <div *ngFor="let exam of exams; let i = index" class="assignment-card" [class.active-dropdown]="activeDropdownIndex === i">
-            <div class="assignment-info">
-                <div class="assignment-title">
-                    <a routerLink="/teacher/detail-exam/{{exam.id}}">
-                        <i class="fas fa-file-alt me-2"></i>{{ exam.title }}
-                    </a>
-                </div>
-                <!-- <div class="assignment-details">
-                    <span class="exam-code">
-                        <i class="fas fa-barcode me-2"></i>Mã bài kiểm tra: {{ exam.id }}
-                    </span>
-                </div> -->
-                <div class="assignment-details">
-                    <span>
-                       Thời gian: {{ exam.id }}
-                    </span>
-                </div>
-                <div class="assignment-details">
-                    <span>
-                        Số câu: {{ exam.id }}
-                    </span>
-                </div>
+        <div class="assignment-list">
+            <div *ngIf="exams.length === 0 && !searchTerm" class="no-assignments">
+                <i class="fas fa-file-alt"></i>
+                <p>Bạn chưa có bài kiểm tra nào</p>
+                <a class="btn-create-class" routerLink="/teacher/add-exam">
+                    <i class="fas fa-plus-circle me-2"></i>Tạo bài kiểm tra đầu tiên
+                </a>
             </div>
-            
-            <div class="assignment-actions">
-                <div class="dropdown">
-                    <button class="btn-dropdown" (click)="toggleDropdown(i)">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <div class="dropdown-menu" [class.show]="activeDropdownIndex === i">
-                        <a class="dropdown-item" (click)="tryExam(exam.id)">
-                            <i class="fas fa-play-circle me-2"></i>Làm thử
-                        </a>
-                        <a class="dropdown-item" (click)="updateExam(exam.id)">
-                            <i class="fas fa-edit me-2"></i>Cập nhật
-                        </a>
-                        <a class="dropdown-item" (click)="assignExam(exam.id)">
-                            <i class="fas fa-share-alt me-2"></i>Giao bài thi
-                        </a>
-                        <a class="dropdown-item" (click)="deleteExam(exam.id)">
-                            <i class="fas fa-trash-alt me-2"></i>Xóa
+
+            <div *ngFor="let exam of exams; let i = index" class="assignment-card"
+                [class.active-dropdown]="activeDropdownIndex === i">
+                <div class="assignment-info">
+                    <div class="assignment-title">
+                        <a routerLink="/teacher/detail-exam/{{exam.id}}">
+                            <i class="fas fa-file-alt me-2"></i>{{ exam.title }}
                         </a>
                     </div>
+                    <div class="assignment-details">
+                        <span>
+                            Thời gian: {{ exam.id }}
+                        </span>
+                    </div>
+                    <div class="assignment-details">
+                        <span>
+                            Số câu: {{ exam.id }}
+                        </span>
+                    </div>
                 </div>
-                <a class="btn-view" routerLink="/teacher/detail-exam/{{exam.id}}">
-                    <!-- <i class="fas fa-arrow-right"></i> -->
-                </a>
+
+                <div class="assignment-actions">
+                    <div class="dropdown">
+                        <button class="btn-dropdown" (click)="toggleDropdown(i)">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-menu" [class.show]="activeDropdownIndex === i">
+                            <a class="dropdown-item" (click)="tryExam(exam.id)">
+                                <i class="fas fa-play-circle me-2"></i>Làm thử
+                            </a>
+                            <a class="dropdown-item" (click)="updateExam(exam.id)">
+                                <i class="fas fa-edit me-2"></i>Cập nhật
+                            </a>
+                            <a class="dropdown-item" (click)="assignExam(exam.id)">
+                                <i class="fas fa-share-alt me-2"></i>Giao bài thi
+                            </a>
+                            <a class="dropdown-item" (click)="deleteExam(exam.id)">
+                                <i class="fas fa-trash-alt me-2"></i>Xóa
+                            </a>
+                        </div>
+                    </div>
+                    <a class="btn-view" routerLink="/teacher/detail-exam/{{exam.id}}">
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="d-flex justify-content-center mt-4">
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            <li class="page-item" *ngIf="currentPage > 0">
-                <a class="page-link" href="#" (click)="onPageChange(0)">First</a>
-            </li>
-            <li class="page-item" *ngIf="currentPage > 0">
-                <a class="page-link" href="#" (click)="onPageChange(currentPage - 1)">Previous</a>
-            </li>
-            <ng-container *ngFor="let page of visiblePages">
-                <li class="page-item" [ngClass]="{'active': page - 1 === currentPage}">
-                    <a class="page-link" href="#" (click)="onPageChange(page - 1)">{{ page }}</a>
+    <div class="pagination-container">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" *ngIf="currentPage > 0">
+                    <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(0)">&laquo;</a>
                 </li>
-            </ng-container>
-            <li class="page-item" *ngIf="currentPage < totalPages - 1">
-                <a class="page-link" href="#" (click)="onPageChange(currentPage + 1)">Next</a>
-            </li>
-            <li class="page-item" *ngIf="currentPage < totalPages - 1">
-                <a class="page-link" href="#" (click)="onPageChange(totalPages - 1)">Last</a>
-            </li>
-        </ul>
-    </nav>
+                <li class="page-item" *ngIf="currentPage > 0">
+                    <a class="page-link" href="#"
+                        (click)="$event.preventDefault(); onPageChange(currentPage - 1)">&lsaquo;</a>
+                </li>
+                <ng-container *ngFor="let page of visiblePages">
+                    <li class="page-item" [ngClass]="{'active': page - 1 === currentPage}">
+                        <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(page - 1)">{{ page
+                            }}</a>
+                    </li>
+                </ng-container>
+                <li class="page-item" *ngIf="currentPage < totalPages - 1">
+                    <a class="page-link" href="#"
+                        (click)="$event.preventDefault(); onPageChange(currentPage + 1)">&rsaquo;</a>
+                </li>
+                <li class="page-item" *ngIf="currentPage < totalPages - 1">
+                    <a class="page-link" href="#"
+                        (click)="$event.preventDefault(); onPageChange(totalPages - 1)">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
 
 <div class="popup-overlay" *ngIf="isPopupVisible" (click)="closePopup($event)">

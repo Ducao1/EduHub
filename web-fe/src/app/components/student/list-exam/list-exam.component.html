@@ -1,75 +1,67 @@
 <app-student-nav-bar></app-student-nav-bar>
 <div class="exam-container">
+    <div class="exam-header">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Tìm kiếm bài thi...">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+    </div>
     <div class="exam-list">
         <div *ngIf="exams.length === 0" class="no-exams">
-            <i class="fas fa-file-alt"></i>
-            <p>Bạn chưa có bài kiểm tra nào được giao</p>
-            <a class="btn-create-class" routerLink="/student/join-exam">
-                <i class="fas fa-plus-circle me-2"></i>Tham gia bài kiểm tra đầu tiên
-            </a>
+            <i class="fas fa-clipboard-list"></i>
+            <p>Lớp này chưa có bài thi nào</p>
         </div>
 
         <div *ngFor="let exam of exams; let i = index" class="exam-card">
             <div class="exam-info">
                 <div class="exam-title">
-                    <a routerLink="/confirm-exam/{{exam.exam_id}}">
-                        <i class="fas fa-file-alt me-2"></i>{{ exam.title }}
+                    <a routerLink="/student/take-exam/{{exam.id}}">
+                       <i class="fas fa-file-alt me-3"></i>{{ exam.title }}
                     </a>
                 </div>
                 <div class="exam-details">
-                    <span>
-                       <i class="fas fa-clock me-2"></i>Thời gian: {{ exam.duration / 60000 }} phút
+                    <span class="duration">
+                        <i class="fas fa-hourglass-half me-2"></i>{{ exam.durationInMinutes }} phút
                     </span>
-                </div>
-                <div class="exam-details">
-                    <span>
-                        <i class="fas fa-question-circle me-2"></i>Số câu: {{ exam.questionCount }}
+                    <span class="due-date" [class.no-deadline]="!exam.dueDate || exam.dueDate[0] === 9999">
+                        <i class="fas fa-clock me-2"></i>
+                        <ng-container *ngIf="exam.dueDate && exam.dueDate[0] !== 9999; else noDeadline">
+                            {{ formatDate(exam.assignedDate) }} – {{ formatDate(exam.dueDate) }}
+                        </ng-container>
+                        <ng-template #noDeadline>Không có thời hạn</ng-template>
                     </span>
-                </div>
-                <div class="exam-details">
-                    <ng-container *ngIf="exam.dueDate && exam.dueDate[0] !== 9999; else noDeadline">
-                        <span>
-                            <i class="fas fa-calendar-alt me-2"></i>Thời hạn: {{ formatDate(exam.assignedDate) }} – {{ formatDate(exam.dueDate) }}
-                        </span>
-                      </ng-container>
-                      <ng-template #noDeadline>
-                        <span>
-                            <i class="fas fa-calendar-alt me-2"></i>Thời hạn: Không có thời hạn
-                        </span>
-                      </ng-template>
                 </div>
             </div>
-            
             <div class="exam-actions">
-                <a class="btn btn-primary" routerLink="/confirm-exam/{{exam.exam_id}}/class/{{classId}}">
+                <a class="btn btn-primary" routerLink="/confirm-exam/{{exam.id}}/class/{{classId}}">
                     Làm bài
                 </a>
             </div>
         </div>
 
-        <div class="d-flex justify-content-center">
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li class="page-item" *ngIf="currentPage > 1">
-                        <a class="page-link" href="#" (click)="onPageChange(1)">First</a>
+    </div>
+    <div class="pagination-container d-flex justify-content-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" *ngIf="currentPage > 1">
+                    <a class="page-link" href="#" (click)="onPageChange(1)">First</a>
+                </li>
+                <li class="page-item" *ngIf="currentPage > 1">
+                    <a class="page-link" href="#" (click)="onPageChange(currentPage - 1)">Previous</a>
+                </li>
+                <ng-container *ngFor="let page of visiblePages">
+                    <li class="page-item" [ngClass]="{'active': page === currentPage}">
+                        <a class="page-link" href="#" (click)="onPageChange(page)">{{ page }}</a>
                     </li>
-                    <li class="page-item" *ngIf="currentPage > 1">
-                        <a class="page-link" href="#" (click)="onPageChange(currentPage - 1)">Previous</a>
-                    </li>
-                    <ng-container *ngFor="let page of visiblePages">
-                        <li class="page-item" [ngClass]="{'active': page === currentPage}">
-                            <a class="page-link" href="#" (click)="onPageChange(page)">{{ page }}</a>
-                        </li>
-                    </ng-container>
-                    <li class="page-item" *ngIf="currentPage < totalPages">
-                        <a class="page-link" href="#" (click)="onPageChange(currentPage + 1)">Next</a>
-                    </li>
-                    <li class="page-item" *ngIf="currentPage < totalPages">
-                        <a class="page-link" href="#" (click)="onPageChange(totalPages)">Last</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+                </ng-container>
+                <li class="page-item" *ngIf="currentPage < totalPages">
+                    <a class="page-link" href="#" (click)="onPageChange(currentPage + 1)">Next</a>
+                </li>
+                <li class="page-item" *ngIf="currentPage < totalPages">
+                    <a class="page-link" href="#" (click)="onPageChange(totalPages)">Last</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
     

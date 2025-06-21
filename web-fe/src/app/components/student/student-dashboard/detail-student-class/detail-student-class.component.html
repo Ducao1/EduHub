@@ -1,12 +1,99 @@
-<app-student-nav-bar></app-student-nav-bar>
-
+<app-student-nav-bar [className]="className" [id]="classId"></app-student-nav-bar>
 <div class="class-container">
-    <div class="class-banner">
-      <div class="class-info">
-        <h2 class="class-title">{{ className }}</h2>
-        <p class="class-subject">{{ classDescription }}</p>
+  <div class="stream-container">
+    <div *ngIf="!isCreatingAnnouncement" class="announcement-creator-card" (click)="toggleAnnouncementCreator(true)">
+      <div class="avatar-circle" style="background-color: #00796b;">
+        <span>N</span>
+      </div>
+      <div class="announcement-input-box">
+        <span>Thông báo nội dung nào đó cho lớp học của bạn</span>
+      </div>
+    </div>
+    <div *ngIf="isCreatingAnnouncement" class="announcement-editor-card">
+        <textarea [(ngModel)]="announcementContent" placeholder="Thông báo nội dung nào đó cho lớp học của bạn..." rows="4" autofocus></textarea>
+        
+        <div *ngIf="selectedFile" class="selected-file">
+            <i class="fas fa-paperclip"></i>
+            <span>{{ selectedFile.name }}</span>
+            <button (click)="removeSelectedFile()" class="remove-file-btn" title="Xóa tệp">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="editor-actions">
+            <div class="attachment-actions">
+                <input type="file" #fileInput hidden (change)="onFileSelected($event)">
+                <button class="attach-btn" (click)="fileInput.click()" title="Đính kèm tệp">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+            </div>
+            <div class="main-actions">
+                <button class="cancel-btn" (click)="toggleAnnouncementCreator(false)">Hủy</button>
+                <button class="post-btn" [disabled]="!announcementContent.trim() && !selectedFile" (click)="postAnnouncement()">Đăng</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-header">
+        <div class="avatar-circle" style="background-color: #d32f2f;">
+          <span>C</span>
+        </div>
+        <div class="post-author-info">
+          <div class="author-name">CNTT - Ha Thi Thanh</div>
+          <div class="post-date">20 thg 4, 2021</div>
+        </div>
+        <div class="post-options">
+          <i class="fas fa-ellipsis-v"></i>
+        </div>
+      </div>
+      <div class="post-content">
+        <p>Cô gửi lại đề kiểm tra bù của các bạn hôm trước.</p>
+      </div>
+      <div class="post-attachments">
+        <a href="#" class="attachment-drive">
+          <img src="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png" alt="Google Drive icon">
+        </a>
+      </div>
+      <div class="post-footer">
+        <div class="comment-count">
+          <i class="fas fa-users"></i>
+          <span>4 nhận xét về lớp học</span>
+        </div>
+      </div>
+      <div class="comment-section">
+        <!-- Hardcoded Comment -->
+        <div class="comment">
+          <div class="avatar-circle" style="background-color: #ef6c00;">
+            <span>H</span>
+          </div>
+          <div class="comment-content-container">
+            <div class="comment-author">
+              Hoàng Trung Đức <span class="comment-date">22 thg 4, 2021</span>
+            </div>
+            <div class="comment-text">cho em xin file aj 0856090453</div>
+          </div>
+        </div>
+        <!-- Add Comment Input -->
+        <div class="add-comment">
+          <div class="avatar-circle" style="background-color: #00796b;">
+            <span>N</span>
+          </div>
+          <div class="comment-input-container">
+            <textarea placeholder="Thêm nhận xét trong lớp học..."></textarea>
+            <div class="comment-toolbar">
+                <i class="fas fa-bold"></i>
+                <i class="fas fa-italic"></i>
+                <i class="fas fa-underline"></i>
+                <i class="fas fa-list-ul"></i>
+                <i class="fas fa-remove-format"></i>
+            </div>
+            <button class="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-
+</div>

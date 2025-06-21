@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgModule } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ExamService } from '../../../services/exam.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UserService } from '../../../services/user.service';
@@ -8,6 +8,8 @@ import { ClassroomService } from '../../../services/classroom.service';
 import { ClassExamService } from '../../../services/class-exam.service';
 import { AssignExamDTO } from '../../../dtos/requests/assign-exam.dto';
 import { Router } from '@angular/router';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-exams',
@@ -20,7 +22,7 @@ import { Router } from '@angular/router';
   templateUrl: './exam.component.html',
   styleUrls: ['./exam.component.scss']
 })
-export class ExamComponent {
+export class ExamComponent implements OnInit, OnDestroy {
   userId!: number;
   exams: any[] = [];
   classes: any[] = [];
@@ -36,6 +38,10 @@ export class ExamComponent {
   totalElements: number = 0;
   totalPages: number = 0;
   visiblePages: number[] = [];
+
+  searchTerm: string = '';
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
 
   constructor(
     private examService: ExamService,
@@ -53,6 +59,22 @@ export class ExamComponent {
       this.examId = Number(routeExamId);
     }
     this.loadAllExams();
+
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.currentPage = 0;
+      this.loadAllExams();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.searchSubscription?.unsubscribe();
+  }
+
+  onSearchChange(): void {
+    this.searchSubject.next(this.searchTerm);
   }
 
   togglePopup() {
@@ -68,7 +90,7 @@ export class ExamComponent {
   }
 
   loadAllExams() {
-    this.examService.getExams(this.userId, this.currentPage, this.pageSize).subscribe({
+    this.examService.getExams(this.userId, this.currentPage, this.pageSize, this.searchTerm).subscribe({
       next: (response) => {
         debugger
         this.exams = response.content;

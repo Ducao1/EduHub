@@ -45,7 +45,7 @@ export class ClassListExamComponent implements OnInit {
         this.exams = response.content;
         this.totalElements = response.totalElements;
         this.totalPages = response.totalPages;
-        this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
+        this.updateVisiblePages();
       },
       error: (err) => {
         debugger
@@ -55,22 +55,24 @@ export class ClassListExamComponent implements OnInit {
   }
 
   onPageChange(page: number): void {
-    this.currentPage = page;
-    this.loadExams();
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadExams();
+    }
   }
 
-  generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
+  updateVisiblePages(): void {
     const maxVisiblePages = 5;
     const halfVisiblePages = Math.floor(maxVisiblePages / 2);
 
-    let startPage = Math.max(currentPage - halfVisiblePages, 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+    let startPage = Math.max(this.currentPage - halfVisiblePages, 1);
+    let endPage = Math.min(startPage + maxVisiblePages - 1, this.totalPages);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(endPage - maxVisiblePages + 1, 1);
     }
 
-    return new Array(endPage - startPage + 1).fill(0)
+    this.visiblePages = new Array(endPage - startPage + 1).fill(0)
         .map((_, index) => startPage + index);
   }
 

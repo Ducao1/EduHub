@@ -20,8 +20,14 @@ export class ExamService {
     };
   }
 
-  getExams(teacherId: number, page: number = 0, size: number = 5): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/exams/teacher/${teacherId}?page=${page}&size=${size}`);
+  getExams(teacherId: number, page: number = 0, size: number = 9, searchTerm: string = ''): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    if (searchTerm) {
+      params = params.set('searchTerm', searchTerm);
+    }
+    return this.http.get(`${environment.apiBaseUrl}/exams/teacher/${teacherId}`, { params });
   }
 
   addExam(examDTO: ExamDTO): Observable<any> {

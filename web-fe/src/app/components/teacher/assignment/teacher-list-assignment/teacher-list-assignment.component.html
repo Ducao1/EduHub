@@ -1,9 +1,9 @@
 <div class="assignment-container">
     <div class="assignment-header">
-        <h2>Danh sách bài tập</h2>
-        <!-- <a class="btn-create-assignment" routerLink="/teacher/add-assignment/{{userId}}">
-            <i class="fas fa-plus-circle me-2"></i>Tạo bài tập mới
-        </a> -->
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Tìm kiếm bài thi...">
+        </div>
     </div>
 
     <div class="assignment-list">
@@ -19,7 +19,7 @@
             <div class="assignment-info">
                 <div class="assignment-title">
                     <a routerLink="/teacher/detail-assignment/{{assignment.id}}">
-                       <i class="fas fa-tasks me-3"></i>{{ assignment.title }}
+                        <i class="fas fa-tasks me-3"></i>{{ assignment.title }}
                     </a>
                 </div>
                 <div class="assignment-details">
@@ -44,39 +44,30 @@
                 </a>
             </div>
         </div>
-
-        <!-- Pagination Controls -->
-        <!-- <div *ngIf="totalElements > pageSize" class="pagination-controls mt-3">
-            <button class="btn btn-secondary me-2" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">
-                Trước
-            </button>
-            <span>Trang {{ currentPage + 1 }} / {{ getTotalPages() }}</span>
-            <button class="btn btn-secondary ms-2" [disabled]="currentPage + 1 >= getTotalPages()" (click)="onPageChange(currentPage + 1)">
-                Sau
-            </button>
-        </div> -->
-        <div class="d-flex justify-content-center">
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            <li class="page-item" *ngIf="currentPage > 1">
-                <a class="page-link" href="#" (click)="onPageChange(1)">First</a>
-            </li>
-            <li class="page-item" *ngIf="currentPage > 1">
-                <a class="page-link" href="#" (click)="onPageChange(currentPage - 1)">Previous</a>
-            </li>
-            <ng-container *ngFor="let page of visiblePages">
-                <li class="page-item" [ngClass]="{'active': page === currentPage}">
-                    <a class="page-link" href="#" (click)="onPageChange(page)">{{ page }}</a>
+    </div>
+    <div class="pagination-container">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" [class.disabled]="currentPage === 0">
+                    <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(0)">&laquo;</a>
                 </li>
-            </ng-container>
-            <li class="page-item" *ngIf="currentPage < totalPages">
-                <a class="page-link" href="#" (click)="onPageChange(currentPage + 1)">Next</a>
-            </li>
-            <li class="page-item" *ngIf="currentPage < totalPages">
-                <a class="page-link" href="#" (click)="onPageChange(totalPages)">Last</a>
-            </li>
-        </ul>
-    </nav>
-</div>
+                <li class="page-item" [class.disabled]="currentPage === 0">
+                    <a class="page-link" href="#"
+                        (click)="$event.preventDefault(); onPageChange(currentPage - 1)">&lsaquo;</a>
+                </li>
+                <li class="page-item" *ngFor="let page of visiblePages" [class.active]="page - 1 === currentPage">
+                    <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(page - 1)">{{ page
+                        }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
+                    <a class="page-link" href="#"
+                        (click)="$event.preventDefault(); onPageChange(currentPage + 1)">&rsaquo;</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
+                    <a class="page-link" href="#"
+                        (click)="$event.preventDefault(); onPageChange(totalPages - 1)">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>

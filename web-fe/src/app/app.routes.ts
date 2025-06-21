@@ -51,8 +51,8 @@ export const routes: Routes = [
       { path: 'list-assignment/:id', component: ListAssignmentComponent },
       { path: 'detail-assignment/:id', component: StudentDetailAssignmentComponent },
       { path: 'list-exam/:id', component: ListExamComponent },
-      { path: 'score', component: ScoreComponent },
-      
+      { path: 'score/:id', component: ScoreComponent },
+
     ]
   },
 
