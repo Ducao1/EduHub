@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
@@ -13,6 +13,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 })
 export class TeacherNavBarComponent {
   classId!: number;
+  @Input() className: string = '';
 
   constructor(
     private route: ActivatedRoute

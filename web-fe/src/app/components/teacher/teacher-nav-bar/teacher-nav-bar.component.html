@@ -1,39 +1,44 @@
 <nav class="class-navbar">
-  <ul>
-    <li>
-      <a routerLink="/teacher/detail-class/{{classId}}" 
-         routerLinkActive="active" 
-         [routerLinkActiveOptions]="{ exact: true }">
-        Bảng tin
-      </a>
-    </li>
-    <li>
-      <a routerLink="/teacher/assignment/{{classId}}" 
-         routerLinkActive="active" 
-         [routerLinkActiveOptions]="{ exact: true }">
-        Bài tập
-      </a>
-    </li>
-    <li>
-      <a routerLink="/teacher/class/exams/{{classId}}" 
-         routerLinkActive="active" 
-         [routerLinkActiveOptions]="{ exact: true }">
-        Bài thi
-      </a>
-    </li>
-    <li>
-      <a routerLink="/teacher/class/{{classId}}" 
-         routerLinkActive="active" 
-         [routerLinkActiveOptions]="{ exact: true }">
-        Mọi người
-      </a>
-    </li>
-    <li>
-      <a routerLink="/teacher/grade" 
-         routerLinkActive="active" 
-         [routerLinkActiveOptions]="{ exact: true }">
-        Điểm
-      </a>
-    </li>
-  </ul>
+  <div class="nav-left">
+    <ul>
+      <li>
+        <a routerLink="/teacher/detail-class/{{classId}}" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{ exact: true }">
+          Bảng tin
+        </a>
+      </li>
+      <li>
+        <a routerLink="/teacher/assignment/{{classId}}" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{ exact: true }">
+          Bài tập
+        </a>
+      </li>
+      <li>
+        <a routerLink="/teacher/class/exams/{{classId}}" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{ exact: true }">
+          Bài thi
+        </a>
+      </li>
+      <li>
+        <a routerLink="/teacher/class/{{classId}}" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{ exact: true }">
+          Mọi người
+        </a>
+      </li>
+      <li>
+        <a routerLink="/teacher/grade" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{ exact: true }">
+          Điểm
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <span class="class-name">{{ className || 'Chưa có tên lớp' }}</span>
+  </div>
 </nav>

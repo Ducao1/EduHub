@@ -146,7 +146,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
     })) || [];
     this.currentQuestionIndex = 0;
     this.timeremaining = response.duration || 0;
-    this.timeLeft = (response.duration || 0) * 60;
+    this.timeLeft = Math.floor((response.duration || 0) / 1000);
     this.initializeAnswers();
 
     this.questions.forEach(question => {
@@ -302,10 +302,10 @@ export class TakeExamComponent implements OnInit, OnDestroy {
   }
 
   getFormattedTime(): string {
-    const minutes = Math.floor(this.timeLeft / 60);
-    const seconds = this.timeLeft % 60;
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  }
+  const minutes = Math.floor(this.timeLeft / 60);
+  const seconds = this.timeLeft % 60;
+  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
 
   private initializeAnswers() {
     this.answers = this.exam.questions.map((question: any) => ({

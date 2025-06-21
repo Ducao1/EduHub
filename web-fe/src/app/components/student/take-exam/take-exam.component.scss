@@ -13,7 +13,7 @@
   overflow-y: auto;
 }
 
-.btn{
+.btn {
   background: #0052B4;
 }
 
@@ -34,8 +34,7 @@
 
 .exam-container {
   padding: 20px;
-  background-color: #f9f9f9;
-  // background-color: #0052B4;
+  background-color: #f1f3f5;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -57,7 +56,6 @@
 .question-panel {
   flex: 1;
   background-color: #fff;
-  // background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -70,6 +68,14 @@
   flex: 1;
   overflow-y: auto;
   margin-bottom: 20px;
+}
+
+.question-panel .card {
+  background-color: #fff;
+  margin-bottom: 0;
+  padding: 20px;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 .navigation-panel {
@@ -89,7 +95,7 @@
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #666;
 }
 
 .timer {
@@ -99,18 +105,10 @@
   font-weight: 300;
 }
 
-.card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 0;
-  padding: 20px;
-}
-
 .navigation-status-key {
   margin-bottom: 15px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #666;
 }
 
 .status-item {
@@ -294,7 +292,6 @@
   background-color: #218838;
 }
 
-/* Confirmation Popup Styles */
 .confirmation-popup-overlay {
   position: fixed;
   top: 0;
@@ -332,36 +329,6 @@
   margin-bottom: 25px;
   text-align: center;
 }
-
-/* Removed popup-details styles */
-/*
-.popup-details {
-  margin-bottom: 25px;
-  border-top: 1px solid #eee;
-  padding-top: 15px;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px dashed #eee;
-
-  &:last-child {
-    border-bottom: none;
-  }
-}
-
-.detail-label {
-  font-weight: 500;
-  color: #666;
-}
-
-.detail-value {
-  font-weight: bold;
-  color: #333;
-}
-*/
 
 .popup-actions {
   display: flex;

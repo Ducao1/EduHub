@@ -40,3 +40,66 @@
   position: relative;
   z-index: 2;
 }
+
+.class-navbar {
+  width: 100%;
+  background: #f1f1f1;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.nav-left {
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  ul li {
+    margin: 0;
+  }
+
+  ul li a {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #5f6368;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-bottom: none;
+    background-color: transparent;
+    transition: all 0.3s;
+  }
+
+  ul li a:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  ul li a.active {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    color: #1a73e8;
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.nav-right {
+  .class-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    padding: 12px 20px;
+    background-color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+}
