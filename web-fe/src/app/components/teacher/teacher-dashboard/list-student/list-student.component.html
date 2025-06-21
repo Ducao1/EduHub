@@ -1,24 +1,67 @@
-<app-teacher-nav-bar></app-teacher-nav-bar>
-<div class="container">
-    <div style="display: flex; justify-content: flex-end; padding: 10px; background-color: #fff;">
-      <a class="btn btn-primary" routerLink="/teacher/class/{{classId}}/add-student">
-          Thêm</a>
-  </div>
-    <h2>Danh sách sinh viên</h2>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Ho tên</th>
-          <th>SĐT</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let student of students; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ student.fullName }}</td>
-          <td>{{ student.phoneNumber }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<div class="page-container">
+    <app-teacher-nav-bar></app-teacher-nav-bar>
+    <div class="student-list-container">
+        <div class="student-list-header">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Tìm kiếm sinh viên theo tên, mã hoặc email...">
+            </div>
+            <a class="btn-add-student" routerLink="/teacher/class/{{classId}}/add-student">
+                <i class="fas fa-plus-circle me-2"></i>Thêm sinh viên
+            </a>
+        </div>
+
+        <div class="student-table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Họ và tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let student of paginatedStudents; let i = index">
+                        <td>{{i + 1 }}</td>
+                        <td>{{ student.fullName }}</td>
+                        <td>{{ student.phoneNumber }}</td>
+                        <td>
+                            <button class="btn-action btn-delete" title="Xóa sinh viên">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div *ngIf="students.length === 0" class="no-students">
+                <i class="fas fa-users"></i>
+                <p>Chưa có sinh viên nào trong lớp</p>
+            </div>
+        </div>
+        
+        <div class="pagination-container" *ngIf="totalPages > 1">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item" *ngIf="currentPage > 1">
+                        <a class="page-link" href="#" (click)="onPageChange(1); $event.preventDefault()">First</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                        <a class="page-link" href="#" (click)="onPageChange(currentPage - 1); $event.preventDefault()">Previous</a>
+                    </li>
+                    <ng-container *ngFor="let page of visiblePages">
+                        <li class="page-item" [class.active]="page === currentPage">
+                            <a class="page-link" href="#" (click)="onPageChange(page); $event.preventDefault()">{{ page }}</a>
+                        </li>
+                    </ng-container>
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                        <a class="page-link" href="#" (click)="onPageChange(currentPage + 1); $event.preventDefault()">Next</a>
+                    </li>
+                    <li class="page-item" *ngIf="currentPage < totalPages">
+                        <a class="page-link" href="#" (click)="onPageChange(totalPages); $event.preventDefault()">Last</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

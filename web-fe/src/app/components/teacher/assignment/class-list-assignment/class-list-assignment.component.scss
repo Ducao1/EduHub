@@ -1,13 +1,18 @@
 .assignment-container {
     background-color: #fff;
     padding: 20px;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0px 0px 5px 5px;
+    height: calc(100vh - 20vh);
+    display: flex;
+    flex-direction: column;
 }
 
 .assignment-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
 
     h2 {
         color: #4a5fd1;
@@ -21,6 +26,30 @@
             color: #7b2cbf;
         }
     }
+}
+
+.search-container {
+    position: relative;
+    flex-grow: 0;
+    width: 400px;
+    margin-right: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #f1f1f1;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
 }
 
 .btn-create-assignment {
@@ -51,6 +80,9 @@
     margin-top: 20px;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    flex-grow: 1;
+    overflow-y: auto;
+    align-content: start;
 }
 
 .no-assignments {
@@ -170,9 +202,15 @@
     }
 }
 
+.pagination-container {
+    padding: 15px 0 0 0;
+    background-color: #fff;
+    flex-shrink: 0;
+}
+
 /* Pagination Styles */
 .pagination {
-    margin-top: 20px;
+    margin-top: 0;
     display: flex;
     justify-content: center;
     padding-left: 0;

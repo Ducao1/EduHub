@@ -1,13 +1,18 @@
 .exam-container {
     background-color: #fff;
     padding: 20px;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0px 0px 5px 5px;
+    height: calc(100vh - 20vh);
+    display: flex;
+    flex-direction: column;
 }
 
 .exam-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
 
     h2 {
         color: #4a5fd1;
@@ -23,6 +28,29 @@
     }
 }
 
+.search-container {
+    position: relative;
+    flex-grow: 0;
+    width: 400px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #f1f1f1;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+
 .btn-create-exam {
     background: #0052B4;
     color: white;
@@ -34,7 +62,7 @@
     border: none;
     display: inline-flex;
     align-items: center;
-    
+
     &:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -50,6 +78,9 @@
     margin-top: 20px;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    flex-grow: 1;
+    overflow-y: auto;
+    align-content: start;
 }
 
 .no-exams {
@@ -59,13 +90,13 @@
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    
+
     i {
         font-size: 48px;
         color: #4a5fd1;
         margin-bottom: 20px;
     }
-    
+
     p {
         color: #666;
         margin-bottom: 20px;
@@ -81,7 +112,7 @@
     border: 1px solid rgba(74, 95, 209, 0.1);
     display: flex;
     justify-content: space-between;
-    
+
     &:hover {
         transform: translateY(-5px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -94,7 +125,7 @@
 
 .exam-title {
     margin-bottom: 15px;
-    
+
     a {
         color: #4a5fd1;
         text-decoration: none;
@@ -102,7 +133,7 @@
         font-weight: 600;
         display: flex;
         align-items: center;
-        
+
         &:hover {
             color: #7b2cbf;
         }
@@ -115,24 +146,25 @@
     gap: 15px;
     margin-bottom: 15px;
     font-size: 14px;
-    
+
     span {
         display: flex;
         align-items: center;
         color: #666;
-        
+
         i {
             color: #4a5fd1;
             margin-right: 5px;
         }
     }
-    
+
     .duration {
         padding-top: 10px;
     }
 
     .due-date {
         padding-top: 10px;
+
         &.no-deadline {
             color: #999;
         }
@@ -151,12 +183,12 @@
     padding: 8px;
     border-radius: 50%;
     transition: all 0.3s ease;
-    
+
     &:hover {
         background: rgba(74, 95, 209, 0.1);
         color: #7b2cbf;
     }
-    
+
     i {
         font-size: 16px;
     }
@@ -229,15 +261,22 @@
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
+.pagination-container {
+    padding: 15px 0 0 0;
+    background-color: #fff;
+    flex-shrink: 0;
+}
+
 /* Pagination Styles */
 .pagination {
-    margin-top: 20px;
+    margin-top: 0;
     display: flex;
     justify-content: center;
     padding-left: 0;

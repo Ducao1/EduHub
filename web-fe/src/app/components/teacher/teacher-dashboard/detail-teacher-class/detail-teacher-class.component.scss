@@ -3,6 +3,10 @@
     width: 100%;
     padding: 20px;
     font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0px 0px 5px 5px;
+    height: calc(100vh - 20vh);
   }
   
   .class-banner {
