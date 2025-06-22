@@ -19,7 +19,7 @@ import { TeacherNavBarComponent } from "../../teacher-nav-bar/teacher-nav-bar.co
 export class ClassListExamComponent implements OnInit {
   classId!: number;
   exams: any[] = [];
-  currentPage: number = 1;
+  currentPage: number = 0;
   pageSize: number = 9;
   totalElements: number = 0;
   totalPages: number = 0;
@@ -39,7 +39,7 @@ export class ClassListExamComponent implements OnInit {
   }
 
   loadExams(): void {
-    this.classExamService.getExamByClass(this.classId, this.currentPage - 1, this.pageSize).subscribe({
+    this.classExamService.getExamByClass(this.classId, this.currentPage, this.pageSize).subscribe({
       next: (response) => {
         debugger
         this.exams = response.content;
@@ -63,17 +63,17 @@ export class ClassListExamComponent implements OnInit {
 
   updateVisiblePages(): void {
     const maxVisiblePages = 5;
-    const halfVisiblePages = Math.floor(maxVisiblePages / 2);
-
-    let startPage = Math.max(this.currentPage - halfVisiblePages, 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, this.totalPages);
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
-    this.visiblePages = new Array(endPage - startPage + 1).fill(0)
-        .map((_, index) => startPage + index);
+    this.visiblePages = Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
   }
 
   formatDate(dateArray: number[]): string {

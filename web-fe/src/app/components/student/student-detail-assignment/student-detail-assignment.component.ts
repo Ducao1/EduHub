@@ -22,8 +22,9 @@ export class StudentDetailAssignmentComponent implements OnInit {
   assignmentId!: number;
   classroom: any = {};
   selectedFile: File | null = null;
-  hasSubmitted: boolean = false;
-  submittedFile: File | null = null;
+  hasSubmitted = false;
+  isPastDue = false;
+  submission: any = null;
 
 
   constructor(
@@ -60,7 +61,6 @@ export class StudentDetailAssignmentComponent implements OnInit {
         //   this.getClassDetails(response.classId);
         // }
         this.checkDeadline();
-        this.checkSubmissionStatus();
       },
       error: (error) => {
         debugger
@@ -71,33 +71,15 @@ export class StudentDetailAssignmentComponent implements OnInit {
 
   checkSubmissionStatus() {
     this.submissionService.getStudentSubmissionStatus(this.userId, this.assignmentId).subscribe({
-      next: (response) => {
-        debugger
-        this.hasSubmitted = response.submitted;
-        if (response.fileName) {
-          this.submittedFile = { name: response.fileName } as File;
-        }
+      next: (response: any) => {
+        this.hasSubmitted = response.hasSubmitted;
+        this.submission = response.submission;
       },
-      error: (error) => {
-        debugger
-        alert(error.error);
+      error: (error: any) => {
+        console.error('Error checking submission status:', error);
       }
     });
   }
-
-
-  // getClassDetails(classId: number) {
-  //   this.classService.getClassById(classId).subscribe({
-  //     next: (response) => {
-  //       debugger
-  //       this.classroom = response;
-  //     },
-  //     error: (error) => {
-  //       debugger
-  //       alert(error.error);
-  //     }
-  //   });
-  // }
 
   getStudentInfo() {
     this.userService.getStudentById(this.userId).subscribe({
@@ -112,66 +94,56 @@ export class StudentDetailAssignmentComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-      console.log("File đã chọn:", file.name);
-    }
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0] ?? null;
   }
 
-  submitAssignment() {
+  submitAssignment(): void {
     if (!this.selectedFile) {
-      alert("Vui lòng chọn file trước khi nộp bài!");
+      alert('Vui lòng chọn một file để nộp.');
       return;
     }
 
     this.submissionService.submitAssignment(this.userId, this.assignmentId, this.selectedFile).subscribe({
-      next: () => {
-        debugger
-        alert("Nộp bài thành công!");
-        this.hasSubmitted = true;
-        this.submittedFile = this.selectedFile;
-        this.selectedFile = null;
+      next: (response) => {
+        alert('Nộp bài thành công!');
+        this.checkSubmissionStatus();
       },
       error: (error) => {
-        debugger
-        alert(error.error);
+        alert(`Lỗi khi nộp bài: ${error.error}`);
       }
     });
   }
 
   cancelSubmission() {
-    this.submissionService.cancelSubmission(this.userId, this.assignmentId).subscribe({
-      next: () => {
-        debugger
-        alert("Hủy nộp bài thành công!");
-        this.hasSubmitted = false;
-        this.submittedFile = null;
-      },
-      error: (error) => {
-        debugger
-        alert(error.error?.message || "Lỗi khi hủy nộp bài!");
-      }
-    });
+    if (confirm('Bạn có chắc chắn muốn hủy nộp bài không?')) {
+      this.submissionService.cancelSubmission(this.userId, this.assignmentId).subscribe({
+        next: (response) => {
+          alert('Đã hủy nộp bài.');
+          this.hasSubmitted = false;
+          this.submission = null;
+        },
+        error: (error) => {
+          alert(`Lỗi khi hủy nộp bài: ${error.error}`);
+        }
+      });
+    }
   }
 
   checkDeadline() {
-    if (!this.assignment?.dueDate) {
-      this.assignment.isExpired = false;
-      return;
+    if (this.assignment.dueDate) {
+      const dueDate = new Date(this.assignment.dueDate[0], this.assignment.dueDate[1] - 1, this.assignment.dueDate[2], this.assignment.dueDate[3], this.assignment.dueDate[4], this.assignment.dueDate[5]);
+      this.isPastDue = new Date() > dueDate;
     }
-
-    const now = new Date();
-    const dueDate = new Date(this.assignment.dueDate);
-    this.assignment.isExpired = now > dueDate;
   }
 
-
   formatDate(dateArray: number[]): string {
-    const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
-    const jsDate = new Date(year, month - 1, day, hour, minute, second);
-    return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
+    if (!dateArray || dateArray.length < 3) {
+      return '';
+    }
+    const [year, month, day, hour = 0, minute = 0] = dateArray;
+    const date = new Date(year, month - 1, day, hour, minute);
+    return this.datePipe.transform(date, 'HH:mm, dd/MM/yyyy') || '';
   }
 }
 

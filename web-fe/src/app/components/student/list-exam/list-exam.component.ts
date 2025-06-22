@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { StudentNavBarComponent } from '../student-nav-bar/student-nav-bar.component';
 import { ClassExamService } from '../../../services/class-exam.service';
 
@@ -15,17 +15,19 @@ import { ClassExamService } from '../../../services/class-exam.service';
 export class ListExamComponent implements OnInit {
   classId!: number;
   exams: any[] = [];
-  pageSize: number = 9; // Adjust as needed
-  totalPages: number = 0;
-  currentPage: number = 1; // Start with page 1 for display, 0 for API
+  currentPage: number = 0;
+  pageSize: number = 9;
   totalElements: number = 0;
+  totalPages: number = 0;
   visiblePages: number[] = [];
+  studentExamStatus: any;
 
   constructor(
     private classExamService: ClassExamService,
     private route: ActivatedRoute,
-    private datePipe: DatePipe
-  ) {}
+    private datePipe: DatePipe,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.classId = Number(this.route.snapshot.paramMap.get('id'));
@@ -38,12 +40,12 @@ export class ListExamComponent implements OnInit {
   }
 
   loadExams(): void {
-    this.classExamService.getExamByClass(this.classId, this.currentPage - 1, this.pageSize).subscribe({
+    this.classExamService.getExamByClass(this.classId, this.currentPage, this.pageSize).subscribe({
       next: (response) => {
-        this.exams = response.content || [];
-        this.totalElements = response.totalElements || 0;
-        this.totalPages = response.totalPages || 0;
-        this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
+        this.exams = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.updateVisiblePages();
       },
       error: (err) => {
         console.error('Lỗi khi lấy danh sách bài thi:', err);
@@ -53,24 +55,24 @@ export class ListExamComponent implements OnInit {
   }
 
   onPageChange(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
+    if (page >= 0 && page < this.totalPages) {
       this.currentPage = page;
       this.loadExams();
     }
   }
 
-  generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
+  updateVisiblePages(): void {
     const maxVisiblePages = 5;
     const halfVisiblePages = Math.floor(maxVisiblePages / 2);
 
-    let startPage = Math.max(currentPage - halfVisiblePages, 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+    let startPage = Math.max(1, (this.currentPage + 1) - halfVisiblePages);
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
-    return new Array(endPage - startPage + 1).fill(0)
+    this.visiblePages = new Array(endPage - startPage + 1).fill(0)
       .map((_, index) => startPage + index);
   }
 
@@ -79,5 +81,9 @@ export class ListExamComponent implements OnInit {
     const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
     const jsDate = new Date(year, month - 1, day, hour, minute, second);
     return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
+  }
+
+  takeExam(examId: number): void {
+    this.router.navigate(['/confirm-exam', examId]);
   }
 }

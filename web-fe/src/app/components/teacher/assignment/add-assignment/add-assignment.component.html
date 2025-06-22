@@ -1,27 +1,45 @@
-<form>
-    <div class="mb-3">
-      <label for="text" class="form-label">Tiêu đề</label>
-      <input type="text" class="form-control" placeholder="Nhập tiêu đề"
-      name="title" [(ngModel)]="title">
-    </div>
-    <div class="mb-3">
-        <label for="text" class="form-label">Nội dung</label>
-        <input type="text" class="form-control" id="name" placeholder="Nhập nội dung"
-        name="content" [(ngModel)]="content">
+<div class="container">
+  <div class="form-container">
+    <h2 class="form-title">Tạo bài tập mới</h2>
+    <form (ngSubmit)="addAssignment()" #assignmentForm="ngForm">
+      <div class="form-group">
+        <label for="title">Tên bài tập</label>
+        <input type="text" id="title" name="title" class="form-control" placeholder="Nhập tên bài tập" [(ngModel)]="title" required #titleField="ngModel">
+        <div *ngIf="titleField.invalid && (titleField.dirty || titleField.touched)" class="error-message">
+          Vui lòng nhập tên bài tập.
+        </div>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Bắt đầu</label>
-        <input type="datetime-local" class="form-control"
-          name="assignedDate" [(ngModel)]="assignedDate">
+
+      <div class="form-group">
+        <label>Thời gian nộp bài</label>
+        <div class="date-range">
+          <div class="date-input">
+            <input type="datetime-local" name="assignedDate" class="form-control" [(ngModel)]="assignedDate">
+          </div>
+          <span class="date-separator">Đến</span>
+          <div class="date-input">
+            <input type="datetime-local" name="dueDate" class="form-control" [(ngModel)]="dueDate">
+          </div>
+          <button type="button" class="btn btn-secondary" (click)="resetDates()">Đặt lại</button>
+        </div>
+        <small class="form-text">Bỏ trống nếu không muốn giới hạn thời gian.</small>
       </div>
-      
-      <div class="mb-3">
-        <label class="form-label">Kết thúc</label>
-        <input type="datetime-local" class="form-control"
-          name="dueDate" [(ngModel)]="dueDate">
+
+      <div class="form-group">
+        <label for="content">Nội dung</label>
+        <textarea id="content" name="content" class="form-control" rows="5" placeholder="Nhập nội dung bài tập" [(ngModel)]="content"></textarea>
       </div>
-      
-    <button type="submit" 
-    class="btn btn-primary w-100" (click)="addAssignment()">Thêm</button>
-    
-  </form>
+
+      <div class="form-group">
+        <label for="attachment">Tệp đính kèm</label>
+        <input type="file" id="attachment" name="attachment" class="form-control" (change)="onFileSelected($event)">
+        <small class="form-text">Chọn file ảnh, PDF, Word, Excel, audio, video...</small>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="cancel()">Hủy</button>
+        <button type="submit" class="btn btn-submit" [disabled]="assignmentForm.invalid">Tạo bài tập</button>
+      </div>
+    </form>
+  </div>
+</div>

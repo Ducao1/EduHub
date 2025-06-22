@@ -24,6 +24,7 @@ export class AddAssignmentComponent {
   assignedDate!: Date;
   dueDate!: Date;
   classId!: number;
+  attachment: File | null = null;
 
   constructor(
     private assignmentService: AssignmentService,
@@ -64,4 +65,19 @@ export class AddAssignmentComponent {
     });
   }
 
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.attachment = file;
+    }
+  }
+
+  resetDates() {
+    this.assignedDate = null as any;
+    this.dueDate = null as any;
+  }
+
+  cancel() {
+    this.router.navigate(['/teacher/assignment', this.classId]);
+  }
 }

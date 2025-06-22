@@ -41,6 +41,8 @@ public class Assignment {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
+    private String attachment;
+
     @OneToOne
     @JoinColumn(name = "class_id", nullable = false)
     @JsonManagedReference

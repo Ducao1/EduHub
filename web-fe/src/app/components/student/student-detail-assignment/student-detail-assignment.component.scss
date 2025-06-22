@@ -297,3 +297,49 @@
     min-width: unset;
   }
 }
+
+body {
+  background-color: #f8f9fa;
+}
+
+.card {
+  transition: transform 0.2s;
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+.card-title {
+  color: #343a40;
+}
+
+.card-subtitle {
+  color: #6c757d;
+}
+
+.assignment-content {
+  line-height: 1.6;
+}
+
+.attachment-link {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #495057;
+  transition: background-color 0.2s;
+
+  i {
+    margin-right: 8px;
+  }
+
+  &:hover {
+    background-color: #dee2e6;
+  }
+}
+
+.badge {
+  font-size: 0.9rem;
+  padding: 0.5em 0.75em;
+}

@@ -269,15 +269,10 @@
 }
 
 .pagination-container {
-    // padding: 20px 0;
-    display: flex;
-    justify-content: center;
-    position: sticky;
-    bottom: 20px;
-    background: #fff;
+    flex-shrink: 0;
+    padding:20px 0px 20px 0px;
 }
 
-/* Pagination Styles */
 .pagination {
     margin: 0;
     padding: 0;

@@ -20,7 +20,7 @@ export class ListAssignmentComponent implements OnInit {
   assignments: any[] = [];
   pageSize: number = 9;
   totalPages: number = 0;
-  currentPage: number = 1;
+  currentPage: number = 0;
   totalElements: number = 0;
   visiblePages: number[] = [];
 
@@ -36,13 +36,12 @@ export class ListAssignmentComponent implements OnInit {
   }
 
   loadAssignments(): void {
-    this.assignmentService.getAssignmentsByClassId(this.classId, this.currentPage - 1, this.pageSize).subscribe({
+    this.assignmentService.getAssignmentsByClassId(this.classId, this.currentPage, this.pageSize).subscribe({
       next: (response) => {
-        debugger
         this.assignments = response.content;
         this.totalElements = response.totalElements;
         this.totalPages = response.totalPages;
-        this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
+        this.updateVisiblePages();
       },
       error: (err) => {
         debugger
@@ -56,18 +55,18 @@ export class ListAssignmentComponent implements OnInit {
     this.loadAssignments();
   }
 
-  generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
+  updateVisiblePages(): void {
     const maxVisiblePages = 5;
     const halfVisiblePages = Math.floor(maxVisiblePages / 2);
 
-    let startPage = Math.max(currentPage - halfVisiblePages, 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+    let startPage = Math.max(this.currentPage - halfVisiblePages, 1);
+    let endPage = Math.min(startPage + maxVisiblePages - 1, this.totalPages);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(endPage - maxVisiblePages + 1, 1);
     }
 
-    return new Array(endPage - startPage + 1).fill(0)
+    this.visiblePages = new Array(endPage - startPage + 1).fill(0)
         .map((_, index) => startPage + index);
   }
 

@@ -18,7 +18,7 @@ import { TeacherNavBarComponent } from '../../teacher-nav-bar/teacher-nav-bar.co
 export class ClassListAssignmentComponent implements OnInit {
   assignments: any[] = [];
   classId!: number;
-  currentPage: number = 1; // Start with page 1 for display, 0 for API
+  currentPage: number = 0; // Start with page 0 for API
   pageSize: number = 9; // Adjust as needed
   totalElements: number = 0;
   totalPages: number = 0;
@@ -37,13 +37,13 @@ export class ClassListAssignmentComponent implements OnInit {
   }
 
   loadAssignments(): void {
-    this.assignmentService.getAssignmentsByClassId(this.classId, this.currentPage -1, this.pageSize).subscribe({
+    this.assignmentService.getAssignmentsByClassId(this.classId, this.currentPage, this.pageSize).subscribe({
       next: (response) => {
         debugger
         this.assignments = response.content;
         this.totalElements = response.totalElements;
         this.totalPages = response.totalPages;
-        this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
+        this.updateVisiblePages();
       },
       error: (err) => {
         debugger
@@ -57,19 +57,19 @@ export class ClassListAssignmentComponent implements OnInit {
     this.loadAssignments();
   }
 
-  generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
+  updateVisiblePages() {
     const maxVisiblePages = 5;
-    const halfVisiblePages = Math.floor(maxVisiblePages / 2);
-
-    let startPage = Math.max(currentPage - halfVisiblePages, 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
-    return new Array(endPage - startPage + 1).fill(0)
-        .map((_, index) => startPage + index);
+    this.visiblePages = Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
   }
 
   formatDate(dateArray: number[]): string {

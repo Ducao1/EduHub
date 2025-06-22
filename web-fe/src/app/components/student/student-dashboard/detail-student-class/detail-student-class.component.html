@@ -1,95 +1,76 @@
 <app-student-nav-bar [className]="className" [id]="classId"></app-student-nav-bar>
 <div class="class-container">
+  <div class="class-header">
+    <h2>{{ className }}</h2>
+    <p>{{ classDescription }}</p>
+  </div>
   <div class="stream-container">
-    <div *ngIf="!isCreatingAnnouncement" class="announcement-creator-card" (click)="toggleAnnouncementCreator(true)">
-      <div class="avatar-circle" style="background-color: #00796b;">
-        <span>N</span>
+    <!-- Input area for new post -->
+    <div class="new-post-input">
+      <textarea [(ngModel)]="newPostContent" placeholder="Bạn muốn thông báo gì?"></textarea>
+      <div *ngIf="selectedFile" class="selected-file">
+        <i class="fas fa-file"></i>
+        <span>{{ selectedFile.name }}</span>
+        <button class="remove-file-btn" (click)="removeSelectedFile()">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
-      <div class="announcement-input-box">
-        <span>Thông báo nội dung nào đó cho lớp học của bạn</span>
+      <div class="input-actions">
+        <input type="file" #fileInput hidden (change)="onFileSelected($event)">
+        <button class="link-btn" title="Thêm file" (click)="fileInput.click()">
+          <i class="fas fa-link"></i>
+        </button>
+        <button class="cancel-btn" (click)="cancelNewContent()">
+          <i class="fas fa-times"></i>
+        </button>
+        <button class="send-btn" [disabled]="!newPostContent.trim() && !selectedFile" (click)="postNewContent()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
       </div>
-    </div>
-    <div *ngIf="isCreatingAnnouncement" class="announcement-editor-card">
-        <textarea [(ngModel)]="announcementContent" placeholder="Thông báo nội dung nào đó cho lớp học của bạn..." rows="4" autofocus></textarea>
-        
-        <div *ngIf="selectedFile" class="selected-file">
-            <i class="fas fa-paperclip"></i>
-            <span>{{ selectedFile.name }}</span>
-            <button (click)="removeSelectedFile()" class="remove-file-btn" title="Xóa tệp">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="editor-actions">
-            <div class="attachment-actions">
-                <input type="file" #fileInput hidden (change)="onFileSelected($event)">
-                <button class="attach-btn" (click)="fileInput.click()" title="Đính kèm tệp">
-                    <i class="fas fa-paperclip"></i>
-                </button>
-            </div>
-            <div class="main-actions">
-                <button class="cancel-btn" (click)="toggleAnnouncementCreator(false)">Hủy</button>
-                <button class="post-btn" [disabled]="!announcementContent.trim() && !selectedFile" (click)="postAnnouncement()">Đăng</button>
-            </div>
-        </div>
     </div>
 
+    <!-- Post Card -->
     <div class="post-card">
       <div class="post-header">
-        <div class="avatar-circle" style="background-color: #d32f2f;">
-          <span>C</span>
+        <div class="avatar-circle" style="background-color: #4285f4;">
+          <span>N</span>
         </div>
         <div class="post-author-info">
-          <div class="author-name">CNTT - Ha Thi Thanh</div>
-          <div class="post-date">20 thg 4, 2021</div>
+          <div class="author-name">Nguyễn Huỳnh Đức</div>
+          <div class="post-date">3 tháng trước</div>
         </div>
         <div class="post-options">
           <i class="fas fa-ellipsis-v"></i>
         </div>
       </div>
       <div class="post-content">
-        <p>Cô gửi lại đề kiểm tra bù của các bạn hôm trước.</p>
-      </div>
-      <div class="post-attachments">
-        <a href="#" class="attachment-drive">
-          <img src="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png" alt="Google Drive icon">
-        </a>
-      </div>
-      <div class="post-footer">
-        <div class="comment-count">
-          <i class="fas fa-users"></i>
-          <span>4 nhận xét về lớp học</span>
-        </div>
+        <p>hello</p>
       </div>
       <div class="comment-section">
-        <!-- Hardcoded Comment -->
-        <div class="comment">
-          <div class="avatar-circle" style="background-color: #ef6c00;">
-            <span>H</span>
-          </div>
-          <div class="comment-content-container">
-            <div class="comment-author">
-              Hoàng Trung Đức <span class="comment-date">22 thg 4, 2021</span>
+        <div class="comment-input">
+          <div class="input-row">
+            <div class="avatar-circle" style="background-color: #4285f4;">
+              <span>N</span>
             </div>
-            <div class="comment-text">cho em xin file aj 0856090453</div>
-          </div>
-        </div>
-        <!-- Add Comment Input -->
-        <div class="add-comment">
-          <div class="avatar-circle" style="background-color: #00796b;">
-            <span>N</span>
-          </div>
-          <div class="comment-input-container">
-            <textarea placeholder="Thêm nhận xét trong lớp học..."></textarea>
-            <div class="comment-toolbar">
-                <i class="fas fa-bold"></i>
-                <i class="fas fa-italic"></i>
-                <i class="fas fa-underline"></i>
-                <i class="fas fa-list-ul"></i>
-                <i class="fas fa-remove-format"></i>
+            <textarea [(ngModel)]="commentContent" placeholder="Viết bình luận..."></textarea>
+            <div *ngIf="commentSelectedFile" class="selected-file">
+              <i class="fas fa-file"></i>
+              <span>{{ commentSelectedFile.name }}</span>
+              <button class="remove-file-btn" (click)="removeCommentFile()">
+                <i class="fas fa-times"></i>
+              </button>
             </div>
-            <button class="send-button">
-                <i class="fas fa-paper-plane"></i>
+          </div>
+          <div class="comment-actions">
+            <input type="file" #commentFileInput hidden (change)="onCommentFileSelected($event)">
+            <button class="link-btn" title="Thêm file" (click)="commentFileInput.click()">
+              <i class="fas fa-link"></i>
+            </button>
+            <button class="cancel-btn" (click)="cancelComment()">
+              <i class="fas fa-times"></i>
+            </button>
+            <button class="send-btn" [disabled]="!commentContent.trim() && !commentSelectedFile" (click)="postComment()">
+              <i class="fas fa-paper-plane"></i>
             </button>
           </div>
         </div>

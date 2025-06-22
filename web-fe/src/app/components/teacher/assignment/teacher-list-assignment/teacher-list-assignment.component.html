@@ -1,4 +1,4 @@
-<div class="assignment-container">
+<div class="component-container">
     <div class="assignment-header">
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
@@ -6,14 +6,14 @@
         </div>
     </div>
 
-    <div class="assignment-list">
-        <div *ngIf="assignments.length === 0" class="no-assignments">
-            <i class="fas fa-clipboard-list"></i>
-            <p>Bạn chưa có bài tập nào</p>
-            <a class="btn-create-assignment" routerLink="/teacher/create-assignment">
-                <i class="fas fa-plus-circle me-2"></i>Tạo bài tập đầu tiên
-            </a>
-        </div>
+        <div class="assignment-list">
+            <div *ngIf="assignments.length === 0 && !searchTerm" class="no-assignments">
+                <i class="fas fa-file-signature"></i>
+                <p>Bạn chưa có bài tập nào</p>
+                <a class="btn-create-class" routerLink="/teacher/add-assignment">
+                    <i class="fas fa-plus-circle me-2"></i>Tạo bài tập đầu tiên
+                </a>
+            </div>
 
         <div *ngFor="let assignment of assignments" class="assignment-card">
             <div class="assignment-info">
@@ -48,22 +48,24 @@
     <div class="pagination-container">
         <nav aria-label="Page navigation">
             <ul class="pagination">
-                <li class="page-item" [class.disabled]="currentPage === 0">
+                <li class="page-item" *ngIf="currentPage > 0">
                     <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(0)">&laquo;</a>
                 </li>
-                <li class="page-item" [class.disabled]="currentPage === 0">
+                <li class="page-item" *ngIf="currentPage > 0">
                     <a class="page-link" href="#"
                         (click)="$event.preventDefault(); onPageChange(currentPage - 1)">&lsaquo;</a>
                 </li>
-                <li class="page-item" *ngFor="let page of visiblePages" [class.active]="page - 1 === currentPage">
-                    <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(page - 1)">{{ page
-                        }}</a>
-                </li>
-                <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
+                <ng-container *ngFor="let page of visiblePages">
+                    <li class="page-item" [ngClass]="{'active': page - 1 === currentPage}">
+                        <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(page - 1)">{{ page
+                            }}</a>
+                    </li>
+                </ng-container>
+                <li class="page-item" *ngIf="currentPage < totalPages - 1">
                     <a class="page-link" href="#"
                         (click)="$event.preventDefault(); onPageChange(currentPage + 1)">&rsaquo;</a>
                 </li>
-                <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
+                <li class="page-item" *ngIf="currentPage < totalPages - 1">
                     <a class="page-link" href="#"
                         (click)="$event.preventDefault(); onPageChange(totalPages - 1)">&raquo;</a>
                 </li>

@@ -32,25 +32,25 @@
             </div>
         </div>
     </div>
-    <div class="pagination-container d-flex justify-content-center">
+    <div class="pagination-container">
         <nav aria-label="Page navigation">
             <ul class="pagination">
-                <li class="page-item" *ngIf="currentPage > 1">
-                    <a class="page-link" (click)="onPageChange(1)">First</a>
+                <li class="page-item" *ngIf="currentPage > 0">
+                    <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(0)">&laquo;</a>
                 </li>
-                <li class="page-item" *ngIf="currentPage > 1">
-                    <a class="page-link" (click)="onPageChange(currentPage - 1)">Previous</a>
+                <li class="page-item" *ngIf="currentPage > 0">
+                    <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(currentPage - 1)">&lsaquo;</a>
                 </li>
                 <ng-container *ngFor="let page of visiblePages">
-                    <li class="page-item" [ngClass]="{'active': page === currentPage}">
-                        <a class="page-link" (click)="onPageChange(page)">{{ page }}</a>
+                    <li class="page-item" [ngClass]="{'active': page - 1 === currentPage}">
+                        <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(page - 1)">{{ page }}</a>
                     </li>
                 </ng-container>
-                <li class="page-item" *ngIf="currentPage < totalPages">
-                    <a class="page-link" (click)="onPageChange(currentPage + 1)">Next</a>
+                <li class="page-item" *ngIf="currentPage < totalPages - 1">
+                    <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(currentPage + 1)">&rsaquo;</a>
                 </li>
-                <li class="page-item" *ngIf="currentPage < totalPages">
-                    <a class="page-link" (click)="onPageChange(totalPages)">Last</a>
+                <li class="page-item" *ngIf="currentPage < totalPages - 1">
+                    <a class="page-link" href="#" (click)="$event.preventDefault(); onPageChange(totalPages - 1)">&raquo;</a>
                 </li>
             </ul>
         </nav>
