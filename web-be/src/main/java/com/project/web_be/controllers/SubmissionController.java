@@ -71,11 +71,8 @@ public class SubmissionController {
             Map<String, Object> submissionDetails = new HashMap<>();
             submissionDetails.put("id", submission.getId());
             if (submission.getAttachments() != null && !submission.getAttachments().isEmpty()) {
-                Attachment firstAttachment = submission.getAttachments().get(0);
-                Map<String, String> fileDetails = new HashMap<>();
-                fileDetails.put("displayName", firstAttachment.getFileName());
-                fileDetails.put("downloadName", firstAttachment.getFilePath().split("/")[1]);
-                submissionDetails.put("file", fileDetails);
+                String downloadName = submission.getAttachments().get(0).getFilePath().split("/")[1];
+                submissionDetails.put("file", downloadName);
             }
             submissionDetails.put("submissionDate", submission.getCreatedAt());
 

@@ -2,13 +2,21 @@
     <app-teacher-nav-bar [className]="classroom.name"></app-teacher-nav-bar>
     <div class="assignment-detail-container">
         <div class="assignment-info">
-            <h4 class="fw-bold">{{ assignment.title }}</h4>
-            <p><strong>Lớp:</strong> {{ classroom.name }}</p>
-            <p><strong>Nội dung:</strong> {{ assignment.content }}</p>
-            <p>
-                <strong>Ngày giao:</strong> {{ formatDate(assignment.assignedDate) }}
-                &nbsp;<strong>Hạn nộp:</strong> {{ assignment.dueDate ? formatDate(assignment.dueDate) : 'Không có hạn nộp' }}
-            </p>
+            <div class="assignment-title">
+                <h4 class="fw-bold">{{ assignment.title }}</h4>
+            </div>
+            <div class="assigned-date">
+                <p><strong>Ngày giao:</strong> {{ formatDate(assignment.assignedDate) }}</p>
+            </div>
+            <div class="assignment-class">
+                <p><strong>Lớp:</strong> {{ classroom.name }}</p>
+            </div>
+            <div class="due-date">
+                <p><strong>Hạn nộp:</strong> {{ assignment.dueDate ? formatDate(assignment.dueDate) : 'Không có hạn nộp' }}</p>
+            </div>
+            <div class="assignment-content">
+                <p><strong>Nội dung:</strong> {{ assignment.content }}</p>
+            </div>
         </div>
 
         <div class="student-list-container">
