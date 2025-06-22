@@ -38,9 +38,6 @@ public class Submission extends BaseEntity {
     @JoinColumn(name = "student_id", nullable = false)
     private User student;
 
-    @Column(name = "file_path")
-    private String filePath;
-
     @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("submission-submissionAnswers")
     private List<SubmissionAnswer> submissionAnswers;
@@ -48,4 +45,8 @@ public class Submission extends BaseEntity {
     @OneToOne(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("submission-score")
     private Score score;
+
+    @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("submission-attachments")
+    private List<Attachment> attachments;
 }

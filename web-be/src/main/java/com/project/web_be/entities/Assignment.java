@@ -41,7 +41,9 @@ public class Assignment {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
-    private String attachment;
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("assignment-attachments")
+    private List<Attachment> attachments;
 
     @OneToOne
     @JoinColumn(name = "class_id", nullable = false)

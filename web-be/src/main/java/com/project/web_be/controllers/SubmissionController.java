@@ -1,20 +1,28 @@
 package com.project.web_be.controllers;
 
+import com.project.web_be.dtos.AttachmentDTO;
 import com.project.web_be.dtos.SubmissionExamDTO;
+import com.project.web_be.entities.Attachment;
 import com.project.web_be.entities.Submission;
 import com.project.web_be.exceptions.DataNotFoundException;
 import com.project.web_be.dtos.responses.ListSubmissionResponse;
 import com.project.web_be.dtos.responses.SubmitExamResponse;
 import com.project.web_be.services.Impl.SubmissionServiceImpl;
 import com.project.web_be.services.SubmissionService;
+import com.project.web_be.services.AttachmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +33,7 @@ import java.util.Map;
 public class SubmissionController {
 
     private final SubmissionServiceImpl submissionService;
+    private final AttachmentService attachmentService;
 
     @PostMapping(value = "/assignment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> submitAssignment(
@@ -42,18 +51,60 @@ public class SubmissionController {
         }
 
         Submission submission = submissionService.saveSubmission(assignmentId, studentId, file);
+        
+        // Lấy attachments của submission
+        List<AttachmentDTO> attachments = attachmentService.getAttachmentsBySubmissionId(submission.getId());
+        
         return ResponseEntity.ok(Map.of(
                 "message", "File uploaded successfully",
-                "filePath", submission.getFilePath()
+                "submissionId", submission.getId(),
+                "attachments", attachments
         ));
     }
 
     @GetMapping("/status/{userId}/{assignmentId}")
-    public ResponseEntity<Map<String, Boolean>> getSubmissionStatus(@PathVariable Long userId, @PathVariable Long assignmentId) {
-        boolean hasSubmitted = submissionService.hasSubmitted(userId, assignmentId);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("submitted", hasSubmitted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> getSubmissionStatus(@PathVariable Long userId, @PathVariable Long assignmentId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Submission submission = submissionService.getSubmissionByStudentAndAssignment(userId, assignmentId);
+            
+            Map<String, Object> submissionDetails = new HashMap<>();
+            submissionDetails.put("id", submission.getId());
+            if (submission.getAttachments() != null && !submission.getAttachments().isEmpty()) {
+                Attachment firstAttachment = submission.getAttachments().get(0);
+                Map<String, String> fileDetails = new HashMap<>();
+                fileDetails.put("displayName", firstAttachment.getFileName());
+                fileDetails.put("downloadName", firstAttachment.getFilePath().split("/")[1]);
+                submissionDetails.put("file", fileDetails);
+            }
+            submissionDetails.put("submissionDate", submission.getCreatedAt());
+
+            response.put("hasSubmitted", true);
+            response.put("submission", submissionDetails);
+            return ResponseEntity.ok(response);
+        } catch (DataNotFoundException e) {
+            response.put("hasSubmitted", false);
+            response.put("submission", null);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/files/{filename}")
+    public ResponseEntity<Resource> getSubmissionFile(@PathVariable String filename) {
+        try {
+            Path file = Paths.get("uploads").resolve(filename);
+            Resource resource = new UrlResource(file.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok().body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/status/class/{classId}/assignment/{assignmentId}")
@@ -63,7 +114,6 @@ public class SubmissionController {
         List<Map<String, Object>> response = submissionService.getClassSubmissionStatus(classId, assignmentId);
         return ResponseEntity.ok(response);
     }
-
 
     @DeleteMapping("/cancel/{userId}/{assignmentId}")
     public ResponseEntity<String> cancelSubmission(@PathVariable Long userId, @PathVariable Long assignmentId) {
@@ -120,7 +170,53 @@ public class SubmissionController {
     public ResponseEntity<?> getSubmissionById(@PathVariable Long id) {
         try {
             Submission submission = submissionService.getSubmissionById(id);
-            return ResponseEntity.ok(submission);
+            // Lấy attachments của submission
+            List<AttachmentDTO> attachments = attachmentService.getAttachmentsBySubmissionId(id);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("submission", submission);
+            response.put("attachments", attachments);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    // Attachment endpoints
+    @PostMapping("/{submissionId}/attachments")
+    public ResponseEntity<?> addAttachmentToSubmission(
+            @PathVariable Long submissionId,
+            @RequestParam("file") MultipartFile file) {
+        try {
+            AttachmentDTO attachment = attachmentService.createAttachmentForSubmission(file, submissionId);
+            return ResponseEntity.status(HttpStatus.CREATED).body(attachment);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/{submissionId}/attachments")
+    public ResponseEntity<?> getSubmissionAttachments(@PathVariable Long submissionId) {
+        try {
+            List<AttachmentDTO> attachments = attachmentService.getAttachmentsBySubmissionId(submissionId);
+            return ResponseEntity.ok(attachments);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @DeleteMapping("/attachments/{attachmentId}")
+    public ResponseEntity<?> deleteAttachment(@PathVariable Long attachmentId) {
+        try {
+            attachmentService.deleteAttachment(attachmentId);
+            return ResponseEntity.ok(Map.of("message", "Attachment deleted successfully"));
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("error", e.getMessage());

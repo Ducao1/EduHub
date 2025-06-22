@@ -35,6 +35,7 @@ import { ConfirmExamComponent } from './components/student/confirm-exam/confirm-
 import { ResultExamComponent } from './components/student/result-exam/result-exam.component';
 import { ClassListExamComponent } from './components/teacher/exam/class-list-exam/class-list-exam.component';
 import { SessionExamComponent } from './components/teacher/exam/session-exam/session-exam.component';
+import { ListSubmissionAssignmentComponent } from './components/teacher/assignment/list-submission-assignment/list-submission-assignment.component';
 
 
 export const routes: Routes = [
@@ -81,7 +82,7 @@ export const routes: Routes = [
       { path: 'add-assignment/:id', component: AddAssignmentComponent },
       { path: 'assignments', component: TeacherListAssignmentComponent },
       { path: 'assignment/:id', component: ClassListAssignmentComponent },
-      { path: 'detail-assignment/:id', component: DetailAssignmentComponent },
+      { path: 'list-submission-assignment/:id', component: ListSubmissionAssignmentComponent },
     ]
   },
   { path: 'try-exam/:examId', component: TryExamComponent },

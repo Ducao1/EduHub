@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,9 +31,11 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final ExamRepository examRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final AttachmentRepository attachmentRepository;
 
     private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
     private static final String UPLOAD_DIR = "uploads/";
+    
     public boolean isValidFileType(String contentType) {
         return contentType != null && (contentType.startsWith("image/") ||
                 contentType.equals("application/pdf") ||
@@ -50,18 +51,22 @@ public class SubmissionServiceImpl implements SubmissionService {
         User existingStudent = userRepository.findById(studentId)
                 .orElseThrow(() -> new DataNotFoundException("Student not found"));
 
-        String filePath = storeFile(file);
-
+        // Tạo submission trước
         Submission submission = new Submission();
         submission.setAssignment(existingAssignment);
         submission.setStudent(existingStudent);
-        submission.setFilePath(filePath);
         submission.setSubmittedAt(LocalDateTime.now());
+        
+        // Lưu submission để có ID
+        Submission savedSubmission = submissionRepository.save(submission);
 
-        return submissionRepository.save(submission);
+        // Tạo attachment cho submission
+        createAttachmentForSubmission(file, savedSubmission);
+
+        return savedSubmission;
     }
 
-    public String storeFile(MultipartFile file) throws IOException {
+    private void createAttachmentForSubmission(MultipartFile file, Submission submission) throws IOException {
         if (!isValidFileType(file.getContentType())) {
             throw new IOException("Định dạng file không hợp lệ: " + file.getOriginalFilename());
         }
@@ -70,17 +75,33 @@ public class SubmissionServiceImpl implements SubmissionService {
             throw new IOException("File quá lớn: " + file.getOriginalFilename());
         }
 
+        String originalFileName = file.getOriginalFilename();
+        String fileExtension = getFileExtension(originalFileName);
+        String fileName = UUID.randomUUID().toString() + "_" + originalFileName;
+        
         Path uploadPath = Paths.get(UPLOAD_DIR);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         Path filePath = uploadPath.resolve(fileName);
-
         Files.write(filePath, file.getBytes());
 
-        return filePath.toString();
+        // Tạo attachment entity
+        Attachment attachment = Attachment.builder()
+                .fileName(fileName)
+                .filePath(UPLOAD_DIR + fileName)
+                .submission(submission)
+                .build();
+
+        attachmentRepository.save(attachment);
+    }
+
+    private String getFileExtension(String fileName) {
+        if (fileName == null || fileName.lastIndexOf(".") == -1) {
+            return "";
+        }
+        return fileName.substring(fileName.lastIndexOf("."));
     }
 
     public boolean hasSubmitted(Long userId, Long assignmentId) {
@@ -88,12 +109,13 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     public boolean cancelSubmission(Long userId, Long assignmentId) {
-        Optional<Submission> submission = submissionRepository.findByStudentIdAndAssignmentId(userId, assignmentId);
-        if (submission.isPresent()) {
-            submissionRepository.delete(submission.get());
-            return true;
-        }
         return false;
+    }
+
+    @Override
+    public Submission getSubmissionByStudentAndAssignment(Long userId, Long assignmentId) throws DataNotFoundException {
+        return submissionRepository.findByStudentIdAndAssignmentId(userId, assignmentId)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy bài nộp"));
     }
 
     public List<Map<String, Object>> getClassSubmissionStatus(Long classId, Long assignmentId) {
@@ -114,82 +136,80 @@ public class SubmissionServiceImpl implements SubmissionService {
         return response;
     }
 
-@Override
-public Submission submitExam(SubmissionExamDTO submissionExamDTO) throws Exception {
-    Exam exam = examRepository.findById(submissionExamDTO.getExamId())
-            .orElseThrow(() -> new DataNotFoundException("Exam not found"));
+    @Override
+    public Submission submitExam(SubmissionExamDTO submissionExamDTO) throws Exception {
+        Exam exam = examRepository.findById(submissionExamDTO.getExamId())
+                .orElseThrow(() -> new DataNotFoundException("Exam not found"));
 
-    User student = userRepository.findById(submissionExamDTO.getStudentId())
-            .orElseThrow(() -> new DataNotFoundException("Student not found"));
+        User student = userRepository.findById(submissionExamDTO.getStudentId())
+                .orElseThrow(() -> new DataNotFoundException("Student not found"));
 
-    Submission submission = Submission.builder()
-            .exam(exam)
-            .student(student)
-            .submittedAt(LocalDateTime.now())
-            .build();
-
-    Submission savedSubmission = submissionRepository.save(submission);
-
-    List<SubmissionAnswer> submissionAnswers = new ArrayList<>();
-    Map<Long, List<Answer>> submittedAnswersMap = new HashMap<>();
-
-    for (SubmissionAnswerDTO submissionAnswerDTO : submissionExamDTO.getAnswers()) {
-        Question question = questionRepository.findById(submissionAnswerDTO.getQuestionId())
-                .orElseThrow(() -> new DataNotFoundException("Question not found"));
-        Answer answer = answerRepository.findById(submissionAnswerDTO.getAnswerId())
-                .orElseThrow(() -> new DataNotFoundException("Answer not found"));
-
-        submittedAnswersMap.computeIfAbsent(question.getId(), k -> new ArrayList<>()).add(answer);
-        SubmissionAnswer submissionAnswer = SubmissionAnswer.builder()
-                .submission(savedSubmission)
-                .question(question)
-                .answer(answer)
+        Submission submission = Submission.builder()
+                .exam(exam)
+                .student(student)
+                .submittedAt(LocalDateTime.now())
                 .build();
 
-        submissionAnswers.add(submissionAnswer);
-    }
+        Submission savedSubmission = submissionRepository.save(submission);
 
-    List<SubmissionAnswer> savedAnswers = submissionAnswerRepository.saveAll(submissionAnswers);
-    savedSubmission.setSubmissionAnswers(savedAnswers);
+        List<SubmissionAnswer> submissionAnswers = new ArrayList<>();
+        Map<Long, List<Answer>> submittedAnswersMap = new HashMap<>();
 
-    float totalScore = 0f;
+        for (SubmissionAnswerDTO submissionAnswerDTO : submissionExamDTO.getAnswers()) {
+            Question question = questionRepository.findById(submissionAnswerDTO.getQuestionId())
+                    .orElseThrow(() -> new DataNotFoundException("Question not found"));
+            Answer answer = answerRepository.findById(submissionAnswerDTO.getAnswerId())
+                    .orElseThrow(() -> new DataNotFoundException("Answer not found"));
 
-    for (Question question : exam.getQuestions()) {
-        List<Answer> correctAnswers = question.getAnswers().stream()
-                .filter(Answer::isCorrect)
-                .toList();
+            submittedAnswersMap.computeIfAbsent(question.getId(), k -> new ArrayList<>()).add(answer);
+            SubmissionAnswer submissionAnswer = SubmissionAnswer.builder()
+                    .submission(savedSubmission)
+                    .question(question)
+                    .answer(answer)
+                    .build();
 
-        List<Answer> submittedAnswers = submittedAnswersMap.getOrDefault(question.getId(), new ArrayList<>());
+            submissionAnswers.add(submissionAnswer);
+        }
 
-        if (question.getType().name().equals("SINGLE_CHOICE")) {
-            if (submittedAnswers.size() == 1 && correctAnswers.contains(submittedAnswers.get(0))) {
-                totalScore += question.getPoint();
-            }
-        } else if (question.getType().name().equals("MULTI_CHOICE")) {
-            List<Long> correctIds = correctAnswers.stream().map(Answer::getId).toList();
-            List<Long> submittedIds = submittedAnswers.stream().map(Answer::getId).toList();
-            System.out.println("correct:" + correctIds);
-            System.out.println("submitted: "+submittedIds);
-            boolean isCorrect = submittedIds.containsAll(correctIds) && correctIds.containsAll(submittedIds);
+        List<SubmissionAnswer> savedAnswers = submissionAnswerRepository.saveAll(submissionAnswers);
+        savedSubmission.setSubmissionAnswers(savedAnswers);
 
-            if (isCorrect) {
-                totalScore += question.getPoint();
-                System.out.println("score:"+ totalScore);
+        float totalScore = 0f;
+
+        for (Question question : exam.getQuestions()) {
+            List<Answer> correctAnswers = question.getAnswers().stream()
+                    .filter(Answer::isCorrect)
+                    .toList();
+
+            List<Answer> submittedAnswers = submittedAnswersMap.getOrDefault(question.getId(), new ArrayList<>());
+
+            if (question.getType().name().equals("SINGLE_CHOICE")) {
+                if (submittedAnswers.size() == 1 && correctAnswers.contains(submittedAnswers.get(0))) {
+                    totalScore += question.getPoint();
+                }
+            } else if (question.getType().name().equals("MULTI_CHOICE")) {
+                List<Long> correctIds = correctAnswers.stream().map(Answer::getId).toList();
+                List<Long> submittedIds = submittedAnswers.stream().map(Answer::getId).toList();
+                System.out.println("correct:" + correctIds);
+                System.out.println("submitted: "+submittedIds);
+                boolean isCorrect = submittedIds.containsAll(correctIds) && correctIds.containsAll(submittedIds);
+
+                if (isCorrect) {
+                    totalScore += question.getPoint();
+                    System.out.println("score:"+ totalScore);
+                }
             }
         }
 
+        Score score = Score.builder()
+                .score(totalScore)
+                .submission(savedSubmission)
+                .build();
+
+        savedSubmission.setScore(score);
+
+        return savedSubmission;
     }
-
-    Score score = Score.builder()
-            .score(totalScore)
-            .submission(savedSubmission)
-            .build();
-
-    savedSubmission.setScore(score);
-
-    return savedSubmission;
-}
-
 
     public List<Submission> getStudentSubmissions(Long examId, Long studentId) {
         return submissionRepository.findByExamIdAndStudentId(examId, studentId);

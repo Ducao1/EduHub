@@ -5,17 +5,18 @@ import { AssignmentService } from '../../../services/assignment.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClassroomService } from '../../../services/classroom.service';
 import { SubmissionService } from '../../../services/submission.service';
+import { StudentNavBarComponent } from "../student-nav-bar/student-nav-bar.component";
 
 @Component({
   selector: 'app-student-detail-assignment',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StudentNavBarComponent],
   templateUrl: './student-detail-assignment.component.html',
   styleUrl: './student-detail-assignment.component.scss',
   providers: [DatePipe]
 })
 export class StudentDetailAssignmentComponent implements OnInit {
-
+  classId!: number;
   assignment: any = {};
   student: any = {};
   userId!: number;
@@ -53,13 +54,8 @@ export class StudentDetailAssignmentComponent implements OnInit {
       next: (response) => {
         debugger
         this.assignment = response;
-        this.assignment.teacherName = response.teacher.fullName;
-        this.assignment.totalPoints = response.totalPoints;
-        this.assignment.attachment = response.attachment;
+        this.classId = response.classId;
         this.getStudentInfo();
-        // if (response.classroom) {
-        //   this.getClassDetails(response.classId);
-        // }
         this.checkDeadline();
       },
       error: (error) => {
@@ -144,6 +140,18 @@ export class StudentDetailAssignmentComponent implements OnInit {
     const [year, month, day, hour = 0, minute = 0] = dateArray;
     const date = new Date(year, month - 1, day, hour, minute);
     return this.datePipe.transform(date, 'HH:mm, dd/MM/yyyy') || '';
+  }
+
+  getOriginalFileName(fileName: string): string {
+    if (!fileName) {
+      return '';
+    }
+    const parts = fileName.split('_');
+    if (parts.length > 1) {
+      parts.shift();
+      return parts.join('_');
+    }
+    return fileName;
   }
 }
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +22,7 @@ public class AssignmentDTO {
     @JsonProperty("assigned_date")
     private LocalDateTime assignedDate;
     @JsonProperty("due_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dueDate;
     @JsonProperty("teacher_id")
     private long teacherId;

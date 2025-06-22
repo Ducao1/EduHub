@@ -8,8 +8,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/assignments")
@@ -17,11 +28,13 @@ import org.springframework.web.bind.annotation.*;
 public class AssignmentController {
     private final AssignmentService assignmentService;
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addAssignment(@RequestBody AssignmentDTO assignmentDTO) {
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addAssignment(
+            @ModelAttribute AssignmentDTO assignmentDTO,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files) {
         try {
-            Assignment assignment = assignmentService.addAssignment(assignmentDTO);
-            return ResponseEntity.ok(assignment);
+            Assignment assignment = assignmentService.addAssignment(assignmentDTO, files);
+            return ResponseEntity.ok(AssignmentResponse.fromAssignment(assignment));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -81,5 +94,23 @@ public class AssignmentController {
     public ResponseEntity<?> deleteAssignment(@PathVariable long id) {
         assignmentService.deleteAssignment(id);
         return ResponseEntity.ok("Delete assignment successfully");
+    }
+
+    @GetMapping("/files/{filename}")
+    public ResponseEntity<Resource> getAssignmentFile(@PathVariable String filename) {
+        try {
+            Path file = Paths.get("uploads").resolve(filename);
+            Resource resource = new UrlResource(file.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
