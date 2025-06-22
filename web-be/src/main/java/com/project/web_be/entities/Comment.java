@@ -16,7 +16,8 @@ import java.util.List;
 @Table(name = "comments",
         indexes = {
                 @Index(name = "idx_parent_comment_id", columnList = "parent_comment_id"),
-                @Index(name = "idx_user_id", columnList = "user_id")
+                @Index(name = "idx_user_id", columnList = "user_id"),
+                @Index(name = "idx_class_id", columnList = "class_id")
         })
 public class Comment extends BaseEntity {
 
@@ -30,6 +31,9 @@ public class Comment extends BaseEntity {
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
+
+    @Column(name = "class_id", nullable = false)
+    private Long classId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id", foreignKey = @ForeignKey(name = "fk_parent_comment"))
