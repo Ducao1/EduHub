@@ -1,16 +1,126 @@
- <app-teacher-nav-bar [className]="className"></app-teacher-nav-bar>
+<app-teacher-nav-bar [className]="className" [id]="classId"></app-teacher-nav-bar>
 <div class="class-container">
-  <div class="class-banner">
-    <div class="class-info">
-      <h2 class="class-title">{{ className }}</h2>
-      <p class="class-subject">{{ classDescription }}</p>
-    </div>
+  <div class="class-header">
+    <h2>{{ className }}</h2>
+    <p>{{ classDescription }}</p>
   </div>
-
-    <div class="main-panel">
-      <div class="announcement">
-        <div class="avatar">N</div>
-        <input type="text" placeholder="Thông báo nội dung nào đó cho lớp học của bạn">
+  <div class="stream-container">
+    <!-- Input area for new post -->
+    <div class="new-post-input">
+      <textarea [(ngModel)]="newPostContent" placeholder="Bạn muốn thông báo gì?"></textarea>
+      <div *ngIf="selectedFile" class="selected-file">
+        <i class="fas fa-file"></i>
+        <span>{{ selectedFile.name }}</span>
+        <button class="remove-file-btn" (click)="removeSelectedFile()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="input-actions">
+        <input type="file" #fileInput hidden (change)="onFileSelected($event)">
+        <button class="link-btn" title="Thêm file" (click)="fileInput.click()">
+          <i class="fas fa-link"></i>
+        </button>
+        <button class="cancel-btn" (click)="cancelNewContent()">
+          <i class="fas fa-times"></i>
+        </button>
+        <button class="send-btn" [disabled]="!newPostContent.trim() && !selectedFile" (click)="postNewContent()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
       </div>
     </div>
+
+    <!-- Post Card -->
+    <div class="post-card" *ngFor="let comment of comments">
+      <div class="post-header">
+        <div class="avatar-circle" style="background-color: #4285f4;">
+          <span>{{ comment.userName.charAt(0).toUpperCase() }}</span>
+        </div>
+        <div class="post-author-info">
+          <span class="author-name">{{ comment.userName }}</span>
+          <span class="post-date">{{ formatDate(comment.createdAt) }}</span>
+        </div>
+        <div class="post-options">
+          <i class="fas fa-ellipsis-v"></i>
+        </div>
+      </div>
+      <div class="post-content">
+        {{ comment.content }}
+        <div *ngIf="comment.attachments && comment.attachments.length > 0" class="comment-attachments">
+          <a *ngFor="let attachment of comment.attachments" [href]="getAttachmentUrl(attachment.filePath)"
+            target="_blank" class="attachment-link">
+            {{ attachment.fileName }}
+          </a>
+        </div>
+      </div>
+      <div class="comment-section">
+        <!-- Sub-comments -->
+        <div *ngIf="comment.subComments && comment.subComments.length > 0" class="sub-comments">
+          <div *ngFor="let reply of comment.subComments" class="sub-comment-item">
+            <div class="post-header">
+              <div class="avatar-circle" style="background-color: #4285f4;">
+                <span>{{ reply.userName.charAt(0).toUpperCase() }}</span>
+              </div>
+              <div class="post-author-info">
+                <span class="author-name">{{ reply.userName }}</span>
+                <span class="post-date">{{ formatDate(reply.createdAt) }}</span>
+              </div>
+            </div>
+            <div class="post-content">
+              <p>{{ reply.content }}</p>
+              <div *ngIf="reply.attachments && reply.attachments.length > 0" class="comment-attachments">
+                <a *ngFor="let attachment of reply.attachments" [href]="getAttachmentUrl(attachment.filePath)" target="_blank" class="attachment-link">
+                  {{ attachment.fileName }}
+                </a>
+              </div>
+            </div>
+            <!-- <div class="comment-actions">
+              <button class="reply-btn" (click)="toggleReply(reply.id)">Trả lời</button>
+              <button *ngIf="currentUserId === reply.userId" class="delete-btn" (click)="handleDeleteComment(reply.id)">Xóa</button>
+            </div> -->
+
+            <!-- Reply Form for sub-comment -->
+            <div *ngIf="replyingTo === reply.id" class="reply-form">
+              <div class="reply-input">
+                <textarea [(ngModel)]="replyContent" placeholder="Viết câu trả lời của bạn..." class="form-control"></textarea>
+                <div class="reply-actions mt-2">
+                  <button class="post-button" (click)="postNewComment(reply.id)" [disabled]="!replyContent.trim()">Gửi</button>
+                  <button class="cancel-button" (click)="toggleReply(reply.id)">Hủy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comment Input -->
+        <div class="comment-input">
+          <div class="input-row">
+            <div class="avatar-circle" style="background-color: #4285f4;">
+              <span>N</span>
+            </div>
+            <textarea [(ngModel)]="commentContentMap[comment.id]" placeholder="Viết bình luận..."></textarea>
+            <div *ngIf="commentSelectedFile" class="selected-file">
+              <i class="fas fa-file"></i>
+              <span>{{ commentSelectedFile.name }}</span>
+              <button class="remove-file-btn" (click)="removeCommentFile()">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="comment-actions">
+            <input type="file" #commentFileInput hidden (change)="onCommentFileSelected($event)">
+            <button class="link-btn" title="Thêm file" (click)="commentFileInput.click()">
+              <i class="fas fa-link"></i>
+            </button>
+            <button class="cancel-btn" (click)="cancelComment()">
+              <i class="fas fa-times"></i>
+            </button>
+            <button class="send-btn" [disabled]="!(commentContentMap[comment.id]?.trim()) && !commentSelectedFile"
+              (click)="postNewComment(comment.id)">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -12,4 +12,6 @@ export interface Comment {
     updatedAt: string; // ISO Date string
     subComments: Comment[];
     attachments: Attachment[];
+    likedByCurrentUser?: boolean;
+    likeCount?: number;
 } 

@@ -23,8 +23,6 @@ export class CommentService {
   }
 
   createComment(formData: FormData): Observable<Comment> {
-    // For FormData, we let the browser set the Content-Type header with the correct boundary.
-    // We only need to provide the Authorization header.
     const headers = this.httpUtilService.createHeaders().delete('Content-Type');
     return this.http.post<Comment>(this.apiComment, formData, { headers });
   }

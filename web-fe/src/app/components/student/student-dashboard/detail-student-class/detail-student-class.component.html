@@ -8,22 +8,25 @@
     <!-- Input area for new post -->
     <div class="new-post-input">
       <textarea [(ngModel)]="newPostContent" placeholder="Bạn muốn thông báo gì?"></textarea>
-      <div *ngIf="selectedFile" class="selected-file">
-        <i class="fas fa-file"></i>
-        <span>{{ selectedFile.name }}</span>
-        <button class="remove-file-btn" (click)="removeSelectedFile()">
-          <i class="fas fa-times"></i>
-        </button>
+      <div *ngIf="selectedFiles && selectedFiles.length > 0" class="selected-files">
+        <div *ngFor="let file of selectedFiles; let i = index" class="selected-file">
+          <i class="fas fa-file"></i>
+          <span>{{ file.name }}</span>
+          <button class="remove-file-btn" (click)="removeSelectedFile(i)">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
       </div>
       <div class="input-actions">
-        <input type="file" #fileInput hidden (change)="onFileSelected($event)">
+        <input type="file" #fileInput hidden multiple (change)="handleFilesSelected($event, selectedFiles)">
         <button class="link-btn" title="Thêm file" (click)="fileInput.click()">
           <i class="fas fa-link"></i>
         </button>
         <button class="cancel-btn" (click)="cancelNewContent()">
           <i class="fas fa-times"></i>
         </button>
-        <button class="send-btn" [disabled]="!newPostContent.trim() && !selectedFile" (click)="postNewContent()">
+        <button class="send-btn" [disabled]="!newPostContent.trim() && selectedFiles.length === 0"
+          (click)="postNewContent()">
           <i class="fas fa-paper-plane"></i>
         </button>
       </div>
@@ -38,9 +41,20 @@
         <div class="post-author-info">
           <span class="author-name">{{ comment.userName }}</span>
           <span class="post-date">{{ formatDate(comment.createdAt) }}</span>
+          <span class="like-section-inline">
+            <button class="like-btn" (click)="toggleLike(comment)">
+              <i class="fas fa-heart" [ngClass]="{'liked': comment?.likedByCurrentUser}"></i>
+              <span>{{ comment?.likeCount || 0 }}</span>
+            </button>
+          </span>
         </div>
-        <div class="post-options">
-          <i class="fas fa-ellipsis-v"></i>
+        <div class="post-options" *ngIf="currentUserId === comment.userId">
+          <button class="ellipsis-btn" (click)="toggleDropdown(comment.id)">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+          <div class="dropdown-menu" *ngIf="openDropdownCommentId == comment.id">
+            <button (click)="deleteComment(comment.id)">Xóa</button>
+          </div>
         </div>
       </div>
       <div class="post-content">
@@ -63,12 +77,28 @@
               <div class="post-author-info">
                 <span class="author-name">{{ reply.userName }}</span>
                 <span class="post-date">{{ formatDate(reply.createdAt) }}</span>
+                <span class="like-section-inline">
+                  <button class="like-btn" (click)="toggleLike(reply)">
+                    <i class="fas fa-heart" [ngClass]="{'liked': reply?.likedByCurrentUser}"></i>
+                    <span>{{ reply?.likeCount || 0 }}</span>
+                  </button>
+                </span>
+              </div>
+
+              <div class="post-options" *ngIf="currentUserId === reply.userId">
+                <button class="ellipsis-btn" (click)="toggleDropdown(reply.id)">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="dropdown-menu" *ngIf="openDropdownCommentId == reply.id">
+                  <button (click)="deleteComment(reply.id)">Xóa</button>
+                </div>
               </div>
             </div>
             <div class="post-content">
               <p>{{ reply.content }}</p>
               <div *ngIf="reply.attachments && reply.attachments.length > 0" class="comment-attachments">
-                <a *ngFor="let attachment of reply.attachments" [href]="getAttachmentUrl(attachment.filePath)" target="_blank" class="attachment-link">
+                <a *ngFor="let attachment of reply.attachments" [href]="getAttachmentUrl(attachment.filePath)"
+                  target="_blank" class="attachment-link">
                   {{ attachment.fileName }}
                 </a>
               </div>
@@ -81,9 +111,11 @@
             <!-- Reply Form for sub-comment -->
             <div *ngIf="replyingTo === reply.id" class="reply-form">
               <div class="reply-input">
-                <textarea [(ngModel)]="replyContent" placeholder="Viết câu trả lời của bạn..." class="form-control"></textarea>
+                <textarea [(ngModel)]="replyContent" placeholder="Viết câu trả lời của bạn..."
+                  class="form-control"></textarea>
                 <div class="reply-actions mt-2">
-                  <button class="post-button" (click)="postNewComment(reply.id)" [disabled]="!replyContent.trim()">Gửi</button>
+                  <button class="post-button" (click)="postNewComment(reply.id)"
+                    [disabled]="!replyContent.trim()">Gửi</button>
                   <button class="cancel-button" (click)="toggleReply(reply.id)">Hủy</button>
                 </div>
               </div>
@@ -97,24 +129,28 @@
             <div class="avatar-circle" style="background-color: #4285f4;">
               <span>N</span>
             </div>
-            <textarea [(ngModel)]="commentContent" placeholder="Viết bình luận..."></textarea>
-            <div *ngIf="commentSelectedFile" class="selected-file">
-              <i class="fas fa-file"></i>
-              <span>{{ commentSelectedFile.name }}</span>
-              <button class="remove-file-btn" (click)="removeCommentFile()">
-                <i class="fas fa-times"></i>
-              </button>
+            <textarea [(ngModel)]="commentContentMap[comment.id]" placeholder="Viết bình luận..."></textarea>
+            <div *ngIf="commentSelectedFiles && commentSelectedFiles.length > 0" class="selected-files">
+              <div *ngFor="let file of commentSelectedFiles; let i = index" class="selected-file">
+                <i class="fas fa-file"></i>
+                <span>{{ file.name }}</span>
+                <button class="remove-file-btn" (click)="removeCommentFile(i)">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
             </div>
           </div>
           <div class="comment-actions">
-            <input type="file" #commentFileInput hidden (change)="onCommentFileSelected($event)">
+            <input type="file" #commentFileInput hidden multiple
+              (change)="handleFilesSelected($event, commentSelectedFiles)">
             <button class="link-btn" title="Thêm file" (click)="commentFileInput.click()">
               <i class="fas fa-link"></i>
             </button>
             <button class="cancel-btn" (click)="cancelComment()">
               <i class="fas fa-times"></i>
             </button>
-            <button class="send-btn" [disabled]="!commentContent.trim() && !commentSelectedFile"
+            <button class="send-btn"
+              [disabled]="!(commentContentMap[comment.id]?.trim()) && commentSelectedFiles.length === 0"
               (click)="postNewComment(comment.id)">
               <i class="fas fa-paper-plane"></i>
             </button>
