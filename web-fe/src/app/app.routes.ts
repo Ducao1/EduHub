@@ -83,6 +83,7 @@ export const routes: Routes = [
       { path: 'assignments', component: TeacherListAssignmentComponent },
       { path: 'assignment/:id', component: ClassListAssignmentComponent },
       { path: 'list-submission-assignment/:id', component: ListSubmissionAssignmentComponent },
+      { path: 'assignment/:assignmentId/submission/:studentId', component: DetailAssignmentComponent },
     ]
   },
   { path: 'try-exam/:examId', component: TryExamComponent },

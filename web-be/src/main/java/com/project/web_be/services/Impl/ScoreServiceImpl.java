@@ -8,6 +8,7 @@ import com.project.web_be.repositories.SubmissionAnswerRepository;
 import com.project.web_be.repositories.SubmissionRepository;
 import com.project.web_be.repositories.UserRepository;
 import com.project.web_be.services.ScoreService;
+import com.project.web_be.dtos.ScoreDTO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,24 @@ public class ScoreServiceImpl implements ScoreService {
         return scoreRepository.save(score);
     }
 
+    public Score gradeSubmission(ScoreDTO scoreDTO) {
+        Submission submission = submissionRepository.findById(scoreDTO.getSubmissionId())
+                .orElseThrow(() -> new EntityNotFoundException("Submission not found"));
+        User teacher = userRepository.findById(scoreDTO.getGradedById())
+                .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
+        Score score = scoreRepository.findBySubmissionId(scoreDTO.getSubmissionId()).orElse(null);
+        if (score == null) {
+            score = Score.builder()
+                    .score(scoreDTO.getTotalScore())
+                    .gradedBy(teacher)
+                    .submission(submission)
+                    .build();
+        } else {
+            score.setScore(scoreDTO.getTotalScore());
+            score.setGradedBy(teacher);
+        }
+        return scoreRepository.save(score);
+    }
 
     @Override
     public Score getScoreBySubmissionId(Long submissionId) {

@@ -1,0 +1,68 @@
+.submission-detail-container {
+  max-width: 500px;
+  margin: 32px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 32px 24px 24px 24px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #1976d2;
+}
+
+.student-info, .submission-info {
+  background: #f5f7fa;
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  font-size: 15px;
+}
+
+.student-info p, .submission-info p {
+  margin: 0 0 8px 0;
+}
+
+.grade-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.grade-box label {
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.grade-box input[type="number"] {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+.grade-box button {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 7px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.grade-box button:hover {
+  background: #125ea2;
+}
+
+a {
+  color: #1976d2;
+  text-decoration: underline;
+  word-break: break-all;
+}

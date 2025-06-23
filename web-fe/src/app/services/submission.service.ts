@@ -62,7 +62,7 @@ export class SubmissionService {
   }
 
   cancelSubmission(userId: number, assignmentId: number): Observable<any> {
-    return this.http.delete(`${environment.apiBaseUrl}/cancel/${userId}/${assignmentId}`);
+    return this.http.delete(`${environment.apiBaseUrl}/submissions/cancel/${userId}/${assignmentId}`);
   }
 
   submitExam(submissionExamDTO: SubmissionExamDTO): Observable<any> {

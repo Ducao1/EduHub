@@ -152,7 +152,7 @@
 
 .post-card {
   background-color: #fff;
-  border: 1px solid #dadce0;
+  border: 1px solid #ccc;
   border-radius: 8px;
   margin-bottom: 24px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -161,7 +161,7 @@
 .post-header {
   display: flex;
   align-items: center;
-  padding: 12px 12px 0px 12px;
+  padding: 12px 24px 0px 12px;
 }
 
 .avatar-circle {
@@ -197,8 +197,41 @@
 }
 
 .post-options {
-  color: #5f6368;
+  position: relative;
+  display: inline-block;
+}
+
+.ellipsis-btn {
+  background: none;
+  border: none;
   cursor: pointer;
+  padding: 4px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  z-index: 1000; /* Đảm bảo dropdown hiển thị trên các phần tử khác */
+  min-width: 120px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  padding: 0;
+  display: block; /* Đảm bảo dropdown hiển thị */
+}
+
+.dropdown-menu button {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-menu button:hover {
+  background: #f5f5f5;
 }
 
 .post-content {
@@ -361,4 +394,27 @@
 
 .reply-form {
   margin-top: 10px;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  outline: none;
+  box-shadow: none;
+}
+
+.fa-heart {
+  color: #bbb;
+  transition: color 0.2s;
+  border: none;
+}
+
+.fa-heart.liked {
+  color: #FF3040;
+  border: none;
 }

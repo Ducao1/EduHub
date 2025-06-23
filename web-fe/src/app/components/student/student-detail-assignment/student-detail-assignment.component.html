@@ -42,6 +42,9 @@
             <span *ngIf="assignment.dueDate" class="text-muted">{{ formatDate(assignment.dueDate) }}</span>
             <span *ngIf="!assignment.dueDate" class="text-muted">Không có</span>
           </div>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold">Điểm</span>
+          </div>
           <hr>
           <div *ngIf="submission">
             <p class="fw-bold">File đã nộp:</p>

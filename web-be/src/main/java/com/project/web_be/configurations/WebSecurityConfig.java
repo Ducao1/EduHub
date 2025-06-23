@@ -108,7 +108,7 @@ public class WebSecurityConfig {
                             .requestMatchers(GET,
                                     String.format("%s/submissions/status/**", apiPrefix)).hasAnyAuthority(Role.TEACHER,Role.STUDENT)
                             .requestMatchers(DELETE,
-                                    String.format("%s/submissions/cancel/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                                    String.format("%s/submissions/cancel/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)
                             .requestMatchers(POST,
                                     String.format("%s/submissions/submit-exam", apiPrefix)).hasAnyAuthority(Role.STUDENT,Role.TEACHER)
                             .requestMatchers(GET,

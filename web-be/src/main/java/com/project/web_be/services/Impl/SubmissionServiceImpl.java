@@ -108,7 +108,25 @@ public class SubmissionServiceImpl implements SubmissionService {
         return submissionRepository.existsByStudentIdAndAssignmentId(userId, assignmentId);
     }
 
+    @Override
+    @Transactional
     public boolean cancelSubmission(Long userId, Long assignmentId) {
+        Optional<Submission> submissionOpt = submissionRepository.findByStudentIdAndAssignmentId(userId, assignmentId);
+        if (submissionOpt.isPresent()) {
+            Submission submission = submissionOpt.get();
+            // Xóa file vật lý nếu cần
+            if (submission.getAttachments() != null) {
+                for (Attachment att : submission.getAttachments()) {
+                    try {
+                        Files.deleteIfExists(Paths.get(att.getFilePath()));
+                    } catch (IOException e) {
+                        // log error nếu cần
+                    }
+                }
+            }
+            submissionRepository.delete(submission);
+            return true;
+        }
         return false;
     }
 

@@ -1,0 +1,19 @@
+<div class="submission-detail-container">
+  <h2>Chi tiết bài nộp</h2>
+  <div class="student-info" *ngIf="student">
+    <p><b>Họ tên:</b> {{ student.fullName }}</p>
+    <p><b>Mã sinh viên:</b> {{ student.studentCode }}</p>
+    <p><b>Email:</b> {{ student.email }}</p>
+  </div>
+  <div class="submission-info" *ngIf="submission">
+    <p><b>Ngày nộp:</b> {{ formatDate(submission.submissionDate)}}</p>
+    <p><b>File nộp:</b>
+      <a [href]="fileUrl" target="_blank">{{ submission.file }}</a>
+    </p>
+  </div>
+  <div class="grade-box" *ngIf="submission">
+    <label>Nhập điểm:</label>
+    <input type="number" [(ngModel)]="grade" min="0" max="10" step="0.1"/>
+    <button (click)="saveGrade()">Lưu điểm</button>
+  </div>
+</div>

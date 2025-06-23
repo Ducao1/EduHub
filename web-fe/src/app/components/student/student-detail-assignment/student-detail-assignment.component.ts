@@ -115,11 +115,13 @@ export class StudentDetailAssignmentComponent implements OnInit {
     if (confirm('Bạn có chắc chắn muốn hủy nộp bài không?')) {
       this.submissionService.cancelSubmission(this.userId, this.assignmentId).subscribe({
         next: (response) => {
+          debugger
           alert('Đã hủy nộp bài.');
           this.hasSubmitted = false;
           this.submission = null;
         },
         error: (error) => {
+          debugger
           alert(`Lỗi khi hủy nộp bài: ${error.error}`);
         }
       });

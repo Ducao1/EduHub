@@ -6,6 +6,7 @@ import com.project.web_be.services.ScoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.project.web_be.dtos.ScoreDTO;
 
 @RestController
 @RequestMapping("${api.prefix}/scores")
@@ -32,6 +33,16 @@ public class ScoreController {
             return ResponseEntity.ok(score);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/grade")
+    public ResponseEntity<?> gradeSubmission(@RequestBody ScoreDTO scoreDTO) {
+        try {
+            Score score = scoreService.gradeSubmission(scoreDTO);
+            return ResponseEntity.ok(score);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
         }
     }
 

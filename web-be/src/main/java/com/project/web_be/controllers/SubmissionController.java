@@ -113,12 +113,12 @@ public class SubmissionController {
     }
 
     @DeleteMapping("/cancel/{userId}/{assignmentId}")
-    public ResponseEntity<String> cancelSubmission(@PathVariable Long userId, @PathVariable Long assignmentId) {
+    public ResponseEntity<?> cancelSubmission(@PathVariable Long userId, @PathVariable Long assignmentId) {
         boolean deleted = submissionService.cancelSubmission(userId, assignmentId);
         if (deleted) {
-            return ResponseEntity.ok("Hủy nộp bài thành công!");
+            return ResponseEntity.ok(Map.of("message", "Hủy nộp bài thành công!"));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy bài nộp!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Không tìm thấy bài nộp!"));
         }
     }
 
