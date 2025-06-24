@@ -1,8 +1,9 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { AssignmentService } from '../../../../services/assignment.service';
 import { TeacherNavBarComponent } from '../../teacher-nav-bar/teacher-nav-bar.component';
+import { AssignmentDTO } from '../../../../dtos/requests/assignment.dto';
 
 @Component({
   selector: 'app-class-list-assignment',
@@ -23,11 +24,13 @@ export class ClassListAssignmentComponent implements OnInit {
   totalElements: number = 0;
   totalPages: number = 0;
   visiblePages: number[] = [];
+  activeDropdownIndex: number = -1;
 
   constructor(
     private assignmentService: AssignmentService,
     private route: ActivatedRoute,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private router: Router
   ) {
   }
 
@@ -76,5 +79,37 @@ export class ClassListAssignmentComponent implements OnInit {
     const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
     const jsDate = new Date(year, month - 1, day, hour, minute, second);
     return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
+  }
+
+  toggleDropdown(index: number) {
+    this.activeDropdownIndex = this.activeDropdownIndex === index ? -1 : index;
+  }
+
+  viewListScoreOfAssignment(){
+
+  }
+
+  updateAssignment(id: number) {
+    // Example: navigate to update page or open a dialog (customize as needed)
+    // this.router.navigate(['/teacher/update-assignment', id]);
+    alert('Chức năng cập nhật sẽ được bổ sung!');
+  }
+
+  deleteAssignment(id: number) {
+    if (confirm('Bạn có chắc chắn muốn xóa bài tập này?')) {
+      this.assignmentService.deleteAssignment(id).subscribe({
+        next: () => {
+          alert('Xóa bài tập thành công!');
+          this.loadAssignments();
+        },
+        error: (err) => {
+          alert('Xóa thất bại: ' + (err.error?.message || err.message));
+        }
+      });
+    }
+  }
+
+  goToScoreList(id: number) {
+    this.router.navigate(['/teacher/assignment', id, 'scores']);
   }
 }

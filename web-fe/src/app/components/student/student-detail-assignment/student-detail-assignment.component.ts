@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClassroomService } from '../../../services/classroom.service';
 import { SubmissionService } from '../../../services/submission.service';
 import { StudentNavBarComponent } from "../student-nav-bar/student-nav-bar.component";
+import { ScoreService } from '../../../services/score.service';
 
 @Component({
   selector: 'app-student-detail-assignment',
@@ -26,6 +27,7 @@ export class StudentDetailAssignmentComponent implements OnInit {
   hasSubmitted = false;
   isPastDue = false;
   submission: any = null;
+  score: number | null = null;
 
 
   constructor(
@@ -35,7 +37,8 @@ export class StudentDetailAssignmentComponent implements OnInit {
     private route: ActivatedRoute,
     private datePipe: DatePipe,
     private submissionService: SubmissionService,
-    private router: Router
+    private router: Router,
+    private scoreService: ScoreService
   ) { }
 
   ngOnInit() {
@@ -70,9 +73,28 @@ export class StudentDetailAssignmentComponent implements OnInit {
       next: (response: any) => {
         this.hasSubmitted = response.hasSubmitted;
         this.submission = response.submission;
+        if (this.hasSubmitted && this.submission?.id) {
+          this.loadScore(this.submission.id);
+        } else {
+          this.score = null;
+        }
       },
       error: (error: any) => {
         console.error('Error checking submission status:', error);
+      }
+    });
+  }
+
+  loadScore(submissionId: number) {
+    this.scoreService.getScoreBySubmissionId(submissionId).subscribe({
+      next: (res: any) => {
+        debugger
+        this.score = res?.score ?? null;
+      },
+      error: (err: any) => {
+        debugger
+        this.score = null;
+        console.error(err);
       }
     });
   }
@@ -112,6 +134,10 @@ export class StudentDetailAssignmentComponent implements OnInit {
   }
 
   cancelSubmission() {
+    if (this.score !== null) {
+      alert('Bài đã được chấm điểm, không thể hủy nộp bài!');
+      return;
+    }
     if (confirm('Bạn có chắc chắn muốn hủy nộp bài không?')) {
       this.submissionService.cancelSubmission(this.userId, this.assignmentId).subscribe({
         next: (response) => {

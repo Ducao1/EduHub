@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.project.web_be.dtos.ScoreDTO;
+import com.project.web_be.dtos.ScoreAssignmentResponseDTO;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/scores")
@@ -55,15 +57,15 @@ public class ScoreController {
         }
     }
 
-//    @GetMapping("/assignments/{id}")
-//    public ResponseEntity<?> getScoresByAssignmentId(@PathVariable Long id) {
-//        try {
-//            return ResponseEntity.ok(scoreService.getScoresByAssignmentId(id));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
+    @GetMapping("/assignments/{id}")
+    public ResponseEntity<?> getScoresByAssignmentId(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(scoreService.getScoresByAssignmentId(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 //    @GetMapping("/exams/{id}")
 //    public ResponseEntity<?> getScoresByExamId(@PathVariable Long id) {
 //        try {

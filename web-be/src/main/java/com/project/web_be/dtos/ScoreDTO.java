@@ -20,3 +20,5 @@ public class ScoreDTO {
     @JsonProperty("total_score")
     private float totalScore;
 }
+
+

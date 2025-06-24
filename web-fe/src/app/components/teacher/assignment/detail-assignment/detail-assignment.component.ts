@@ -76,10 +76,12 @@ export class DetailAssignmentComponent implements OnInit {
     };
     this.scoreService.gradeSubmission(scoreDTO).subscribe({
       next: () => {
+        debugger
         alert('Lưu điểm thành công!');
         this.loadScore();
       },
       error: () => {
+        debugger
         alert('Lỗi khi lưu điểm!');
       }
     });
@@ -89,6 +91,13 @@ export class DetailAssignmentComponent implements OnInit {
     const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
     const jsDate = new Date(year, month - 1, day, hour, minute, second);
     return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
+  }
+
+  getOriginalFileName(fileName: string): string {
+    if (!fileName) return '';
+    const index = fileName.indexOf('_');
+    if (index === -1) return fileName;
+    return fileName.substring(index + 1);
   }
 
 }

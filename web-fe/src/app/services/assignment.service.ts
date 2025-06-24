@@ -37,4 +37,12 @@ export class AssignmentService {
   getAssignmentById(id: number): Observable<any> {
     return this.http.get<any>(`${environment.apiBaseUrl}/assignments/${id}`);
   }
+
+  updateAssignment(id: number, assignmentDTO: AssignmentDTO): Observable<any> {
+    return this.http.put(`${environment.apiBaseUrl}/assignments/${id}`, assignmentDTO, this.getApiConfig());
+  }
+
+  deleteAssignment(id: number): Observable<any> {
+    return this.http.delete(`${environment.apiBaseUrl}/assignments/${id}`, this.getApiConfig());
+  }
 }

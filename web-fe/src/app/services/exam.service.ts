@@ -45,4 +45,8 @@ export class ExamService {
   deleteExamById(id: number): Observable<any> {
     return this.http.delete(`${environment.apiBaseUrl}/exams/${id}`);
   }
+
+  getExamsByClassId(classId: number, page: number = 0, size: number = 100): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/exams/class/${classId}?page=${page}&size=${size}`);
+  }
 }

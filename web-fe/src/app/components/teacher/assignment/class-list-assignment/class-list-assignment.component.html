@@ -19,7 +19,7 @@
             </a>
         </div>
 
-        <div *ngFor="let assignment of assignments" class="assignment-card">
+        <div *ngFor="let assignment of assignments; let i = index" class="assignment-card" [class.active-dropdown]="activeDropdownIndex === i">
             <div class="assignment-info">
                 <div class="assignment-title">
                     <a routerLink="/teacher/list-submission-assignment/{{assignment.id}}">
@@ -40,6 +40,22 @@
                 </div>
             </div>
             <div class="assignment-actions">
+                <div class="dropdown">
+                    <button class="btn-dropdown" (click)="toggleDropdown(i)">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu" [class.show]="activeDropdownIndex === i">
+                        <a class="dropdown-item" (click)="goToScoreList(assignment.id)">
+                            Xem điểm
+                        </a>
+                        <a class="dropdown-item" (click)="updateAssignment(assignment.id)">
+                            Cập nhật
+                        </a>
+                        <a class="dropdown-item" (click)="deleteAssignment(assignment.id)">
+                            Xóa
+                        </a>
+                    </div>
+                </div>
                 <a class="btn-view" routerLink="/teacher/detail-assignment/{{assignment.id}}">
                 </a>
             </div>

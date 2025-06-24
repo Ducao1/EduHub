@@ -9,10 +9,15 @@ import com.project.web_be.repositories.SubmissionRepository;
 import com.project.web_be.repositories.UserRepository;
 import com.project.web_be.services.ScoreService;
 import com.project.web_be.dtos.ScoreDTO;
+import com.project.web_be.dtos.responses.ScoreAssignmentResponse;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -91,11 +96,24 @@ public class ScoreServiceImpl implements ScoreService {
         return scoreRepository.findBySubmissionId(submissionId).orElse(null);
     }
 
-//    @Override
-//    public List<Score> getScoresByAssignmentId(Long assignmentId) {
-//        return scoreRepository.findByAssignmentId(assignmentId);
-//    }
-//
+    @Override
+    public List<ScoreAssignmentResponse> getScoresByAssignmentId(Long assignmentId) {
+        List<Score> scores = scoreRepository.findAllBySubmission_Assignment_Id(assignmentId);
+        List<ScoreAssignmentResponse> result = new ArrayList<>();
+        for (Score score : scores) {
+            if (score.getSubmission() != null && score.getSubmission().getStudent() != null) {
+                result.add(ScoreAssignmentResponse.builder()
+                        .scoreId(score.getId())
+                        .score(score.getScore())
+                        .studentId(score.getSubmission().getStudent().getId())
+                        .studentName(score.getSubmission().getStudent().getFullName())
+                        .studentPhone(score.getSubmission().getStudent().getPhoneNumber())
+                        .build());
+            }
+        }
+        return result;
+    }
+
 //    @Override
 //    public List<Score> getScoresByExamId(Long examId) {
 //        return scoreRepository.findByExamId(examId);

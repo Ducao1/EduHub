@@ -7,3 +7,11 @@ export interface Score {
   gradedBy?: User;
   submission?: Submission;
 }
+
+export interface ScoreAssignmentResponse {
+  scoreId: number;
+  score: number;
+  studentId: number;
+  studentName: string;
+  studentPhone: string;
+}

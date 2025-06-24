@@ -36,6 +36,8 @@ import { ResultExamComponent } from './components/student/result-exam/result-exa
 import { ClassListExamComponent } from './components/teacher/exam/class-list-exam/class-list-exam.component';
 import { SessionExamComponent } from './components/teacher/exam/session-exam/session-exam.component';
 import { ListSubmissionAssignmentComponent } from './components/teacher/assignment/list-submission-assignment/list-submission-assignment.component';
+import { ListScoreAssignmentComponent } from './components/teacher/assignment/list-score-assignment/list-score-assignment.component';
+import { ListScoreExamComponent } from './components/teacher/exam/list-score-exam/list-score-exam.component';
 
 
 export const routes: Routes = [
@@ -83,7 +85,9 @@ export const routes: Routes = [
       { path: 'assignments', component: TeacherListAssignmentComponent },
       { path: 'assignment/:id', component: ClassListAssignmentComponent },
       { path: 'list-submission-assignment/:id', component: ListSubmissionAssignmentComponent },
+      { path: 'assignment/:id/scores', component: ListScoreAssignmentComponent },
       { path: 'assignment/:assignmentId/submission/:studentId', component: DetailAssignmentComponent },
+      { path: 'exam/:id/scores', component: ListScoreExamComponent },
     ]
   },
   { path: 'try-exam/:examId', component: TryExamComponent },

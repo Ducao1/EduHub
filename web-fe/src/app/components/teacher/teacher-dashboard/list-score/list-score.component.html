@@ -1,20 +1,40 @@
-<div class="container mt-4">
-    <h2>Danh sách bài nộp cho bài kiểm tra</h2>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Tên học sinh</th>
-          <th>Điểm</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let submission of submissions; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ submission.studentName }}</td>
-          <td>{{ submission.score }}</td>
-        </tr>
-      </tbody>
-    </table>
+<app-teacher-nav-bar></app-teacher-nav-bar>
+<div class="score-list-container">
+  <div class="score-columns">
+    <div class="score-column">
+      <h2>Danh sách bài tập</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Tên bài tập</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let assignment of assignments; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ assignment.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="score-column">
+      <h2>Danh sách bài thi</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Tên bài thi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let exam of exams; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ exam.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+</div>
   

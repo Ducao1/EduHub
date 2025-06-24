@@ -92,6 +92,6 @@ export class ClassListExamComponent implements OnInit {
   }
 
   viewScores(examId: number) {
-    this.router.navigate(['/teacher/list-score', examId]);
+    this.router.navigate(['/teacher/exam', examId, 'scores']);
   }
 }

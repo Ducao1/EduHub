@@ -44,6 +44,8 @@
           </div>
           <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="fw-bold">Điểm</span>
+            <span *ngIf="score !== null; else notGraded">{{ score }}</span>
+            <ng-template #notGraded><span class="text-muted">Chưa chấm</span></ng-template>
           </div>
           <hr>
           <div *ngIf="submission">
@@ -63,7 +65,7 @@
                 <button class="btn btn-primary w-100 mt-3" (click)="submitAssignment()" [disabled]="!selectedFile">Nộp bài</button>
               </div>
               <div *ngIf="hasSubmitted">
-                <button class="btn btn-outline-danger w-100" (click)="cancelSubmission()">Hủy nộp bài</button>
+                <button *ngIf="score === null" class="btn btn-outline-danger w-100" (click)="cancelSubmission()">Hủy nộp bài</button>
               </div>
             </div>
             <div *ngIf="isPastDue && !hasSubmitted" class="alert alert-danger" role="alert">

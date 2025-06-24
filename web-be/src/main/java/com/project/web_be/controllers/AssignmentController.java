@@ -20,7 +20,9 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("${api.prefix}/assignments")
@@ -93,7 +95,9 @@ public class AssignmentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAssignment(@PathVariable long id) {
         assignmentService.deleteAssignment(id);
-        return ResponseEntity.ok("Delete assignment successfully");
+        Map<String, String> response = new HashMap<>();
+        response.put("message","Delete assignment successfully");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/files/{filename}")
