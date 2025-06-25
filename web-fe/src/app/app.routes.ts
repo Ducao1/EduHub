@@ -44,7 +44,7 @@ export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'profile', component: ProfileComponent },
+  
   { path: 'change-password', component: ChangePasswordComponent },
   {
     path: 'student', component: StudentLayoutComponent, children: [
@@ -55,15 +55,13 @@ export const routes: Routes = [
       { path: 'detail-assignment/:classId/:assignmentId', component: StudentDetailAssignmentComponent },
       { path: 'list-exam/:classId', component: ListExamComponent },
       { path: 'score/:classId', component: ScoreComponent },
-
+      { path: 'profile/:id', component: ProfileComponent },
     ]
   },
 
   {
     path: 'teacher', component: TeacherLayoutComponent, children: [
-      // { path: 'dashboard', component: TeacherDashboardComponent },
-      // { path: 'list-class', component: ListClassComponent },
-
+      { path: 'profile/:id', component: ProfileComponent },
       { path: 'dashboard', component: ListClassComponent },
       { path: 'add-class', component: AddClassComponent },
       { path: 'detail-class/:classId', component: DetailTeacherClassComponent },

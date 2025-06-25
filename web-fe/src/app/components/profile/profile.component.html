@@ -1,1 +1,202 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <div class="profile-left">
+    <div class="avatar-upload">
+      <div class="avatar-dropzone">
+        <span class="plus-icon">+</span>
+      </div>
+    </div>
+    <div class="profile-name">Nguyễn Văn A</div>
+    <div class="profile-email">nguyenvana&#64;email.com</div>
+    <div class="profile-info-list">
+      <div class="profile-info-item"><span>Vai trò:</span> Học sinh</div>
+    </div>
+  </div>
+  <div class="profile-right">
+    <div class="profile-tabs">
+      <div class="tab active">Thông tin cá nhân</div>
+    </div>
+    <form class="profile-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Họ và tên</label>
+          <input type="text" class="form-control" placeholder="Nhập họ và tên">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="form-control" placeholder="Nhập email">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Số điện thoại</label>
+          <input type="text" class="form-control" placeholder="Nhập số điện thoại">
+        </div>
+        <div class="form-group">
+          <label>Ngày sinh</label>
+          <input type="date" class="form-control">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Giới tính</label>
+          <select class="form-control">
+            <option value="">Chọn giới tính</option>
+            <option value="male">Nam</option>
+            <option value="female">Nữ</option>
+            <option value="other">Khác</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn-update">Cập nhật</button>
+    </form>
+  </div>
+</div>
+
+<style>
+.profile-container {
+  display: flex;
+  gap: 36px;
+  margin: 24px auto 16px auto;
+  max-width: 1200px;
+  min-height: 480px;
+}
+.profile-left {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.08);
+  padding: 32px 20px;
+  width: 320px;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.avatar-upload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.avatar-dropzone {
+  width: 140px;
+  height: 140px;
+  border: 2px solid #2563eb;
+  border-radius: 16px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border 0.2s;
+  position: relative;
+}
+.avatar-dropzone:hover {
+  border: 2.5px solid #1746a2;
+}
+.plus-icon {
+  font-size: 36px;
+  color: #222;
+  font-weight: 400;
+  user-select: none;
+}
+.profile-name {
+  font-size: 21px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.profile-email {
+  color: #6c757d;
+  margin-bottom: 16px;
+}
+.profile-info-list {
+  width: 100%;
+  margin-top: 14px;
+}
+.profile-info-item {
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 8px;
+}
+.profile-info-item span {
+  color: #6c757d;
+  font-weight: 500;
+}
+.profile-right {
+  flex: 1;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.08);
+  padding: 32px 32px 20px 32px;
+  min-height: 380px;
+}
+.profile-tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.tab {
+  font-size: 18px;
+  font-weight: 500;
+  color: #2563eb;
+  border-bottom: 2px solid #2563eb;
+  padding-bottom: 6px;
+}
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.form-row {
+  display: flex;
+  gap: 24px;
+}
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.form-group label {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #444;
+}
+.form-control {
+  border: 1.5px solid #e3e6f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s;
+}
+.form-control:focus {
+  border: 1.5px solid #2563eb;
+}
+.btn-update {
+  margin-top: 18px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 0;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-update:hover {
+  background: #1746a2;
+}
+@media (max-width: 1100px) {
+  .profile-container {
+    flex-direction: column;
+    gap: 16px;
+    max-width: 98vw;
+    min-height: unset;
+  }
+  .profile-right, .profile-left {
+    min-height: unset;
+    padding: 18px 6px;
+  }
+}
+</style>

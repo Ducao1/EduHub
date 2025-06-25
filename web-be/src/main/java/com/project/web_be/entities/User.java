@@ -28,6 +28,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
 
+    private String email;
+    private String dob;
+    private String avatar;
+    private String gender;
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -37,6 +41,7 @@ public class User extends BaseEntity implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,5 +9,13 @@ import { Component } from '@angular/core';
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
+  userId!: number;
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UserService,
+  ) { }
 
+  ngOnInit() {
+    const userId = this.userService.getUserId();
+  }
 }
