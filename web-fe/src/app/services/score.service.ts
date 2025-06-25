@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { ScoreAssignmentResponse } from '../interfaces/score';
+import { ScoreAssignmentResponse, ScoreExamResponse } from '../interfaces/score';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,15 @@ export class ScoreService {
     return this.http.get<ScoreAssignmentResponse[]>(`${this.apiBase}/assignments/${assignmentId}`);
   }
 
-  getScoresByExamId(examId: number): Observable<ScoreAssignmentResponse[]> {
-    return this.http.get<ScoreAssignmentResponse[]>(`${this.apiBase}/exams/${examId}`);
+  getScoresByExamId(examId: number): Observable<ScoreExamResponse[]> {
+    return this.http.get<ScoreExamResponse[]>(`${this.apiBase}/exams/${examId}`);
+  }
+
+  getAssignmentScoresByStudentId(studentId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiBase}/assignments/student/${studentId}`);
+  }
+
+  getExamScoresByStudentId(studentId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiBase}/exams/student/${studentId}`);
   }
 }

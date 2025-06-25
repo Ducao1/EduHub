@@ -26,7 +26,7 @@ export class AddStudentComponent {
   ) { }
 
   ngOnInit(): void {
-    this.classId = Number(this.activedRoute.snapshot.paramMap.get('id'));
+    this.classId = Number(this.activedRoute.snapshot.paramMap.get('classId'));
   }
 
   addStudent() {

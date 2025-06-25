@@ -19,6 +19,16 @@ public class ScoreDTO {
 
     @JsonProperty("total_score")
     private float totalScore;
+
+    private String studentName;
+    private java.time.LocalDateTime submittedAt;
+
+    public ScoreDTO(Long id, String studentName, Float score, java.time.LocalDateTime submittedAt) {
+        this.submissionId = id;
+        this.studentName = studentName;
+        this.totalScore = score;
+        this.submittedAt = submittedAt;
+    }
 }
 
 

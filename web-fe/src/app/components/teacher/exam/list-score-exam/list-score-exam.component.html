@@ -12,13 +12,15 @@
                         <th>STT</th>
                         <th>Họ và tên</th>
                         <th>Điểm</th>
+                        <th>Thời gian nộp</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let score of paginatedScores; let i = index">
-                        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                    <tr *ngFor="let score of scores; let i = index">
+                        <td>{{ i + 1 }}</td>
                         <td>{{ score.studentName }}</td>
-                        <td>{{ score.score }}</td>
+                        <td>{{ score.total_score }}</td>
+                        <td>{{ formatDate(score.submittedAt) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -26,30 +28,6 @@
                 <i class="fas fa-users"></i>
                 <p>Chưa có điểm nào cho bài thi này</p>
             </div>
-        </div>
-        
-        <div class="pagination-container" *ngIf="totalPages > 1">
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li class="page-item" *ngIf="currentPage > 1">
-                        <a class="page-link" href="#" (click)="onPageChange(1); $event.preventDefault()">First</a>
-                    </li>
-                    <li class="page-item" [class.disabled]="currentPage === 1">
-                        <a class="page-link" href="#" (click)="onPageChange(currentPage - 1); $event.preventDefault()">Previous</a>
-                    </li>
-                    <ng-container *ngFor="let page of visiblePages">
-                        <li class="page-item" [class.active]="page === currentPage">
-                            <a class="page-link" href="#" (click)="onPageChange(page); $event.preventDefault()">{{ page }}</a>
-                        </li>
-                    </ng-container>
-                    <li class="page-item" [class.disabled]="currentPage === totalPages">
-                        <a class="page-link" href="#" (click)="onPageChange(currentPage + 1); $event.preventDefault()">Next</a>
-                    </li>
-                    <li class="page-item" *ngIf="currentPage < totalPages">
-                        <a class="page-link" href="#" (click)="onPageChange(totalPages); $event.preventDefault()">Last</a>
-                    </li>
-                </ul>
-            </nav>
         </div>
     </div>
 </div>

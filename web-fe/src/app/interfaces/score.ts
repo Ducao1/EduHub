@@ -15,3 +15,10 @@ export interface ScoreAssignmentResponse {
   studentName: string;
   studentPhone: string;
 }
+
+export interface ScoreExamResponse {
+  id: number;
+  studentName: string;
+  total_score: number;
+  submittedAt: Date;
+}

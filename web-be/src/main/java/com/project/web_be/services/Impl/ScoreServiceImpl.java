@@ -1,5 +1,6 @@
 package com.project.web_be.services.Impl;
 
+import com.project.web_be.dtos.responses.StudentScoreResponse;
 import com.project.web_be.entities.Score;
 import com.project.web_be.entities.Submission;
 import com.project.web_be.entities.User;
@@ -114,11 +115,53 @@ public class ScoreServiceImpl implements ScoreService {
         return result;
     }
 
-//    @Override
-//    public List<Score> getScoresByExamId(Long examId) {
-//        return scoreRepository.findByExamId(examId);
-//    }
-//
+    @Override
+    public List<ScoreDTO> getScoresByExamId(Long examId) {
+        List<Score> scores = scoreRepository.findAllBySubmission_Exam_Id(examId);
+        List<ScoreDTO> result = new ArrayList<>();
+        for (Score score : scores) {
+            if (score.getSubmission() != null && score.getSubmission().getStudent() != null) {
+                result.add(new ScoreDTO(
+                    score.getSubmission().getId(),
+                    score.getSubmission().getStudent().getFullName(),
+                    score.getScore(),
+                    score.getSubmission().getSubmittedAt()
+                ));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<StudentScoreResponse> getExamScoresByStudentId(Long studentId) {
+        List<Score> scores = scoreRepository.findAll();
+        List<StudentScoreResponse> result = new ArrayList<>();
+        for (Score score : scores) {
+            if (score.getSubmission() != null && score.getSubmission().getStudent() != null
+                    && score.getSubmission().getStudent().getId().equals(studentId)
+                    && score.getSubmission().getExam() != null) {
+                String title = score.getSubmission().getExam().getTitle();
+                result.add(new StudentScoreResponse(title, score.getScore()));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<StudentScoreResponse> getAssignmentScoresByStudentId(Long studentId) {
+        List<Score> scores = scoreRepository.findAll();
+        List<StudentScoreResponse> result = new ArrayList<>();
+        for (Score score : scores) {
+            if (score.getSubmission() != null && score.getSubmission().getStudent() != null
+                    && score.getSubmission().getStudent().getId().equals(studentId)
+                    && score.getSubmission().getAssignment() != null) {
+                String title = score.getSubmission().getAssignment().getTitle();
+                result.add(new StudentScoreResponse(title, score.getScore()));
+            }
+        }
+        return result;
+    }
+
 //    @Override
 //    public List<Score> getScoresByUserId(Long userId) {
 //        return scoreRepository.findByUserId(userId);

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { AssignmentService } from '../../../services/assignment.service';
 import { StudentNavBarComponent } from '../student-nav-bar/student-nav-bar.component';
+import { ClassroomService } from '../../../services/classroom.service';
 
 @Component({
   selector: 'app-list-assignment',
@@ -17,6 +18,7 @@ import { StudentNavBarComponent } from '../student-nav-bar/student-nav-bar.compo
 })
 export class ListAssignmentComponent implements OnInit {
   classId!: number;
+  className!: string;
   assignments: any[] = [];
   pageSize: number = 9;
   totalPages: number = 0;
@@ -27,12 +29,25 @@ export class ListAssignmentComponent implements OnInit {
   constructor(
     private assignmentService: AssignmentService,
     private route: ActivatedRoute,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private classroomService: ClassroomService
   ) { }
 
   ngOnInit() {
-    this.classId = Number(this.route.snapshot.paramMap.get('id'));
+    this.classId = Number(this.route.snapshot.paramMap.get('classId'));
+    this.loadClassInfo();
     this.loadAssignments();
+  }
+
+  loadClassInfo() {
+    this.classroomService.getClassById(this.classId).subscribe({
+      next: (response) => {
+        this.className = response.name;
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy thông tin lớp:', err);
+      }
+    });
   }
 
   loadAssignments(): void {

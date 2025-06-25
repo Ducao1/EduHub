@@ -4,6 +4,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { AssignmentService } from '../../../../services/assignment.service';
 import { TeacherNavBarComponent } from '../../teacher-nav-bar/teacher-nav-bar.component';
 import { AssignmentDTO } from '../../../../dtos/requests/assignment.dto';
+import { ClassroomService } from '../../../../services/classroom.service';
 
 @Component({
   selector: 'app-class-list-assignment',
@@ -19,6 +20,7 @@ import { AssignmentDTO } from '../../../../dtos/requests/assignment.dto';
 export class ClassListAssignmentComponent implements OnInit {
   assignments: any[] = [];
   classId!: number;
+  className!: string;
   currentPage: number = 0; // Start with page 0 for API
   pageSize: number = 9; // Adjust as needed
   totalElements: number = 0;
@@ -30,13 +32,26 @@ export class ClassListAssignmentComponent implements OnInit {
     private assignmentService: AssignmentService,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private classroomService: ClassroomService
   ) {
   }
 
   ngOnInit() {
-    this.classId = Number(this.route.snapshot.paramMap.get('id'));
+    this.classId = Number(this.route.snapshot.paramMap.get('classId'));
+    this.loadClassInfo();
     this.loadAssignments();
+  }
+
+  loadClassInfo() {
+    this.classroomService.getClassById(this.classId).subscribe({
+      next: (response) => {
+        this.className = response.name;
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy thông tin lớp:', err);
+      }
+    });
   }
 
   loadAssignments(): void {
@@ -110,6 +125,6 @@ export class ClassListAssignmentComponent implements OnInit {
   }
 
   goToScoreList(id: number) {
-    this.router.navigate(['/teacher/assignment', id, 'scores']);
+    this.router.navigate(['/teacher/assignment',this.classId, id, 'scores']);
   }
 }

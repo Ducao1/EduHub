@@ -1,4 +1,4 @@
-<app-student-nav-bar></app-student-nav-bar>
+<app-student-nav-bar [className]="className"></app-student-nav-bar>
 <div class="assignment-container">
     <div class="assignment-header">
         <div class="search-container">
@@ -16,7 +16,7 @@
         <div *ngFor="let assignment of assignments" class="assignment-card">
             <div class="assignment-info">
                 <div class="assignment-title">
-                    <a routerLink="/student/detail-assignment/{{assignment.id}}">
+                    <a routerLink="/student/detail-assignment/{{classId}}/{{assignment.id}}">
                        <i class="fas fa-tasks me-3"></i>{{ assignment.title }}
                     </a>
                 </div>

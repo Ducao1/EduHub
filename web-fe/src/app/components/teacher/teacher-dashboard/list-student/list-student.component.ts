@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { EnrollmentService } from '../../../../services/enrollment.service';
 import { TeacherNavBarComponent } from "../../teacher-nav-bar/teacher-nav-bar.component";
 import { User } from '../../../../interfaces/user';
+import { ClassroomService } from '../../../../services/classroom.service';
 
 @Component({
   selector: 'app-list-student',
@@ -18,6 +19,7 @@ import { User } from '../../../../interfaces/user';
 })
 export class ListStudentComponent {
   classId!: number;
+  className!: string;
   students: User[] = [];
   paginatedStudents: User[] = [];
   
@@ -28,12 +30,25 @@ export class ListStudentComponent {
 
   constructor(
     private enrollmentService: EnrollmentService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private classroomService: ClassroomService
   ) { }
 
   ngOnInit() {
-    this.classId = Number(this.route.snapshot.paramMap.get('id'));
+    this.classId = Number(this.route.snapshot.paramMap.get('classId'));
+    this.loadClassInfo();
     this.loadAllStudent();
+  }
+
+  loadClassInfo() {
+    this.classroomService.getClassById(this.classId).subscribe({
+      next: (response) => {
+        this.className = response.name;
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy thông tin lớp:', err);
+      }
+    });
   }
 
   loadAllStudent() {

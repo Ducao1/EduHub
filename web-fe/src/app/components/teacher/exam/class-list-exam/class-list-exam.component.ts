@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { ClassExamService } from '../../../../services/class-exam.service';
 import { TeacherNavBarComponent } from "../../teacher-nav-bar/teacher-nav-bar.component";
+import { ClassroomService } from '../../../../services/classroom.service';
 
 @Component({
   selector: 'app-class-list-exam',
@@ -18,6 +19,7 @@ import { TeacherNavBarComponent } from "../../teacher-nav-bar/teacher-nav-bar.co
 })
 export class ClassListExamComponent implements OnInit {
   classId!: number;
+  className!: string;
   exams: any[] = [];
   currentPage: number = 0;
   pageSize: number = 9;
@@ -30,13 +32,27 @@ export class ClassListExamComponent implements OnInit {
     private classExamService: ClassExamService,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private classroomService: ClassroomService
   ) { }
 
   ngOnInit() {
-    this.classId = Number(this.route.snapshot.paramMap.get('id'));
+    this.classId = Number(this.route.snapshot.paramMap.get('classId'));
+    this.loadClassInfo();
     this.loadExams();
   }
+
+  loadClassInfo() {
+    this.classroomService.getClassById(this.classId).subscribe({
+      next: (response) => {
+        this.className = response.name;
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy thông tin lớp:', err);
+      }
+    });
+  }
+
 
   loadExams(): void {
     this.classExamService.getExamByClass(this.classId, this.currentPage, this.pageSize).subscribe({
@@ -92,6 +108,6 @@ export class ClassListExamComponent implements OnInit {
   }
 
   viewScores(examId: number) {
-    this.router.navigate(['/teacher/exam', examId, 'scores']);
+    this.router.navigate(['/teacher/exam',this.classId, examId, 'scores']);
   }
 }

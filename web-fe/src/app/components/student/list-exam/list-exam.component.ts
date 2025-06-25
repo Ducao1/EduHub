@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { StudentNavBarComponent } from '../student-nav-bar/student-nav-bar.component';
 import { ClassExamService } from '../../../services/class-exam.service';
+import { ClassroomService } from '../../../services/classroom.service';
 
 @Component({
   selector: 'app-list-exam',
@@ -14,6 +15,7 @@ import { ClassExamService } from '../../../services/class-exam.service';
 })
 export class ListExamComponent implements OnInit {
   classId!: number;
+  className!: string;
   exams: any[] = [];
   currentPage: number = 0;
   pageSize: number = 9;
@@ -26,17 +28,30 @@ export class ListExamComponent implements OnInit {
     private classExamService: ClassExamService,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+     private classroomService: ClassroomService
   ) { }
 
   ngOnInit() {
-    this.classId = Number(this.route.snapshot.paramMap.get('id'));
+    this.classId = Number(this.route.snapshot.paramMap.get('classId'));
     if (!this.classId) {
       console.error('classId không hợp lệ:', this.classId);
       alert('Thiếu classId trong URL. Vui lòng kiểm tra lại.');
       return; // Có thể redirect về trang dashboard nếu cần
     }
+    this.loadClassInfo();
     this.loadExams();
+  }
+
+  loadClassInfo() {
+    this.classroomService.getClassById(this.classId).subscribe({
+      next: (response) => {
+        this.className = response.name;
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy thông tin lớp:', err);
+      }
+    });
   }
 
   loadExams(): void {

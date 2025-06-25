@@ -1,17 +1,111 @@
-<app-student-nav-bar></app-student-nav-bar>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Bài thi</th>
-      <th>Điểm</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let score of scores; let i = index">
-        <td>{{score.id}}</td>
-        <td>{{score.title}}</td>
-        <td>{{score.score}}</td>
-    </tr>
-  </tbody>
-</table>
+<app-student-nav-bar [className]="className"></app-student-nav-bar>
+<div class="page-container">
+  <div class="score-list-container">
+    <div class="score-columns">
+      <div class="score-column">
+        <div class="score-title">Điểm bài tập</div>
+        <div class="score-table-container">
+          <table class="table score-table">
+            <colgroup>
+              <col style="width:12%">
+              <col style="width:60%">
+              <col style="width:28%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Tên bài tập</th>
+                <th>Điểm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let score of assignmentScores; let i = index">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td class="text-left">{{ score.title }}</td>
+                <td class="text-center">{{ score.score }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="assignmentScores.length === 0" class="no-scores">
+            <i class="fas fa-users"></i>
+            <p>Chưa có điểm bài tập nào</p>
+          </div>
+        </div>
+      </div>
+      <div class="score-column">
+        <div class="score-title">Điểm bài thi</div>
+        <div class="score-table-container">
+          <table class="table score-table">
+            <colgroup>
+              <col style="width:12%">
+              <col style="width:60%">
+              <col style="width:28%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Tên bài thi</th>
+                <th>Điểm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let score of examScores; let i = index">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td class="text-left">{{ score.title }}</td>
+                <td class="text-center">{{ score.score }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="examScores.length === 0" class="no-scores">
+            <i class="fas fa-users"></i>
+            <p>Chưa có điểm bài thi nào</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.score-list-container {
+  padding: 16px;
+  background: #fafbfc;
+  border-radius: 10px;
+}
+.score-columns {
+  display: flex;
+  gap: 24px;
+}
+.score-column {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.score-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.score-table-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 16px;
+}
+.table thead th {
+  background: #f6f8fa;
+  color: #6c757d;
+  font-weight: 600;
+}
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.no-scores {
+  text-align: center;
+  color: #aaa;
+  padding: 16px 0 0 0;
+}
+@media (max-width: 900px) {
+  .score-columns {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+</style>

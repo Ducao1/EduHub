@@ -54,7 +54,7 @@ export class ExamComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userId = this.userService.getUserId() ?? 0;
-    const routeExamId = this.activedRoute.snapshot.paramMap.get('id');
+    const routeExamId = this.activedRoute.snapshot.paramMap.get('examId');
     if (routeExamId) {
       this.examId = Number(routeExamId);
     }

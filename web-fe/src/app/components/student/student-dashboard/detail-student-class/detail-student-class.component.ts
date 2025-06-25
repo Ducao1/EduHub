@@ -50,7 +50,7 @@ export class DetailStudentClassComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.classId = Number(this.route.snapshot.paramMap.get('id'));
+    this.classId = Number(this.route.snapshot.paramMap.get('classId'));
     this.currentUserId = this.userService.getUserId();
     this.loadClassInfo();
     this.loadComments();
@@ -59,10 +59,12 @@ export class DetailStudentClassComponent implements OnInit {
   loadClassInfo() {
     this.classroomService.getClassById(this.classId).subscribe({
       next: (response) => {
+        debugger
         this.className = response.name;
         this.classDescription = response.description || 'Không có mô tả.';
       },
       error: (err) => {
+        debugger
         console.error('Lỗi khi lấy thông tin lớp:', err);
       }
     });

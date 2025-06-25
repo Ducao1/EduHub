@@ -1,4 +1,4 @@
-<app-teacher-nav-bar></app-teacher-nav-bar>
+<app-teacher-nav-bar [className]="className"></app-teacher-nav-bar>
 <div class="assignment-container">
     <div class="assignment-header">
         <div class="search-container">
@@ -56,7 +56,7 @@
                         </a>
                     </div>
                 </div>
-                <a class="btn-view" routerLink="/teacher/detail-assignment/{{assignment.id}}">
+                <a class="btn-view" routerLink="/teacher/detail-assignment/{{classId}}/{{assignment.id}}">
                 </a>
             </div>
         </div>

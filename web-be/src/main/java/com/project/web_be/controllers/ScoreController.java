@@ -66,15 +66,33 @@ public class ScoreController {
         }
     }
 
-//    @GetMapping("/exams/{id}")
-//    public ResponseEntity<?> getScoresByExamId(@PathVariable Long id) {
-//        try {
-//            return ResponseEntity.ok(scoreService.getScoresByExamId(id));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
+    @GetMapping("/exams/{id}")
+    public ResponseEntity<?> getScoresByExamId(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(scoreService.getScoresByExamId(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/exams/student/{studentId}")
+    public ResponseEntity<?> getExamScoresByStudentId(@PathVariable Long studentId) {
+        try {
+            return ResponseEntity.ok(scoreService.getExamScoresByStudentId(studentId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/assignments/student/{studentId}")
+    public ResponseEntity<?> getAssignmentScoresByStudentId(@PathVariable Long studentId) {
+        try {
+            return ResponseEntity.ok(scoreService.getAssignmentScoresByStudentId(studentId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 //    @GetMapping("/users/{id}")
 //    public ResponseEntity<?> getScoresByUserId(@PathVariable Long id) {
 //        try {

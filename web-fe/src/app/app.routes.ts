@@ -49,12 +49,12 @@ export const routes: Routes = [
   {
     path: 'student', component: StudentLayoutComponent, children: [
       { path: 'dashboard', component: StudentDashboardComponent },
-      { path: 'detail-class/:id', component: DetailStudentClassComponent },
+      { path: 'detail-class/:classId', component: DetailStudentClassComponent },
       { path: 'join-class', component: JoinClassComponent },
-      { path: 'list-assignment/:id', component: ListAssignmentComponent },
-      { path: 'detail-assignment/:id', component: StudentDetailAssignmentComponent },
-      { path: 'list-exam/:id', component: ListExamComponent },
-      { path: 'score/:id', component: ScoreComponent },
+      { path: 'list-assignment/:classId', component: ListAssignmentComponent },
+      { path: 'detail-assignment/:classId/:assignmentId', component: StudentDetailAssignmentComponent },
+      { path: 'list-exam/:classId', component: ListExamComponent },
+      { path: 'score/:classId', component: ScoreComponent },
 
     ]
   },
@@ -66,9 +66,9 @@ export const routes: Routes = [
 
       { path: 'dashboard', component: ListClassComponent },
       { path: 'add-class', component: AddClassComponent },
-      { path: 'detail-class/:id', component: DetailTeacherClassComponent },
-      { path: 'class/:id', component: ListStudentComponent },
-      { path: 'class/:id/add-student', component: AddStudentComponent },
+      { path: 'detail-class/:classId', component: DetailTeacherClassComponent },
+      { path: 'class/:classId', component: ListStudentComponent },
+      { path: 'class/:classId/add-student', component: AddStudentComponent },
 
       { path: 'detail-exam/:id', component: DetailExamComponent },
       { path: 'add-exam', component: AddExamComponent },
@@ -78,16 +78,16 @@ export const routes: Routes = [
 
       { path: 'assign-exam/:id', component: AssignExamComponent },
       { path: 'list-score/:id', component: ListScoreComponent },
-      { path: 'class/exams/:id', component: ClassListExamComponent },
+      { path: 'class/exams/:classId', component: ClassListExamComponent },
       { path: 'exam-scores/:id', component: ListScoreComponent },
 
       { path: 'add-assignment/:id', component: AddAssignmentComponent },
       { path: 'assignments', component: TeacherListAssignmentComponent },
-      { path: 'assignment/:id', component: ClassListAssignmentComponent },
-      { path: 'list-submission-assignment/:id', component: ListSubmissionAssignmentComponent },
-      { path: 'assignment/:id/scores', component: ListScoreAssignmentComponent },
+      { path: 'class/assignments/:classId', component: ClassListAssignmentComponent },
+      { path: 'list-submission-assignment/:classId/:assignmentId', component: ListSubmissionAssignmentComponent },
+      { path: 'assignment/:classId/:assignmentId/scores', component: ListScoreAssignmentComponent },
       { path: 'assignment/:assignmentId/submission/:studentId', component: DetailAssignmentComponent },
-      { path: 'exam/:id/scores', component: ListScoreExamComponent },
+      { path: 'exam/:classId/:examId/scores', component: ListScoreExamComponent },
     ]
   },
   { path: 'try-exam/:examId', component: TryExamComponent },

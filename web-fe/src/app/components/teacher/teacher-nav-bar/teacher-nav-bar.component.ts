@@ -19,6 +19,6 @@ export class TeacherNavBarComponent {
     private route: ActivatedRoute
   ) { }
   ngOnInit() {
-    this.classId = Number(this.route.snapshot.paramMap.get('id'));
+    this.classId = Number(this.route.snapshot.paramMap.get('classId'));
   }
 }

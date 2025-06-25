@@ -50,7 +50,7 @@ export class DetailTeacherClassComponent implements OnInit {
     ) { }
   
     ngOnInit() {
-      this.classId = Number(this.route.snapshot.paramMap.get('id'));
+      this.classId = Number(this.route.snapshot.paramMap.get('classId'));
       this.currentUserId = this.userService.getUserId();
       this.loadClassInfo();
       this.loadComments();

@@ -31,7 +31,7 @@ export class ListScoreAssignmentComponent implements OnInit {
   constructor(private route: ActivatedRoute, private scoreService: ScoreService, private assignmentService: AssignmentService) {}
 
   ngOnInit() {
-    this.assignmentId = Number(this.route.snapshot.paramMap.get('id'));
+    this.assignmentId = Number(this.route.snapshot.paramMap.get('assignmentId'));
     this.loadAssignmentTitle();
     this.loadScores();
   }
