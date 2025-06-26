@@ -45,10 +45,24 @@
       </div>
 
       <div class="tab-content" *ngIf="selectedTab === 'activity'">
+        <div class="activity-header">
+          <h3>Log hoạt động sinh viên</h3>
+          <div class="activity-actions">
+            <button class="btn-clear-cache" (click)="clearActivityCache()">
+              Xóa cache
+            </button>
+            <button class="btn-refresh" (click)="fetchActivityLog()">
+              Làm mới
+            </button>
+          </div>
+        </div>
         <div class="activity-list">
           <div class="activity-item" *ngFor="let activity of activities">
             <div class="activity-message">{{ activity.message }}</div>
             <div class="activity-time">{{ activity.timestamp | date:'HH:mm:ss' }}</div>
+          </div>
+          <div class="no-activity" *ngIf="activities.length === 0">
+            <p>Chưa có hoạt động nào được ghi nhận</p>
           </div>
         </div>
       </div>

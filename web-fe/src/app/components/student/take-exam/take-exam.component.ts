@@ -275,8 +275,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
           document.exitFullscreen();
         }
         this.examStatusService.updateStatus(this.examId, this.studentId, ExamStatusType.SUBMITTED, this.classId);
-        this.examCacheService.clearExam(this.examId);
-        this.examCacheService.clearAnswers(this.examId);
+        this.examCacheService.clearAllExamCache(this.examId, this.classId);
         console.log(`Điểm: ${response.score}`);
         this.router.navigate(['/result-exam', response.id]);
       },

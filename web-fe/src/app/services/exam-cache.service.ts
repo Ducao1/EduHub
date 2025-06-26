@@ -8,6 +8,7 @@ export class ExamCacheService {
   private readonly CACHE_KEY_PREFIX = 'exam_';
   private readonly TTL = 60 * 60 * 1000;
   private readonly ANSWER_CACHE_KEY_PREFIX = 'exam_answers_';
+  private readonly ACTIVITY_CACHE_KEY_PREFIX = 'exam_activity_';
 
   setExam(examId: number, exam: Exam): void {
     const cacheData = {
@@ -48,5 +49,63 @@ export class ExamCacheService {
 
   clearAnswers(examId: number): void {
     localStorage.removeItem(`${this.ANSWER_CACHE_KEY_PREFIX}${examId}`);
+  }
+
+  // Cache activity log
+  setActivityLog(examId: number, classId: number, activities: any[]): void {
+    const key = `${this.ACTIVITY_CACHE_KEY_PREFIX}${examId}_${classId}`;
+    const cacheData = {
+      activities: activities,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem(key, JSON.stringify(cacheData));
+  }
+
+  getActivityLog(examId: number, classId: number): any[] | null {
+    const key = `${this.ACTIVITY_CACHE_KEY_PREFIX}${examId}_${classId}`;
+    const cached = localStorage.getItem(key);
+    if (cached) {
+      const cacheData = JSON.parse(cached);
+      // Cache activity log không có TTL vì cần giữ lại khi reload
+      return cacheData.activities;
+    }
+    return null;
+  }
+
+  addActivityToCache(examId: number, classId: number, activity: any): void {
+    const key = `${this.ACTIVITY_CACHE_KEY_PREFIX}${examId}_${classId}`;
+    const cached = localStorage.getItem(key);
+    let activities: any[] = [];
+    
+    if (cached) {
+      const cacheData = JSON.parse(cached);
+      activities = cacheData.activities || [];
+    }
+
+    // Thêm activity mới vào đầu mảng
+    activities.unshift(activity);
+
+    // Giới hạn số lượng activity trong cache (tối đa 1000)
+    if (activities.length > 1000) {
+      activities = activities.slice(0, 1000);
+    }
+
+    const cacheData = {
+      activities: activities,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem(key, JSON.stringify(cacheData));
+  }
+
+  clearActivityLog(examId: number, classId: number): void {
+    const key = `${this.ACTIVITY_CACHE_KEY_PREFIX}${examId}_${classId}`;
+    localStorage.removeItem(key);
+  }
+
+  // Xóa tất cả cache liên quan đến exam
+  clearAllExamCache(examId: number, classId: number): void {
+    this.clearExam(examId);
+    this.clearAnswers(examId);
+    this.clearActivityLog(examId, classId);
   }
 }

@@ -7,6 +7,7 @@ import { ExamStatusType } from '../dtos/enums/exam-status-type.enum';
 import { ExamStatus } from '../interfaces/exam-status';
 import { StudentExamStatusDTO } from '../dtos/responses/student-exam-status.dto';
 import { HttpClient } from '@angular/common/http';
+import { ExamCacheService } from './exam-cache.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,7 @@ export class ExamStatusService {
 
   constructor(
     private http: HttpClient,
+    private examCacheService: ExamCacheService
   ) {
     this.initializeWebSocket();
   }
@@ -200,6 +202,10 @@ export class ExamStatusService {
       activityType,
       timestamp: new Date().toISOString()
     };
+    
+    // Cache activity ngay lập tức
+    this.examCacheService.addActivityToCache(examId, classId, activity);
+    
     if (this.stompClient && this.stompClient.connected) {
       this.stompClient.publish({
         destination: '/app/exam/activity',
@@ -220,6 +226,8 @@ export class ExamStatusService {
       if (!this.activitySubscriptions[topic]) {
         this.stompClient.subscribe(topic, (message: any) => {
           const activity = JSON.parse(message.body);
+          // Cache activity khi nhận được từ WebSocket
+          this.examCacheService.addActivityToCache(examId, classId, activity);
           callback(activity);
         });
         this.activitySubscriptions[topic] = true;
@@ -239,5 +247,19 @@ export class ExamStatusService {
    */
   fetchActivityLog(examId: number, classId: number): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiBaseUrl}/exam-activity?examId=${examId}&classId=${classId}`);
+  }
+
+  /**
+   * Lấy log hoạt động từ cache (cho trường hợp reload trang)
+   */
+  getCachedActivityLog(examId: number, classId: number): any[] {
+    return this.examCacheService.getActivityLog(examId, classId) || [];
+  }
+
+  /**
+   * Xóa cache activity log
+   */
+  clearActivityLogCache(examId: number, classId: number): void {
+    this.examCacheService.clearActivityLog(examId, classId);
   }
 }

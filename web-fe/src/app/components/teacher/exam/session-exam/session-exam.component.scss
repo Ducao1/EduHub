@@ -167,23 +167,79 @@
     
         .student-list-table {
           display: none; /* Hide the table */
-}
+        }
 
-.activity-list {
-  .activity-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-    
-    &:last-child {
-      border-bottom: none;
-    }
-    
-    .activity-message {
-      margin-bottom: 5px;
+        .activity-list {
+          .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 20px;
+
+            h3 {
+              margin: 0;
               color: #333;
-    }
-    
-    .activity-time {
+              font-size: 18px;
+            }
+
+            .activity-actions {
+              display: flex;
+              gap: 10px;
+
+              .btn-clear-cache {
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                  background-color: #c82333;
+                }
+              }
+
+              .btn-refresh {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                  background-color: #0056b3;
+                }
+              }
+            }
+          }
+
+          .no-activity {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+            font-style: italic;
+          }
+
+          .activity-item {
+            padding: 10px 20px;
+            border-bottom: 1px solid #eee;
+            
+            &:last-child {
+              border-bottom: none;
+            }
+            
+            .activity-message {
+              margin-bottom: 5px;
+              color: #333;
+            }
+            
+            .activity-time {
               color: #6c757d;
               font-size: 14px;
             }
