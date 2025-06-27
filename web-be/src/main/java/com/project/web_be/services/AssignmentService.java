@@ -13,11 +13,11 @@ public interface AssignmentService {
     Assignment addAssignment(AssignmentDTO assignmentDTO, List<MultipartFile> files) throws Exception;
     Assignment getAssignmentById(long id) throws Exception;
 
-    Page<Assignment> getAllAssignmentsByClassId(long classId, Pageable pageable);
+    Page<Assignment> getAllAssignmentsByClassId(long classId, Pageable pageable, String searchTerm);
 
     Assignment updateAssignment(AssignmentDTO assignmentDTO, long id) throws Exception;
 
-    Page<Assignment> getAllAssignmentsByTeacherId(Long teacherId, Pageable pageable);
+    Page<Assignment> getAllAssignmentsByTeacherId(long teacherId, Pageable pageable, String searchTerm);
 
     void deleteAssignment(long id);
 }

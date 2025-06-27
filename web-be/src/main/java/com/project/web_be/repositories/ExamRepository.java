@@ -14,4 +14,8 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     Page<Exam> findByTeacherId(Long teacherId, Pageable pageable);
     @Query("SELECT e FROM Exam e JOIN e.classExams ce WHERE ce.classroom.id = :classId")
     Page<Exam> findByClassroomId(@Param("classId") Long classId, Pageable pageable);
+    @Query("SELECT e FROM Exam e WHERE e.teacher.id = :teacherId AND LOWER(e.title) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    Page<Exam> searchByTeacherIdAndTitle(@Param("teacherId") Long teacherId, @Param("searchTerm") String searchTerm, Pageable pageable);
+    @Query("SELECT e FROM Exam e JOIN e.classExams ce WHERE ce.classroom.id = :classId AND LOWER(e.title) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    Page<Exam> searchByClassroomIdAndTitle(@Param("classId") Long classId, @Param("searchTerm") String searchTerm, Pageable pageable);
 }

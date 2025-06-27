@@ -1,15 +1,22 @@
-<form>
-    <div class="mb-3">
-      <label for="text" class="form-label">Tên lớp</label>
-      <input type="text" class="form-control" id="name" placeholder="Nhập tên lớp"
-      name="name" [(ngModel)]="className">
-    </div>
-    <div class="mb-3">
-      <label for="text" class="form-label">Mô tả</label>
-      <input type="text" class="form-control" id="description" placeholder="Mô tả"
-      name="description" [(ngModel)]="description">
-    </div>
-    <button type="submit" 
-    class="btn btn-primary w-100" (click)="createClass()">Tạo lớp</button>
-    
-  </form>
+<div class="add-class-container">
+  <div class="add-class-card">
+    <h2 class="add-class-title">Tạo lớp học mới</h2>
+    <form (ngSubmit)="createClass()" #addClassForm="ngForm">
+      <div class="form-group">
+        <label for="className">Tên lớp học <span class="required">*</span></label>
+        <input type="text" id="className" name="className" class="form-control" [(ngModel)]="className" required #classNameField="ngModel">
+        <div *ngIf="classNameField.invalid && (classNameField.dirty || classNameField.touched)" class="error-message">
+          Vui lòng nhập tên lớp học.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="description">Mô tả</label>
+        <textarea id="description" name="description" class="form-control" rows="3" [(ngModel)]="description" placeholder="Nhập mô tả (không bắt buộc)"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="cancel()">Hủy</button>
+        <button type="submit" class="btn btn-submit" [disabled]="addClassForm.invalid">Tạo lớp</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -19,6 +19,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import com.project.web_be.dtos.responses.ExamResultDTO;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -154,6 +156,17 @@ public class SubmissionServiceImpl implements SubmissionService {
         return response;
     }
 
+    private boolean isQuestionCorrect(Question question, List<Answer> selectedAnswers) {
+        Set<Long> correctAnswerIds = question.getAnswers().stream()
+            .filter(Answer::isCorrect)
+            .map(Answer::getId)
+            .collect(java.util.stream.Collectors.toSet());
+        Set<Long> selectedAnswerIds = selectedAnswers.stream()
+            .map(Answer::getId)
+            .collect(java.util.stream.Collectors.toSet());
+        return correctAnswerIds.equals(selectedAnswerIds);
+    }
+
     @Override
     public Submission submitExam(SubmissionExamDTO submissionExamDTO) throws Exception {
         Exam exam = examRepository.findById(submissionExamDTO.getExamId())
@@ -192,39 +205,34 @@ public class SubmissionServiceImpl implements SubmissionService {
         List<SubmissionAnswer> savedAnswers = submissionAnswerRepository.saveAll(submissionAnswers);
         savedSubmission.setSubmissionAnswers(savedAnswers);
 
-        float totalScore = 0f;
-
-        for (Question question : exam.getQuestions()) {
-            List<Answer> correctAnswers = question.getAnswers().stream()
-                    .filter(Answer::isCorrect)
-                    .toList();
-
-            List<Answer> submittedAnswers = submittedAnswersMap.getOrDefault(question.getId(), new ArrayList<>());
-
-            if (question.getType().name().equals("SINGLE_CHOICE")) {
-                if (submittedAnswers.size() == 1 && correctAnswers.contains(submittedAnswers.get(0))) {
-                    totalScore += question.getPoint();
-                }
-            } else if (question.getType().name().equals("MULTI_CHOICE")) {
-                List<Long> correctIds = correctAnswers.stream().map(Answer::getId).toList();
-                List<Long> submittedIds = submittedAnswers.stream().map(Answer::getId).toList();
-                System.out.println("correct:" + correctIds);
-                System.out.println("submitted: "+submittedIds);
-                boolean isCorrect = submittedIds.containsAll(correctIds) && correctIds.containsAll(submittedIds);
-
-                if (isCorrect) {
-                    totalScore += question.getPoint();
-                    System.out.println("score:"+ totalScore);
+        float totalPoint = 0f;
+        float studentPoint = 0f;
+        if (exam.getQuestions() != null) {
+            for (Question question : exam.getQuestions()) {
+                float questionPoint = question.getPoint();
+                totalPoint += questionPoint;
+                List<Answer> selectedAnswers = submittedAnswersMap.getOrDefault(question.getId(), new ArrayList<>());
+                if (isQuestionCorrect(question, selectedAnswers)) {
+                    studentPoint += questionPoint;
                 }
             }
         }
 
-        Score score = Score.builder()
-                .score(totalScore)
+        Float score = null;
+        if (totalPoint > 0) {
+            score = (10.0f / totalPoint) * studentPoint;
+            score = Math.round(score * 100.0f) / 100.0f;
+            if (score == score.intValue()) {
+                score = score.intValue() * 1.0f;
+            }
+        }
+
+        Score savedScore = Score.builder()
+                .score(score)
                 .submission(savedSubmission)
                 .build();
 
-        savedSubmission.setScore(score);
+        savedSubmission.setScore(savedScore);
 
         return savedSubmission;
     }
@@ -240,5 +248,50 @@ public class SubmissionServiceImpl implements SubmissionService {
     public Submission getSubmissionById(Long submissionId) throws DataNotFoundException {
         return submissionRepository.findById(submissionId)
                 .orElseThrow(() -> new DataNotFoundException("Submission not found"));
+    }
+
+    public ExamResultDTO getExamResult(Long submissionId) throws DataNotFoundException {
+        Submission submission = getSubmissionById(submissionId);
+        String examTitle = submission.getExam() != null ? submission.getExam().getTitle() : "";
+        String studentName = submission.getStudent() != null ? submission.getStudent().getFullName() : "";
+        java.time.LocalDateTime submittedAt = submission.getSubmittedAt() != null ? submission.getSubmittedAt() : submission.getCreatedAt();
+        int totalCount = 0;
+        float totalPoint = 0f;
+        float studentPoint = 0f;
+        if (submission.getExam() != null && submission.getExam().getQuestions() != null) {
+            totalCount = submission.getExam().getQuestions().size();
+            Map<Long, List<Answer>> submittedAnswersMap = new HashMap<>();
+            if (submission.getSubmissionAnswers() != null) {
+                for (SubmissionAnswer sa : submission.getSubmissionAnswers()) {
+                    submittedAnswersMap.computeIfAbsent(sa.getQuestion().getId(), k -> new ArrayList<>()).add(sa.getAnswer());
+                }
+            }
+            for (Question question : submission.getExam().getQuestions()) {
+                float questionPoint = question.getPoint();
+                totalPoint += questionPoint;
+                List<Answer> selectedAnswers = submittedAnswersMap.getOrDefault(question.getId(), new ArrayList<>());
+                if (isQuestionCorrect(question, selectedAnswers)) {
+                    studentPoint += questionPoint;
+                }
+            }
+        }
+        int correctCount = (int) studentPoint; // hoặc có thể trả về số câu đúng nếu muốn
+        Float score = null;
+        if (totalPoint > 0) {
+            score = (10.0f / totalPoint) * studentPoint;
+            score = Math.round(score * 100.0f) / 100.0f;
+            if (score == score.intValue()) {
+                score = score.intValue() * 1.0f;
+            }
+        }
+        return new ExamResultDTO(
+            submission.getId(),
+            examTitle,
+            studentName,
+            submittedAt,
+            correctCount,
+            totalCount,
+            score
+        );
     }
 }

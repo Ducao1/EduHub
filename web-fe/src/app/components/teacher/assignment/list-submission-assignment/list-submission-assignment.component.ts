@@ -55,7 +55,7 @@ export class ListSubmissionAssignmentComponent {
 
   ngOnInit() {
     this.teacherId = this.userService.getUserId() ?? 0;
-    this.assignmentId = Number(this.route.snapshot.paramMap.get('id'));
+    this.assignmentId = Number(this.route.snapshot.paramMap.get('assignmentId'));
 
     if (this.assignmentId) {
       this.getAssignmentDetails(this.assignmentId);

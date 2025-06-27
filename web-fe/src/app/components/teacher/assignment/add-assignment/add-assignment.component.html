@@ -32,13 +32,16 @@
 
       <div class="form-group">
         <label for="attachment">Tệp đính kèm</label>
-        <input type="file" id="attachment" name="attachment" class="form-control" (change)="onFileSelected($event)">
-        <small class="form-text">Chọn file ảnh, PDF, Word, Excel, audio, video...</small>
+        <input type="file" id="attachment" name="attachment" class="form-control" (change)="onFilesSelected($event)" multiple>
+        <small class="form-text">Chọn nhiều file ảnh, PDF, Word, Excel, audio, video... (Tổng dung lượng không quá 5MB)</small>
+        <div *ngIf="totalFileSize > 5 * 1024 * 1024" class="error-message">
+          Tổng dung lượng file vượt quá 5MB!
+        </div>
       </div>
 
       <div class="form-actions">
         <button type="button" class="btn btn-cancel" (click)="cancel()">Hủy</button>
-        <button type="submit" class="btn btn-submit" [disabled]="assignmentForm.invalid">Tạo bài tập</button>
+        <button type="submit" class="btn btn-submit" [disabled]="assignmentForm.invalid || totalFileSize > 5 * 1024 * 1024">Tạo bài tập</button>
       </div>
     </form>
   </div>

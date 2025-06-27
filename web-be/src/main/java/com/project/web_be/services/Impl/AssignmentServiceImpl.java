@@ -123,12 +123,6 @@ public class AssignmentServiceImpl implements AssignmentService {
         throw new DataNotFoundException("Cannot find assignment with id: " + id);
     }
 
-
-    @Override
-    public Page<Assignment> getAllAssignmentsByClassId(long classId, Pageable pageable) {
-        return assignmentRepository.findByClassroomId(classId, pageable);
-    }
-
     @Override
     @Transactional
     public Assignment updateAssignment(AssignmentDTO assignmentDTO, long id) throws Exception {
@@ -142,7 +136,10 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Page<Assignment> getAllAssignmentsByTeacherId(Long teacherId, Pageable pageable) {
+    public Page<Assignment> getAllAssignmentsByTeacherId(long teacherId, Pageable pageable, String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return assignmentRepository.searchByTeacherIdAndTitle(teacherId, searchTerm, pageable);
+        }
         return assignmentRepository.findByTeacherId(teacherId, pageable);
     }
 
@@ -150,5 +147,12 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Transactional
     public void deleteAssignment(long id) {
         assignmentRepository.deleteById(id);
+    }
+
+    public Page<Assignment> getAllAssignmentsByClassId(long classId, Pageable pageable, String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return assignmentRepository.searchByClassroomIdAndTitle(classId, searchTerm, pageable);
+        }
+        return assignmentRepository.findByClassroomId(classId, pageable);
     }
 }

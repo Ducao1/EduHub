@@ -1,7 +1,8 @@
 .exam-container {
     background-color: #fff;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #333;
+    // border: 1px solid #ccc;
     border-top: none;
     border-radius: 0px 0px 5px 5px;
     height: calc(100vh - 20vh);
@@ -109,7 +110,8 @@
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
-    border: 1px solid rgba(74, 95, 209, 0.1);
+    // border: 1px solid rgba(74, 95, 209, 0.1);
+    border: 1px solid #333;
     display: flex;
     justify-content: space-between;
 

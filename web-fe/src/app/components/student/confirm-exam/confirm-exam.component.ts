@@ -74,4 +74,9 @@ export class ConfirmExamComponent implements OnInit {
     }
     this.router.navigate(['/take-exam', this.examId, 'class', this.classId]);
   }
+
+  get durationInMinutes(): number {
+    if (!this.exam?.duration) return 0;
+    return Math.floor(this.exam.duration / 60000);
+  }
 }

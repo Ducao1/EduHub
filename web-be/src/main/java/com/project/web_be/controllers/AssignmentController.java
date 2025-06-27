@@ -56,10 +56,11 @@ public class AssignmentController {
     public ResponseEntity<?> getAllAssignmentByClassId(
             @PathVariable long id,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String searchTerm) {
         try {
             Pageable pageable = PageRequest.of(page, size);
-            Page<Assignment> assignments = assignmentService.getAllAssignmentsByClassId(id, pageable);
+            Page<Assignment> assignments = assignmentService.getAllAssignmentsByClassId(id, pageable, searchTerm);
             Page<AssignmentResponse> assignmentResponses = assignments.map(AssignmentResponse::fromAssignment);
             return ResponseEntity.ok(assignmentResponses);
         } catch (Exception e) {
@@ -71,10 +72,11 @@ public class AssignmentController {
     public ResponseEntity<?> getAllAssignmentByTeacherId(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String searchTerm) {
         try {
             Pageable pageable = PageRequest.of(page, size);
-            Page<Assignment> assignments = assignmentService.getAllAssignmentsByTeacherId(id, pageable);
+            Page<Assignment> assignments = assignmentService.getAllAssignmentsByTeacherId(id, pageable, searchTerm);
             Page<AssignmentResponse> assignmentResponses = assignments.map(AssignmentResponse::fromAssignment);
             return ResponseEntity.ok(assignmentResponses);
         } catch (Exception e) {

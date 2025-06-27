@@ -34,7 +34,7 @@ export class AddExamComponent {
     console.log('Teacher ID:', this.teacherId);
   }
 
-  addAssignment() {
+  addExam() {
     const examDTO: ExamDTO = {
       teacher_id: this.teacherId,
       duration: this.duration,
@@ -57,4 +57,7 @@ export class AddExamComponent {
     });
   }
 
+  cancel() {
+    this.router.navigate(['/teacher/exam']);
+  }
 }

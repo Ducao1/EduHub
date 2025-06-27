@@ -22,7 +22,7 @@ export class ClassListExamComponent implements OnInit {
   className!: string;
   exams: any[] = [];
   currentPage: number = 0;
-  pageSize: number = 9;
+  pageSize: number = 6;
   totalElements: number = 0;
   totalPages: number = 0;
   visiblePages: number[] = [];

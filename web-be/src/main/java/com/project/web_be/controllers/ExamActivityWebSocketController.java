@@ -50,7 +50,7 @@ public class ExamActivityWebSocketController {
                 .timestamp(dto.getTimestamp())
                 .build();
 
-        LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        LocalDateTime currentTime = LocalDateTime.now();
         if (activity.getTimestamp().isAfter(currentTime.plusMinutes(5))) {
             activity.setTimestamp(currentTime);
         }

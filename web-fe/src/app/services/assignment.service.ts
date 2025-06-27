@@ -21,17 +21,21 @@ export class AssignmentService {
       headers: this.httpUtilService.createHeaders(),
     };
   }
-  getAssignmentsByTeacherId(teacherId: number, page: number, size: number): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/assignments/teacher/${teacherId}?page=${page}&size=${size}`);
+  getAssignmentsByTeacherId(teacherId: number, page: number, size: number, searchTerm: string = ''): Observable<any> {
+    let params: any = { page, size };
+    if (searchTerm) params.searchTerm = searchTerm;
+    return this.http.get(`${environment.apiBaseUrl}/assignments/teacher/${teacherId}`, { params });
   }
 
 
-  getAssignmentsByClassId(classId: number, page: number, size: number): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/assignments/class/${classId}?page=${page}&size=${size}`);
+  getAssignmentsByClassId(classId: number, page: number, size: number, searchTerm: string = ''): Observable<any> {
+    let params: any = { page, size };
+    if (searchTerm) params.searchTerm = searchTerm;
+    return this.http.get(`${environment.apiBaseUrl}/assignments/class/${classId}`, { params });
   }
 
-  addAssignment(assignmentDTO: AssignmentDTO): Observable<any> {
-    return this.http.post(this.apiAddAssignment, assignmentDTO, this.getApiConfig());
+  addAssignment(formData: FormData): Observable<any> {
+    return this.http.post(this.apiAddAssignment, formData);
   }
 
   getAssignmentById(id: number): Observable<any> {

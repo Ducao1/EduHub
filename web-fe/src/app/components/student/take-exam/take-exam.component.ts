@@ -36,6 +36,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
   timeLeft: number = 0;
   timer: any;
   private statusSubscription: Subscription;
+  startTime: number = 0;
 
   @ViewChildren('questionElement') questionElements!: QueryList<ElementRef>;
 
@@ -63,6 +64,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
       return;
     }
     this.showConfirmationDialog();
+    this.restoreStartTime();
   }
 
   ngOnDestroy() {
@@ -276,6 +278,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
         }
         this.examStatusService.updateStatus(this.examId, this.studentId, ExamStatusType.SUBMITTED, this.classId);
         this.examCacheService.clearAllExamCache(this.examId, this.classId);
+        localStorage.removeItem(`exam_start_time_${this.examId}_${this.classId}`);
         console.log(`Điểm: ${response.score}`);
         this.router.navigate(['/result-exam', response.id]);
       },
@@ -292,11 +295,7 @@ export class TakeExamComponent implements OnInit, OnDestroy {
 
   startTimer() {
     this.timer = setInterval(() => {
-      if (this.timeLeft > 0) {
-        this.timeLeft--;
-      } else {
-        this.submitExam();
-      }
+      this.updateTimeLeft();
     }, 1000);
   }
 
@@ -316,6 +315,10 @@ export class TakeExamComponent implements OnInit, OnDestroy {
   private initializeExamStatus() {
     if (this.studentId) {
       this.examStatusService.updateStatus(this.examId, this.studentId, ExamStatusType.IN_PROGRESS, this.classId);
+      const key = `exam_start_time_${this.examId}_${this.classId}`;
+      if (!localStorage.getItem(key)) {
+        localStorage.setItem(key, Date.now().toString());
+      }
     }
   }
 
@@ -361,5 +364,26 @@ export class TakeExamComponent implements OnInit, OnDestroy {
       this.classId,
       this.studentId
     );
+  }
+
+  private restoreStartTime() {
+    const key = `exam_start_time_${this.examId}_${this.classId}`;
+    let startTime = localStorage.getItem(key);
+    if (!startTime) {
+      startTime = Date.now().toString();
+      localStorage.setItem(key, startTime);
+    }
+    this.startTime = Number(startTime);
+    this.updateTimeLeft();
+  }
+
+  private updateTimeLeft() {
+    const now = Date.now();
+    const durationMs = this.exam.duration;
+    const elapsed = now - this.startTime;
+    this.timeLeft = Math.max(Math.floor((durationMs - elapsed) / 1000), 0);
+    if (this.timeLeft <= 0) {
+      this.submitExam();
+    }
   }
 }

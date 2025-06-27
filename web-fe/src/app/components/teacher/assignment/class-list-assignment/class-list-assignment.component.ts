@@ -22,7 +22,7 @@ export class ClassListAssignmentComponent implements OnInit {
   classId!: number;
   className!: string;
   currentPage: number = 0; // Start with page 0 for API
-  pageSize: number = 9; // Adjust as needed
+  pageSize: number = 6; // Adjust as needed
   totalElements: number = 0;
   totalPages: number = 0;
   visiblePages: number[] = [];

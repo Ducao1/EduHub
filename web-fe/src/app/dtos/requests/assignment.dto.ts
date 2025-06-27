@@ -1,8 +1,8 @@
 export class AssignmentDTO {
-    assigned_date!: Date;
-    due_date!: Date;
-    class_id!: number;
-    teacher_id!: number;
+    assignedDate!: Date;
+    dueDate!: Date;
+    classId!: number;
+    teacherId!: number;
     title: string;
     content: string;
 

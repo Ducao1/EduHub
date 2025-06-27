@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.project.web_be.dtos.responses.ExamResultDTO;
+
 @RestController
 @RequestMapping("${api.prefix}/submissions")
 @RequiredArgsConstructor
@@ -218,6 +220,16 @@ public class SubmissionController {
             Map<String, String> response = new HashMap<>();
             response.put("error", e.getMessage());
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/result/{submissionId}")
+    public ResponseEntity<?> getExamResult(@PathVariable Long submissionId) {
+        try {
+            ExamResultDTO result = submissionService.getExamResult(submissionId);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 }

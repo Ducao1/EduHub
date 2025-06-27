@@ -3,7 +3,7 @@
         <div class="header">
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Tìm kiếm bài thi...">
+                <input type="text" class="search-input" placeholder="Tìm kiếm bài thi..." [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()">
             </div>
             <a class="btn-create-class" routerLink="/teacher/add-exam">
                 <i class="fas fa-plus-circle me-2"></i>Tạo bài kiểm tra mới
@@ -29,12 +29,12 @@
                     </div>
                     <div class="assignment-details">
                         <span>
-                            Thời gian: {{ exam.id }}
+                            Thời gian: {{ getDurationMinutes(exam.duration) }} phút
                         </span>
                     </div>
                     <div class="assignment-details">
                         <span>
-                            Số câu: {{ exam.id }}
+                            Số câu: {{ exam.questions?.length || 0 }}
                         </span>
                     </div>
                 </div>

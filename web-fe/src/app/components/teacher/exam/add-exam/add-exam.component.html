@@ -1,11 +1,25 @@
-<div class="mb-3">
-    <label for="text" class="form-label">Tên</label>
-    <input type="text" class="form-control" placeholder="Nhập tiêu dề cho bài thi" name="title"
-    [(ngModel)]="title">
+<div class="add-exam-container">
+  <div class="add-exam-card">
+    <h2 class="add-exam-title">Tạo bài kiểm tra mới</h2>
+    <form (ngSubmit)="addExam()" #addExamForm="ngForm">
+      <div class="form-group">
+        <label for="title">Tên bài kiểm tra <span class="required">*</span></label>
+        <input type="text" id="title" name="title" class="form-control" [(ngModel)]="title" required #titleField="ngModel">
+        <div *ngIf="titleField.invalid && (titleField.dirty || titleField.touched)" class="error-message">
+          Vui lòng nhập tên bài kiểm tra.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="duration">Thời gian (phút) <span class="required">*</span></label>
+        <input type="number" id="duration" name="duration" class="form-control" [(ngModel)]="duration" required min="1" #durationField="ngModel">
+        <div *ngIf="durationField.invalid && (durationField.dirty || durationField.touched)" class="error-message">
+          Vui lòng nhập thời gian hợp lệ.
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="cancel()">Hủy</button>
+        <button type="submit" class="btn btn-submit" [disabled]="addExamForm.invalid">Tạo bài kiểm tra</button>
+      </div>
+    </form>
+  </div>
 </div>
-<div class="mb-3">
-    <label for="duration" class="form-label">Thời gian (phút)</label>
-    <input type="number" class="form-control" placeholder="Nhập thời gian cho bài thi" name="duration" 
-    [(ngModel)]="duration" min="1">
-</div>
-<button type="submit" class="btn btn-primary w-100" (click)="addAssignment()">Tạo</button>

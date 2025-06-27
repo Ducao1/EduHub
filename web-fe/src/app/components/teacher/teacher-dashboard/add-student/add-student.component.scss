@@ -1,0 +1,88 @@
+.add-student-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.add-student-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 32px 28px 24px 28px;
+  max-width: 420px;
+  width: 100%;
+}
+
+.add-student-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #d0d7de;
+  font-size: 1rem;
+  background: #f9f9f9;
+  transition: border 0.2s;
+}
+.form-control:focus {
+  border: 1.5px solid #1976d2;
+  outline: none;
+  background: #fff;
+}
+
+.required {
+  color: #e53935;
+  font-size: 1.1em;
+}
+
+.error-message {
+  color: #e53935;
+  font-size: 0.95em;
+  margin-top: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.btn {
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-cancel {
+  background: #e0e0e0;
+  color: #333;
+}
+.btn-submit {
+  background: #1976d2;
+  color: #fff;
+}
+.btn-submit:disabled {
+  background: #90caf9;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .add-student-card {
+    padding: 16px 4px 12px 4px;
+    max-width: 98vw;
+  }
+}

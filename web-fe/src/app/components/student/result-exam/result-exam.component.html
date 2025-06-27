@@ -2,16 +2,16 @@
   <div class="exam-info">
     <h2>Kết Quả Bài Thi</h2>
     <div class="info-item">
-      <span class="label">Thời gian làm bài:</span>
-      <span class="value">{{ formatDate(submission.submittedAt) }}</span>
+      <span class="label">Thời gian nộp bài:</span>
+      <span class="value">{{ formatDateArray(examResult.submittedAt) || '---' }}</span>
     </div>
     <div class="info-item">
       <span class="label">Số câu đúng:</span>
-      <span class="value" style="color: red; font-size: 1.2em;"></span>
+      <span class="value" >{{ examResult.correctCount }} / {{ examResult.totalCount }}</span>
     </div>
     <div class="info-item">
       <span class="label">Điểm:</span>
-      <span class="value" style="color: red; font-size: 1.2em;">{{ submission.score?.score ?? 'Chưa chấm điểm' }}</span>
+      <span class="value">{{ examResult.score != null ? examResult.score.toFixed(1) : 'Chưa chấm điểm' }}</span>
     </div>
 
     <div class="warning-box">

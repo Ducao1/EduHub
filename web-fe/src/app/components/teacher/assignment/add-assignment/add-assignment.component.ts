@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AssignmentService } from '../../../../services/assignment.service';
 import { AssignmentDTO } from '../../../../dtos/requests/assignment.dto';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../../../services/user.service';
+import { Assignment } from '../../../../interfaces/assigment';
 
 @Component({
   selector: 'app-add-assignment',
@@ -17,7 +18,7 @@ import { UserService } from '../../../../services/user.service';
   templateUrl: './add-assignment.component.html',
   styleUrl: './add-assignment.component.scss'
 })
-export class AddAssignmentComponent {
+export class AddAssignmentComponent implements OnInit {
   teacherId!: number;
   title = '';
   content = '';
@@ -25,10 +26,12 @@ export class AddAssignmentComponent {
   dueDate!: Date;
   classId!: number;
   attachment: File | null = null;
+  selectedFiles: File[] = [];
+  totalFileSize: number = 0;
 
   constructor(
     private assignmentService: AssignmentService,
-    private router : Router,
+    private router: Router,
     private userService : UserService,
     private route: ActivatedRoute
   ){}
@@ -41,34 +44,45 @@ export class AddAssignmentComponent {
   }
 
   addAssignment() {
-    const assignmentDTO: AssignmentDTO = {
-      class_id: this.classId, 
-      teacher_id: this.teacherId,
-      title: this.title,
-      content: this.content,
-      assigned_date: this.assignedDate,
-      due_date: this.dueDate
-    };
-    this.assignmentService.addAssignment(assignmentDTO).subscribe({
-      next: (response)=>{
+    if (this.totalFileSize > 5 * 1024 * 1024) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append('title', this.title);
+    formData.append('content', this.content);
+    formData.append('classId', this.classId.toString());
+    formData.append('teacherId', this.teacherId.toString());
+    if (this.assignedDate) {
+      formData.append('assignedDate', new Date(this.assignedDate).toISOString());
+    }
+    if (this.dueDate) {
+      formData.append('dueDate', new Date(this.dueDate).toISOString());
+    }
+    if (this.selectedFiles && this.selectedFiles.length > 0) {
+      for (const file of this.selectedFiles) {
+        formData.append('files', file, file.name);
+      }
+    }
+    this.assignmentService.addAssignment(formData).subscribe({
+      next: (response) => {
         debugger
         alert('Bài tập được tạo thành công!');
-        this.router.navigate(['/teacher/assignments']); 
-      },
-      complete:()=> {
-        debugger
+        this.router.navigate([`/teacher/class/assignments/${this.classId}`]);
       },
       error: (error) => {
         debugger
-        alert(error.error)
+        alert(error.error || 'Đã xảy ra lỗi khi tạo bài tập!');
       }
     });
   }
 
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.attachment = file;
+  onFilesSelected(event: any): void {
+    if (event.target.files && event.target.files.length > 0) {
+      this.selectedFiles = Array.from(event.target.files);
+      this.totalFileSize = this.selectedFiles.reduce((acc, file) => acc + file.size, 0);
+    } else {
+      this.selectedFiles = [];
+      this.totalFileSize = 0;
     }
   }
 

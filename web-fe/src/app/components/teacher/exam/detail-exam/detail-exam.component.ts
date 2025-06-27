@@ -17,6 +17,15 @@ import { QuestionDTO } from '../../../../dtos/requests/question.dto';
   styleUrl: './detail-exam.component.scss'
 })
 export class DetailExamComponent {
+getDurationMinutes(arg0: any) {
+throw new Error('Method not implemented.');
+}
+addQuestion() {
+throw new Error('Method not implemented.');
+}
+goBack() {
+throw new Error('Method not implemented.');
+}
 
   exam: any = {};
   examId!: number;
@@ -107,4 +116,6 @@ export class DetailExamComponent {
         return type;
     }
   }
+
+  editExam() {}
 }

@@ -10,6 +10,8 @@
     height: calc(100vh - 14vh);
     box-sizing: border-box;
     background-color: #fff;
+    border: 1px solid #333;
+    border-radius: 5px
 }
 
 .main-content {
@@ -130,7 +132,8 @@
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
-    border: 1px solid rgba(74, 95, 209, 0.1);
+    // border: 1px solid rgba(74, 95, 209, 0.1);
+    border: 1px solid #e0e0e0;
     display: flex;
     justify-content: space-between;
     position: relative;
@@ -299,7 +302,7 @@
 .search-input {
     width: 100%;
     padding: 10px 40px 10px 15px;
-    border: 1px solid #ccc;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
     font-size: 14px;
     background: #f1f1f1;

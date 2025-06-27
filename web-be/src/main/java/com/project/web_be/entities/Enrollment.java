@@ -19,6 +19,8 @@ public class Enrollment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private boolean confirm;
+
     @ManyToOne
     @JoinColumn(name = "class_id", nullable = false)
     @JsonIgnore

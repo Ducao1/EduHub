@@ -28,7 +28,7 @@ export class ListScoreExamComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.examId = Number(this.route.snapshot.paramMap.get('id'));
+    this.examId = Number(this.route.snapshot.paramMap.get('examId'));
     this.loadExamTitle();
     this.loadScores();
   }

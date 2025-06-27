@@ -1,1 +1,98 @@
+.add-exam-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
 
+.add-exam-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 40px 32px 32px 32px;
+  max-width: 420px;
+  width: 100%;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.add-exam-card:hover {
+  box-shadow: 0 8px 32px rgba(25, 118, 210, 0.15);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.add-exam-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #d0d7de;
+  font-size: 1rem;
+  background: #f9f9f9;
+  transition: border 0.2s, box-shadow 0.3s;
+}
+.form-control:focus {
+  border: 1.5px solid #1976d2;
+  outline: none;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.08);
+}
+
+.required {
+  color: #e53935;
+  font-size: 1.1em;
+}
+
+.error-message {
+  color: #e53935;
+  font-size: 0.95em;
+  margin-top: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-cancel {
+  background: #e0e0e0;
+  color: #333;
+}
+.btn-submit {
+  background: #1976d2;
+  color: #fff;
+}
+.btn-submit:disabled {
+  background: #90caf9;
+  color: #fff;
+  cursor: not-allowed;
+}
+.btn-submit:not(:disabled):hover {
+  background: #1565c0;
+  transform: scale(1.04);
+}
+
+@media (max-width: 600px) {
+  .add-exam-card {
+    padding: 18px 4px 14px 4px;
+    max-width: 98vw;
+  }
+}

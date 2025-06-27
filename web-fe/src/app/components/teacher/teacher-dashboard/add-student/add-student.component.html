@@ -1,10 +1,25 @@
-<form>
-    <div class="mb-3">
-      <label for="text" class="form-label">SĐT</label>
-      <input type="text" class="form-control" id="name" placeholder="Nhập SĐT"
-      name="phoneNumber" [(ngModel)]="phoneNumber">
-    </div>
-    <button type="submit" 
-    class="btn btn-primary w-100" (click)="addStudent()">Thêm</button>
-    
-  </form>
+<div class="add-student-container">
+  <div class="add-student-card">
+    <h2 class="add-student-title">Thêm học sinh vào lớp</h2>
+    <form (ngSubmit)="addStudent()" #addStudentForm="ngForm">
+      <div class="form-group">
+        <label for="fullName">Họ và tên <span class="required">*</span></label>
+        <input type="text" name="phoneNumber" class="form-control" [(ngModel)]="phoneNumber" required #fullNameField="ngModel">
+        <div *ngIf="fullNameField.invalid && (fullNameField.dirty || fullNameField.touched)" class="error-message">
+          Vui lòng nhập họ tên.
+        </div>
+      </div>
+      <!-- <div class="form-group">
+        <label for="email">Email <span class="required">*</span></label>
+        <input type="email" id="email" name="email" class="form-control" [(ngModel)]="email" required #emailField="ngModel">
+        <div *ngIf="emailField.invalid && (emailField.dirty || emailField.touched)" class="error-message">
+          Vui lòng nhập email hợp lệ.
+        </div>
+      </div> -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="cancel()">Hủy</button>
+        <button type="submit" class="btn btn-submit" [disabled]="addStudentForm.invalid">Thêm học sinh</button>
+      </div>
+    </form>
+  </div>
+</div>

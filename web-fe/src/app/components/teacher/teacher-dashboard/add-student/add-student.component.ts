@@ -51,5 +51,9 @@ export class AddStudentComponent {
     });
   }
 
+  cancel() {
+    this.router.navigate(['/teacher/class', this.classId]);
+  }
+
 
 }

@@ -38,5 +38,7 @@ export class AddClassComponent {
     });
   }
 
-
+  cancel() {
+    this.router.navigate(['/teacher/dashboard']);
+  }
 }

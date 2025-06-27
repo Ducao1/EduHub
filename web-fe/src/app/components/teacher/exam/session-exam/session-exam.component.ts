@@ -33,6 +33,7 @@ export class SessionExamComponent implements OnInit, OnDestroy {
   ExamStatusType = ExamStatusType;
   students: StudentExamStatus[] = [];
   private subscriptions: Subscription[] = [];
+  private recentActivityStudents: Set<number> = new Set();
 
   constructor(
     private datePipe: DatePipe,
@@ -83,6 +84,12 @@ export class SessionExamComponent implements OnInit, OnDestroy {
           message: this.getActivityMessage(activity),
           timestamp: new Date(activity.timestamp)
         });
+        // Thêm sinh viên vào danh sách có hoạt động gần đây
+        this.recentActivityStudents.add(activity.studentId);
+        // Tự động xóa khỏi danh sách sau 5 phút
+        setTimeout(() => {
+          this.recentActivityStudents.delete(activity.studentId);
+        }, 5 * 60 * 1000);
       }
     );
   }
@@ -181,6 +188,11 @@ export class SessionExamComponent implements OnInit, OnDestroy {
         message: this.getActivityMessage(activity),
         timestamp: new Date(activity.timestamp)
       }));
+      
+      // Cập nhật danh sách sinh viên có hoạt động gần đây
+      cachedActivities.forEach(activity => {
+        this.recentActivityStudents.add(activity.studentId);
+      });
     }
   }
 
@@ -260,6 +272,54 @@ export class SessionExamComponent implements OnInit, OnDestroy {
   clearActivityCache(): void {
     this.examCacheService.clearActivityLog(this.examId, this.classId);
     this.activities = [];
+    this.recentActivityStudents.clear();
     console.log('Đã xóa cache activity log cho bài thi:', this.examId, 'lớp:', this.classId);
+  }
+
+  // Làm mới danh sách sinh viên
+  refreshStudentList(): void {
+    this.examStatusService.getClassStudentsWithExamStatus(this.examId, this.classId);
+  }
+
+  // Kiểm tra sinh viên có hoạt động gần đây không
+  hasRecentActivity(studentId: number): boolean {
+    return this.recentActivityStudents.has(studentId);
+  }
+
+  // Lấy class CSS cho activity item
+  getActivityClass(activity: any): string {
+    const activityType = this.extractActivityTypeFromMessage(activity.message);
+    switch (activityType) {
+      case 'FULLSCREEN_EXIT':
+        return 'activity-warning';
+      case 'TAB_CHANGE':
+        return 'activity-warning';
+      case 'EXAM_LEFT':
+        return 'activity-danger';
+      default:
+        return 'activity-info';
+    }
+  }
+
+  // Lấy icon cho activity
+  getActivityIcon(activity: any): string {
+    const activityType = this.extractActivityTypeFromMessage(activity.message);
+    switch (activityType) {
+      case 'FULLSCREEN_EXIT':
+        return 'fas fa-desktop';
+      case 'TAB_CHANGE':
+        return 'fas fa-window-maximize';
+      case 'EXAM_LEFT':
+        return 'fas fa-sign-out-alt';
+      default:
+        return 'fas fa-info-circle';
+    }
+  }
+
+  // Lấy log hoạt động cho từng sinh viên
+  getLogsForStudent(studentId: number) {
+    return this.activities
+      .filter(log => log.message.includes(`Sinh viên ${studentId} `))
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }
 }

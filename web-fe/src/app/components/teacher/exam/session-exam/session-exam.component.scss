@@ -8,11 +8,11 @@
     background-color: white;
     padding: 20px;
     border-radius: 8px;
-  margin-bottom: 20px;
+    margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   
-  h2 {
-    color: #333;
+    h2 {
+      color: #333;
       margin: 0 0 10px 0;
       font-size: 28px;
     }
@@ -25,276 +25,305 @@
       .exam-title {
         font-weight: bold;
         color: #007bff;
-  }
+      }
   
       .class-name {
         color: #6c757d;
       }
+    }
   }
-}
 
-.status-summary {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 30px;
+  .status-summary {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
 
-.status-card {
-  flex: 1;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  background-color: white;
+    .status-card {
+      flex: 1;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      background-color: white;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       border-left: 5px solid;
   
-  .status-count {
+      .status-count {
         font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
   
-  .status-label {
-    color: #666;
+      .status-label {
+        color: #666;
         font-size: 16px;
-  }
+      }
   
-  &.status-not-started {
+      &.status-not-started {
         border-color: #ffc107;
         .status-count { color: #ffc107; }
-  }
+      }
   
-  &.status-in-progress {
+      &.status-in-progress {
         border-color: #007bff;
         .status-count { color: #007bff; }
-  }
+      }
   
-  &.status-submitted {
+      &.status-submitted {
         border-color: #28a745;
         .status-count { color: #28a745; }
       }
+    }
   }
-}
 
   .session-exam-content {
-  background-color: white;
-  border-radius: 8px;
+    background-color: white;
+    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
 
-.tab-container {
-  .tab-header {
-    display: flex;
-    border-bottom: 1px solid #eee;
-        margin-bottom: 20px;
-    
-    button {
-          padding: 15px 25px;
-      border: none;
-      background: none;
-      cursor: pointer;
-      font-size: 16px;
-      color: #666;
-          outline: none;
-          transition: all 0.3s ease;
+    .monitoring-layout {
+      display: grid;
+      grid-template-columns: 3fr 7fr;
+      gap: 30px;
+      min-height: 70vh;
 
-          &:hover {
-            color: #007bff;
+      .overview-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        min-width: 260px;
+        max-width: 400px;
+        margin: 0 auto;
+
+        .session-exam-header {
+          width: 100%;
+          background: none;
+          box-shadow: none;
+          padding: 0;
+          text-align: center;
+          h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
           }
-      
-      &.active {
-            color: #007bff;
-            border-bottom: 2px solid #007bff;
-            font-weight: bold;
+          .exam-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            .exam-title {
+              color: #007bff;
+              font-weight: 600;
+              font-size: 1.1rem;
+            }
+            .class-name {
+              color: #6c757d;
+              font-size: 1rem;
+            }
+          }
+        }
+
+        .status-summary {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          width: 100%;
+          .status-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 18px 20px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            border-left: 6px solid #eee;
+            .status-count {
+              font-size: 2rem;
+              font-weight: bold;
+              min-width: 36px;
+              text-align: center;
+            }
+            .status-label {
+              font-size: 1.1rem;
+              color: #555;
+              font-weight: 500;
+            }
+            &.status-not-started { border-left-color: #ffc107; .status-count { color: #ffc107; } }
+            &.status-in-progress { border-left-color: #007bff; .status-count { color: #007bff; } }
+            &.status-submitted { border-left-color: #28a745; .status-count { color: #28a745; } }
+          }
+        }
+      }
+
+      .details-column {
+        width: 100%;
+        .students-activity-table-box {
+          background: #fff;
+          border-radius: 10px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+          padding: 24px 18px 18px 18px;
+          .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            h3 {
+              font-size: 1.25rem;
+              font-weight: 600;
+              margin: 0;
+            }
+            .student-actions {
+              .btn-refresh {
+                background: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                padding: 7px 16px;
+                font-size: 14px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                transition: background 0.2s;
+                &:hover { background: #0056b3; }
+              }
+            }
+          }
+          .students-activity-table-wrapper {
+            overflow-x: auto;
+          }
+          .students-activity-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            th, td {
+              padding: 10px 8px;
+              text-align: left;
+              font-size: 15px;
+            }
+            th {
+              background: #f1f3f6;
+              font-weight: 700;
+              color: #333;
+              border-bottom: 2px solid #e9ecef;
+            }
+            tr {
+              border-bottom: 1px solid #f0f0f0;
+              transition: background 0.2s;
+              &:hover { background: #f8f9fa; }
+            }
+            .student-status-badge {
+              display: inline-block;
+              padding: 5px 14px;
+              border-radius: 12px;
+              font-size: 0.95em;
+              font-weight: 600;
+              &.status-not-started { background: #fff3cd; color: #e65100; }
+              &.status-in-progress { background: #bbdefb; color: #1565c0; }
+              &.status-submitted { background: #c8e6c9; color: #388e3c; }
+            }
+            .student-name { font-weight: 600; color: #222; }
+            .student-id { color: #888; font-size: 0.95em; }
+            .student-activity-logs {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              .activity-log-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: #f8f9fa;
+                border-radius: 6px;
+                padding: 5px 10px;
+                font-size: 0.97em;
+                &.activity-warning { background: #fff3cd; color: #856404; }
+                &.activity-danger { background: #f8d7da; color: #721c24; }
+                &.activity-info { background: #d1ecf1; color: #0c5460; }
+                .activity-message { flex: 1; }
+                .activity-time { color: #888; font-size: 0.93em; margin-left: 4px; }
+                i { font-size: 1em; margin-left: 4px; }
+              }
+              .no-activity { color: #aaa; font-style: italic; padding: 4px 0; }
+            }
+          }
+          .no-students { text-align: center; color: #888; padding: 30px 0; font-style: italic; }
+        }
+      }
     }
   }
 }
 
-.tab-content {
-        // padding: 20px;
-
-        .student-cards-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 20px;
-  padding: 20px;
-
-          .student-card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-    display: flex;
-            flex-direction: column;
-    align-items: center;
-            text-align: center;
-            transition: transform 0.2s ease-in-out;
-    
-            &:hover {
-              transform: translateY(-5px);
-    }
-      
-      .student-name {
-              font-size: 1.2rem;
-              font-weight: bold;
-              color: #333;
-              margin-bottom: 10px;
-    }
-    
-            .student-status-badge {
-              padding: 8px 15px;
-              border-radius: 20px;
-              font-size: 0.9rem;
-              font-weight: 600;
-              display: inline-block;
-      
-      &.status-not-started {
-                background-color: #ffe0b2; /* Light orange */
-                color: #e65100; /* Dark orange */
-      }
-      
-      &.status-in-progress {
-                background-color: #bbdefb; /* Light blue */
-                color: #1565c0; /* Dark blue */
-      }
-      
-      &.status-submitted {
-                background-color: #c8e6c9; /* Light green */
-                color: #388e3c; /* Dark green */
-              }
-            }
-      }
-    }
-    
-        .student-list-table {
-          display: none; /* Hide the table */
-        }
-
-        .activity-list {
-          .activity-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 0 20px;
-
-            h3 {
-              margin: 0;
-              color: #333;
-              font-size: 18px;
-            }
-
-            .activity-actions {
-              display: flex;
-              gap: 10px;
-
-              .btn-clear-cache {
-                background-color: #dc3545;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 14px;
-                transition: background-color 0.3s ease;
-
-                &:hover {
-                  background-color: #c82333;
-                }
-              }
-
-              .btn-refresh {
-                background-color: #007bff;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 14px;
-                transition: background-color 0.3s ease;
-
-                &:hover {
-                  background-color: #0056b3;
-                }
-              }
-            }
-          }
-
-          .no-activity {
-            text-align: center;
-            padding: 40px 20px;
-            color: #6c757d;
-            font-style: italic;
-          }
-
-          .activity-item {
-            padding: 10px 20px;
-            border-bottom: 1px solid #eee;
-            
-            &:last-child {
-              border-bottom: none;
-            }
-            
-            .activity-message {
-              margin-bottom: 5px;
-              color: #333;
-            }
-            
-            .activity-time {
-              color: #6c757d;
-              font-size: 14px;
-            }
-          }
-        }
-      }
-    }
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
   }
 }
 
 /* Responsive adjustments */
+@media (max-width: 1200px) {
+  .session-exam-content {
+    .monitoring-layout {
+      grid-template-columns: 1fr;
+      .overview-column { max-width: 100%; margin-bottom: 30px; }
+      .details-column { width: 100%; }
+    }
+  }
+}
+
 @media (max-width: 992px) {
   .session-exam-container {
     padding: 15px;
-  }
 
-  .status-summary {
-    flex-wrap: wrap;
-    .status-card {
-      flex: none;
-      width: 100%;
+    .status-summary {
+      flex-wrap: wrap;
+      .status-card {
+        flex: none;
+        width: 100%;
+      }
     }
-  }
 
-  .student-list-table {
-    th, td {
-      padding: 8px 10px;
-      font-size: 14px;
+    .session-exam-content {
+      .monitoring-layout {
+        .students-activity-table-box {
+          padding: 15px;
+        }
+      }
     }
   }
 }
 
 @media (max-width: 768px) {
-  .session-exam-header {
-    padding: 15px;
-    h2 {
-      font-size: 24px;
+  .session-exam-container {
+    .session-exam-header {
+      padding: 15px;
+      h2 {
+        font-size: 24px;
+      }
+      .exam-info {
+        flex-direction: column;
+        gap: 5px;
+      }
     }
-    .exam-info {
-      flex-direction: column;
-      gap: 5px;
-    }
-  }
 
-  .tab-header button {
-    padding: 10px 15px;
-    font-size: 14px;
-  }
-
-  .student-list-table {
-    font-size: 13px;
-    .status-badge {
-      min-width: 70px;
-      padding: 4px 8px;
-      font-size: 0.75rem;
+    .session-exam-content {
+      padding: 10px;
+      .monitoring-layout {
+        gap: 16px;
+        .overview-column, .details-column {
+          padding: 0;
+        }
+        .students-activity-table-box {
+          padding: 10px 2px 8px 2px;
+          .column-header h3 { font-size: 1.05rem; }
+          .students-activity-table th, .students-activity-table td { font-size: 13px; padding: 7px 4px; }
+        }
+      }
     }
   }
 }
@@ -302,21 +331,23 @@
 @media (max-width: 576px) {
   .session-exam-container {
     padding: 10px;
-  }
 
-  .session-exam-header {
-    h2 {
-      font-size: 20px;
+    .session-exam-header {
+      h2 {
+        font-size: 20px;
+      }
     }
-  }
 
-  .status-summary {
-    gap: 10px;
-  }
+    .status-summary {
+      gap: 10px;
+    }
 
-  .student-list-table {
-    th, td {
-      padding: 6px 8px;
+    .session-exam-content {
+      padding: 15px;
+
+      .monitoring-layout {
+        gap: 15px;
+      }
     }
   }
 }

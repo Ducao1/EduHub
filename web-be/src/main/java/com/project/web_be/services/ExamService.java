@@ -12,9 +12,9 @@ public interface ExamService {
     Exam getExamById(long id) throws Exception;
     List<Exam> getAllExams();
 
-    Page<Exam> getAllExamsByTeacherId(long teacherId, Pageable pageable);
+    Page<Exam> getAllExamsByTeacherId(long teacherId, Pageable pageable, String searchTerm);
 
-    Page<Exam> getAllExamsByClassId(Long classId, Pageable pageable);
+    Page<Exam> getAllExamsByClassId(Long classId, Pageable pageable, String searchTerm);
 
     Exam updateExam(ExamDTO examDTO, long id) throws Exception;
     void deleteExam(long id);

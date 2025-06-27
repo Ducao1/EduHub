@@ -34,7 +34,7 @@ export class ExamComponent implements OnInit, OnDestroy {
   activeDropdownIndex: number = -1;
 
   currentPage: number = 0;
-  pageSize: number = 9;
+  pageSize: number = 6;
   totalElements: number = 0;
   totalPages: number = 0;
   visiblePages: number[] = [];
@@ -205,5 +205,10 @@ export class ExamComponent implements OnInit, OnDestroy {
   assignExam(examId: number) {
     this.examId = examId;
     this.togglePopup();
+  }
+
+  getDurationMinutes(duration: number): number {
+    if (!duration) return 0;
+    return Math.ceil(duration / 60000);
   }
 }

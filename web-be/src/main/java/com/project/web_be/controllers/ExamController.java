@@ -51,10 +51,11 @@ public class ExamController {
     public ResponseEntity<?> getAllExamsByTeacher(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String searchTerm) {
         try {
             Pageable pageable = PageRequest.of(page, size);
-            Page<Exam> exams = examService.getAllExamsByTeacherId(id, pageable);
+            Page<Exam> exams = examService.getAllExamsByTeacherId(id, pageable, searchTerm);
             Page<ExamResponse> examResponses = exams.map(exam -> ExamResponse.fromExam(exam, null));
             return ResponseEntity.ok(examResponses);
         } catch (Exception e) {
@@ -66,10 +67,11 @@ public class ExamController {
     public ResponseEntity<?> getAllExamsByClassId(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String searchTerm) {
         try {
             Pageable pageable = PageRequest.of(page, size);
-            Page<Exam> exams = examService.getAllExamsByClassId(id, pageable);
+            Page<Exam> exams = examService.getAllExamsByClassId(id, pageable, searchTerm);
             Page<ExamResponse> examResponses = exams.map(exam -> ExamResponse.fromExam(exam, id));
             return ResponseEntity.ok(examResponses);
         } catch (Exception e) {

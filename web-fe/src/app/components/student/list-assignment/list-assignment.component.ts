@@ -20,7 +20,7 @@ export class ListAssignmentComponent implements OnInit {
   classId!: number;
   className!: string;
   assignments: any[] = [];
-  pageSize: number = 9;
+  pageSize: number = 6;
   totalPages: number = 0;
   currentPage: number = 0;
   totalElements: number = 0;

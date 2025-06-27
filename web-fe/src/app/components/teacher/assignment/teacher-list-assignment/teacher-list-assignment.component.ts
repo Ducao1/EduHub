@@ -22,7 +22,7 @@ export class TeacherListAssignmentComponent implements OnInit, OnDestroy {
   userId!: number;
   assignments: any[] = [];
   currentPage: number = 0;
-  pageSize: number = 9;
+  pageSize: number = 6;
   totalElements: number = 0;
   totalPages: number = 0;
   visiblePages: number[] = [];
@@ -62,7 +62,7 @@ export class TeacherListAssignmentComponent implements OnInit, OnDestroy {
   }
 
   loadAssignments(): void {
-    this.assignmentService.getAssignmentsByTeacherId(this.userId, this.currentPage, this.pageSize).subscribe({
+    this.assignmentService.getAssignmentsByTeacherId(this.userId, this.currentPage, this.pageSize, this.searchTerm).subscribe({
       next: (response) => {
         debugger
         this.assignments = response.content;

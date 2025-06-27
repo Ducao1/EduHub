@@ -1,4 +1,8 @@
 <div class="session-exam-container">
+  <div class="session-exam-content">
+    <div class="monitoring-layout">
+      <!-- Cột trái: Tiêu đề + trạng thái -->
+      <div class="overview-column">
   <div class="session-exam-header">
     <h2>THEO DÕI BÀI THI</h2>
     <div class="exam-info">
@@ -6,7 +10,6 @@
       <span class="class-name">{{ className }}</span>
     </div>
   </div>
-
   <div class="status-summary">
     <div class="status-card" [ngClass]="getStatusClass(ExamStatusType.NOT_STARTED)">
       <div class="status-count">{{ getStatusCount(ExamStatusType.NOT_STARTED) }}</div>
@@ -21,48 +24,59 @@
       <div class="status-label">{{ getStatusText(ExamStatusType.SUBMITTED) }}</div>
     </div>
   </div>
-
-  <div class="session-exam-content">
-    <div class="tab-container">
-      <div class="tab-header">
-        <button [class.active]="selectedTab === 'students'" (click)="selectTab('students')">
-          Danh sách sinh viên
-        </button>
-        <button [class.active]="selectedTab === 'activity'" (click)="selectTab('activity')">
-          Hoạt động
-        </button>
       </div>
 
-      <div class="tab-content" *ngIf="selectedTab === 'students'">
-        <div class="student-cards-grid">
-          <div class="student-card" *ngFor="let student of students">
-            <div class="student-name">{{ student.studentName }}</div>
-            <div class="student-status-badge" [ngClass]="getStatusClass(student.status)">
-              {{ getStatusText(student.status) }}
+      <!-- Cột phải: Bảng sinh viên & hoạt động -->
+      <div class="details-column">
+        <div class="students-activity-table-box">
+          <div class="column-header">
+            <h3>Danh sách sinh viên & hoạt động ({{ students.length }})</h3>
+            <div class="student-actions">
+              <button class="btn-refresh" (click)="refreshStudentList()">
+                <i class="fas fa-sync-alt"></i> Làm mới
+              </button>
             </div>
           </div>
+          <div class="students-activity-table-wrapper">
+            <table class="students-activity-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tên sinh viên</th>
+                  <th>Trạng thái</th>
+                  <th>Log hoạt động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let student of students; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <div class="student-name">{{ student.studentName }}</div>
+                    <div class="student-id">ID: {{ student.studentId }}</div>
+                  </td>
+                  <td>
+                    <span class="student-status-badge" [ngClass]="getStatusClass(student.status)">
+                      {{ getStatusText(student.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="student-activity-logs">
+                      <div *ngFor="let log of getLogsForStudent(student.studentId); let j = index" class="activity-log-item" [ngClass]="getActivityClass(log)">
+                        <span class="activity-message">{{ log.message }}</span>
+                        <span class="activity-time">{{ log.timestamp | date:'HH:mm:ss' }}</span>
+                        <i [class]="getActivityIcon(log)"></i>
+                      </div>
+                      <div *ngIf="getLogsForStudent(student.studentId).length === 0" class="no-activity">
+                        Không có hoạt động
         </div>
       </div>
-
-      <div class="tab-content" *ngIf="selectedTab === 'activity'">
-        <div class="activity-header">
-          <h3>Log hoạt động sinh viên</h3>
-          <div class="activity-actions">
-            <button class="btn-clear-cache" (click)="clearActivityCache()">
-              Xóa cache
-            </button>
-            <button class="btn-refresh" (click)="fetchActivityLog()">
-              Làm mới
-            </button>
-          </div>
-        </div>
-        <div class="activity-list">
-          <div class="activity-item" *ngFor="let activity of activities">
-            <div class="activity-message">{{ activity.message }}</div>
-            <div class="activity-time">{{ activity.timestamp | date:'HH:mm:ss' }}</div>
-          </div>
-          <div class="no-activity" *ngIf="activities.length === 0">
-            <p>Chưa có hoạt động nào được ghi nhận</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngIf="students.length === 0" class="no-students">
+              <p>Chưa có sinh viên nào trong lớp</p>
+            </div>
           </div>
         </div>
       </div>

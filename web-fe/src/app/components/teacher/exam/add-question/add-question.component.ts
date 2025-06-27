@@ -138,4 +138,8 @@ export class AddQuestionComponent {
       ]
     };
   }
+
+  cancel() {
+    this.router.navigate(['/teacher/detail-exam/', this.examId]);
+  }
 }

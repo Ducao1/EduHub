@@ -52,12 +52,18 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public Page<Exam> getAllExamsByTeacherId(long teacherId, Pageable pageable) {
+    public Page<Exam> getAllExamsByTeacherId(long teacherId, Pageable pageable, String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return examRepository.searchByTeacherIdAndTitle(teacherId, searchTerm, pageable);
+        }
         return examRepository.findByTeacherId(teacherId, pageable);
     }
 
     @Override
-    public Page<Exam> getAllExamsByClassId(Long classId, Pageable pageable) {
+    public Page<Exam> getAllExamsByClassId(Long classId, Pageable pageable, String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return examRepository.searchByClassroomIdAndTitle(classId, searchTerm, pageable);
+        }
         return examRepository.findByClassroomId(classId, pageable);
     }
 

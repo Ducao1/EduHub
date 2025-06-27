@@ -22,7 +22,7 @@
         <div *ngFor="let assignment of assignments; let i = index" class="assignment-card" [class.active-dropdown]="activeDropdownIndex === i">
             <div class="assignment-info">
                 <div class="assignment-title">
-                    <a routerLink="/teacher/list-submission-assignment/{{assignment.id}}">
+                    <a routerLink="/teacher/list-submission-assignment/{{classId}}/{{assignment.id}}">
                        <i class="fas fa-tasks me-3"></i>{{ assignment.title }}
                     </a>
                 </div>

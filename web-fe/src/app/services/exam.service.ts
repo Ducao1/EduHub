@@ -46,7 +46,13 @@ export class ExamService {
     return this.http.delete(`${environment.apiBaseUrl}/exams/${id}`);
   }
 
-  getExamsByClassId(classId: number, page: number = 0, size: number = 100): Observable<any> {
-    return this.http.get(`${environment.apiBaseUrl}/exams/class/${classId}?page=${page}&size=${size}`);
+  getExamsByClassId(classId: number, page: number = 0, size: number = 100, searchTerm: string = ''): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    if (searchTerm) {
+      params = params.set('searchTerm', searchTerm);
+    }
+    return this.http.get(`${environment.apiBaseUrl}/exams/class/${classId}`, { params });
   }
 }
