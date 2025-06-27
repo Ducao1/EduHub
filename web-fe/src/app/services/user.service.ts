@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpUtilService } from './http.util.service';
 import { RegisterDTO } from '../dtos/requests/register.dto';
 import { Observable } from 'rxjs';
@@ -163,5 +163,26 @@ export class UserService {
 
   getUserById(id: number): Observable<any> {
     return this.http.get(`${environment.apiBaseUrl}/users/${id}`, this.getApiConfig());
+  }
+
+  updateUser(id: number, data: any): Observable<any> {
+    const formData = new FormData();
+    if (data.fullName) formData.append('fullName', data.fullName);
+    if (data.phoneNumber) formData.append('phoneNumber', data.phoneNumber);
+    if (data.email) formData.append('email', data.email);
+    if (data.gender !== undefined && data.gender !== null) formData.append('gender', String(data.gender));
+    if (data.dob) formData.append('dob', data.dob);
+    if (data.avatar) formData.append('avatar', data.avatar);
+
+    // Tạo headers riêng cho FormData, không set Content-Type để Angular tự động set
+    const headers = new HttpHeaders({
+      'Accept-Language': 'vi',
+    });
+
+    return this.http.put(
+      `${environment.apiBaseUrl}/users/${id}`,
+      formData,
+      { headers }
+    );
   }
 }

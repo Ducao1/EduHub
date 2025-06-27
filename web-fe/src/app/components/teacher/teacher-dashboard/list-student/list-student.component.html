@@ -17,6 +17,7 @@
                     <tr>
                         <th>STT</th>
                         <th>Họ và tên</th>
+                        <th>Email</th>
                         <th>Số điện thoại</th>
                         <th>Hành động</th>
                     </tr>
@@ -25,6 +26,7 @@
                     <tr *ngFor="let student of paginatedStudents; let i = index">
                         <td>{{i + 1 }}</td>
                         <td>{{ student.fullName }}</td>
+                        <td>{{student.email}}</td>
                         <td>{{ student.phoneNumber }}</td>
                         <td>
                             <button class="btn-action btn-delete" title="Xóa sinh viên">

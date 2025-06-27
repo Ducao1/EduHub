@@ -3,6 +3,7 @@ package com.project.web_be.services.Impl;
 import com.project.web_be.components.JwtTokenUtils;
 import com.project.web_be.dtos.UserDTO;
 import com.project.web_be.dtos.UserLoginDTO;
+import com.project.web_be.dtos.UpdateUserDTO;
 import com.project.web_be.entities.Role;
 import com.project.web_be.entities.User;
 import com.project.web_be.exceptions.DataNotFoundException;
@@ -19,7 +20,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -182,5 +188,27 @@ public class UserServiceImpl implements UserService {
         }
         
         userRepository.save(user);
+    }
+
+    public User updateUser(Long id, UpdateUserDTO dto) throws Exception {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (dto.getFullName() != null) user.setFullName(dto.getFullName());
+        if (dto.getPhoneNumber() != null) user.setPhoneNumber(dto.getPhoneNumber());
+        if (dto.getGender() != null) user.setGender(dto.getGender());
+        if (dto.getDob() != null) user.setDob(dto.getDob());
+
+        MultipartFile avatar = dto.getAvatar();
+        if (avatar != null && !avatar.isEmpty()) {
+            String uploadDir = "uploads/avatars/";
+            Files.createDirectories(Paths.get(uploadDir));
+            String fileName = id + "_" + avatar.getOriginalFilename();
+            Path filePath = Paths.get(uploadDir, fileName);
+            avatar.transferTo(filePath);
+            user.setAvatar("/" + uploadDir + fileName);
+        }
+
+        return userRepository.save(user);
     }
 }

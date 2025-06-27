@@ -4,6 +4,7 @@ import com.project.web_be.dtos.SwitchRoleDTO;
 import com.project.web_be.dtos.UserDTO;
 import com.project.web_be.dtos.UserLoginDTO;
 import com.project.web_be.dtos.UserRolesDTO;
+import com.project.web_be.dtos.UpdateUserDTO;
 import com.project.web_be.entities.Role;
 import com.project.web_be.entities.Submission;
 import com.project.web_be.entities.User;
@@ -11,8 +12,10 @@ import com.project.web_be.repositories.RoleRepository;
 import com.project.web_be.services.Impl.UserServiceImpl;
 import com.project.web_be.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -159,6 +162,19 @@ public class UserController {
             Map<String, String> response = new HashMap<>();
             response.put("error", e.getMessage());
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateUser(
+        @PathVariable Long id,
+        @ModelAttribute UpdateUserDTO updateUserDTO
+    ) {
+        try {
+            User updatedUser = userService.updateUser(id, updateUserDTO);
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

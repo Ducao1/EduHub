@@ -34,7 +34,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     
-    private LocalDateTime dob;
+    private String dob;
     private String avatar;
     private boolean gender;
     @Column(name = "password", nullable = false)
@@ -42,8 +42,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "full_name")
     private String fullName;
-
-    private String description;
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)

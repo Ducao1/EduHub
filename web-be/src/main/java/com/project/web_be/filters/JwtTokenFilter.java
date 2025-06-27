@@ -82,7 +82,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/ws/**", apiPrefix), "POST"),
                 Pair.of("/ws/**", "GET"),
                 Pair.of("/ws", "GET"),
-                Pair.of("/ws/**", "POST")
+                Pair.of("/ws/**", "POST"),
+                Pair.of("/uploads/", "GET")
         );
 
         String requestPath = request.getServletPath();

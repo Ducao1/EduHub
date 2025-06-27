@@ -1,14 +1,20 @@
 <div class="profile-container">
   <div class="profile-left">
     <div class="avatar-upload">
-      <div class="avatar-dropzone">
-        <span class="plus-icon">+</span>
+      <div class="avatar-dropzone" style="position: relative;">
+        <ng-container *ngIf="avatarPreviewUrl; else plusIcon">
+          <img [src]="avatarPreviewUrl" alt="avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;" />
+        </ng-container>
+        <ng-template #plusIcon>
+          <span class="plus-icon">+</span>
+        </ng-template>
+        <input type="file" (change)="onAvatarChange($event)" accept="image/*" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" />
       </div>
     </div>
     <div class="profile-name">{{user.fullName}}</div>
     <div class="profile-email">{{user.email}}</div>
-    <div class="profile-info-list">
-      <div class="profile-info-item"><span>Vai trò:</span> {{ user?.currentRole?.name === 'TEACHER' ? 'Giảng viên' : (user?.currentRole?.name === 'STUDENT' ? 'Sinh viên' : (user?.currentRole?.name || 'Nhập vai trò')) }}</div>
+    <div class="profile-role" style="font-size: 20px; font-weight: 700; color: #1746a2; margin-bottom: 8px;">
+      {{ user?.currentRole?.name === 'TEACHER' ? 'Giảng viên' : (user?.currentRole?.name === 'STUDENT' ? 'Sinh viên' : (user?.currentRole?.name || 'Nhập vai trò')) }}
     </div>
   </div>
   <div class="profile-right">
@@ -19,43 +25,62 @@
       <div class="form-row">
         <div class="form-group">
           <label>Họ và tên</label>
-          <input type="text" class="form-control" [value]="user?.fullName || 'Nhập họ và tên'">
+          <input type="text" class="form-control" [(ngModel)]="user.fullName" name="fullName">
         </div>
         <div class="form-group">
           <label>Email</label>
-          <input type="email" class="form-control" [value]="user?.email || 'Nhập email'">
+          <input type="email" class="form-control" [(ngModel)]="user.email" name="email" disabled>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
           <label>Số điện thoại</label>
-          <input type="text" class="form-control" [value]="user?.phoneNumber || 'Nhập số điện thoại'">
+          <input type="text" class="form-control" [(ngModel)]="user.phoneNumber" name="phoneNumber">
         </div>
         <div class="form-group">
           <label>Ngày sinh</label>
-          <input type="date" class="form-control" [value]="user?.dob">
+          <input type="date" class="form-control" [(ngModel)]="user.dob" name="dob">
         </div>
       </div>
       <div class="profile-form-row">
         <div class="profile-form-group">
           <label>Giới tính</label>
-          <div class="gender-radio-group">
-            <label class="gender-radio">
-              <input type="radio" name="gender" value="Nam" [checked]="user?.gender === 'Nam'" disabled>
-              <span>Nam</span>
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                [(ngModel)]="user.gender"
+                [value]="false"
+              />
+              Nam
             </label>
-            <label class="gender-radio">
-              <input type="radio" name="gender" value="Nữ" [checked]="user?.gender === 'Nữ'" disabled>
-              <span>Nữ</span>
+            <label style="margin-left: 16px;">
+              <input
+                type="radio"
+                name="gender"
+                [(ngModel)]="user.gender"
+                [value]="true"
+              />
+              Nữ
             </label>
           </div>
         </div>
       </div>
-      <button type="submit" class="btn-update">Cập nhật</button>
+      <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 18px;">
+        <button class="btn-back" type="button" (click)="onBack()">Trở lại</button>
+        <button class="btn-update" (click)="updateUser()">Cập nhật</button>
+      </div>
     </form>
   </div>
 </div>
-<!-- 
-<style>
 
-</style> -->
+<div class="notification-fixed-container">
+  <app-notification
+    *ngIf="notification"
+    [type]="notification.type"
+    [title]="notification.title"
+    [message]="notification.message"
+    (close)="notification = null">
+  </app-notification>
+</div>

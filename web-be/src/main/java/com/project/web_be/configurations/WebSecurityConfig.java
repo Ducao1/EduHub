@@ -148,6 +148,8 @@ public class WebSecurityConfig {
                                     String.format("%s/scores/assignments/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)
                             .requestMatchers(GET,
                                     String.format("%s/scores/exams/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)
+
+                            .requestMatchers("/uploads/**").permitAll()
                             .anyRequest().permitAll();
                     //.anyRequest().permitAll();
 

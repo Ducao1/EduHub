@@ -1,0 +1,11 @@
+<div class="notification-container" [ngClass]="type">
+  <span class="icon">
+    <ng-container [ngSwitch]="type">
+      <svg *ngSwitchCase="'success'" width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#D1FADF"/><path d="M6 10.5l2 2 4-4" stroke="#12B76A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg *ngSwitchCase="'warning'" width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#FEF7C3"/><path d="M10 6v4m0 2h.01" stroke="#F79009" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg *ngSwitchCase="'error'" width="20" height="20" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#FEE4E2"/><path d="M13 7l-6 6m0-6l6 6" stroke="#F04438" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </ng-container>
+  </span>
+  <span class="message">{{ message }}</span>
+  <button class="close-btn" (click)="close.emit()">&times;</button>
+</div>

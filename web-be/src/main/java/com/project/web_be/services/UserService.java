@@ -2,6 +2,7 @@ package com.project.web_be.services;
 
 import com.project.web_be.dtos.UserDTO;
 import com.project.web_be.dtos.UserLoginDTO;
+import com.project.web_be.dtos.UpdateUserDTO;
 import com.project.web_be.entities.User;
 
 public interface UserService {
@@ -21,6 +22,7 @@ public interface UserService {
     void addRoleToUser(String email, String roleName) throws Exception;
     
     void removeRoleFromUser(String email, String roleName) throws Exception;
+
+    User updateUser(Long id, UpdateUserDTO updateUserDTO) throws Exception;
 //    User getUserDetailsFromToken(String token) throws Exception;
-//    User updateUser(Long userId, UpdateUserDTO updatedUserDTO) throws Exception;
 }
