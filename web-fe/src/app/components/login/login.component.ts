@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
 
 export class LoginComponent {
   @ViewChild('loginForm') loginForm!: NgForm;
-  email: string = 'hoaiduc@gmail.com';
+  email: string = 'huynhduc@gmail.com';
   password: string = '123456';
   passwordVisible: boolean = false;
 

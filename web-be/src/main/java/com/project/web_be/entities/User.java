@@ -36,12 +36,14 @@ public class User extends BaseEntity implements UserDetails {
     
     private LocalDateTime dob;
     private String avatar;
-    private String gender;
+    private boolean gender;
     @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "full_name")
     private String fullName;
+
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)

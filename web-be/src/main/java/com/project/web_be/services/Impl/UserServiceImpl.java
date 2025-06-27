@@ -10,6 +10,7 @@ import com.project.web_be.exceptions.InvalidParamException;
 import com.project.web_be.repositories.RoleRepository;
 import com.project.web_be.repositories.UserRepository;
 import com.project.web_be.services.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(null)
                 .dob(null)
                 .avatar(null)
-                .gender(null)
+                .gender(true)
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .role(role)
                 .currentRole(role)
@@ -92,6 +93,12 @@ public class UserServiceImpl implements UserService {
 
         authenticationManager.authenticate(authenticationToken);
         return jwtTokenUtil.generateToken(existingUser);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng với id: "+id));
     }
 
     @Override

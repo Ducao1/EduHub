@@ -1,21 +1,39 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
-  imports: [],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent {
-  userId!: number;
-  constructor(
-    private route: ActivatedRoute,
-    private userService: UserService,
-  ) { }
+export class ProfileComponent implements OnInit {
+  user: any = {};
+  loading = true;
+  error: string | null = null;
 
-  ngOnInit() {
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
     const userId = this.userService.getUserId();
+    if (userId) {
+      this.userService.getUserById(userId).subscribe({
+        next: (response) => {
+          debugger
+          this.user = response;
+          this.loading = false;
+        },
+        error: (err) => {
+          debugger
+          this.error = 'Không thể tải thông tin người dùng';
+          this.loading = false;
+        }
+      });
+    }
   }
 }

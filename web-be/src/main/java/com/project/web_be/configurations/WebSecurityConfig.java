@@ -48,11 +48,15 @@ public class WebSecurityConfig {
                                     String.format("%s/users/roles", apiPrefix),
                                     String.format("%s/users/add-role", apiPrefix),
                                     String.format("%s/users/remove-role", apiPrefix),
+                                    String.format("%s/users/**", apiPrefix),
                                     String.format("%s/ws/**", apiPrefix),
                                     String.format("%s/ws/**", apiPrefix),
                                     "ws/**"
                             )
                             .permitAll()
+                            .requestMatchers(POST,
+                                    String.format("%s/user/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)
+
                             .requestMatchers(POST,
                                     String.format("%s/answer/add", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(DELETE,

@@ -8,6 +8,8 @@ public interface UserService {
     User register(UserDTO userDTO) throws Exception;
 
     String login(UserLoginDTO userLoginDTO) throws Exception;
+
+    User getUserById(Long id);
     
     // Các method quản lý role
     String switchRole(String email, String newRoleName) throws Exception;

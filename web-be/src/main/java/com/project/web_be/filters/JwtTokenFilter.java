@@ -77,6 +77,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/users/add-role", apiPrefix), "POST"),
                 Pair.of(String.format("%s/users/remove-role", apiPrefix), "DELETE"),
                 Pair.of(String.format("%s/users/encode", apiPrefix), "POST"),
+                Pair.of(String.format("%s/users/**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/ws/**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/ws/**", apiPrefix), "POST"),
                 Pair.of("/ws/**", "GET"),

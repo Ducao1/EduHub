@@ -50,6 +50,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable long id){
+        try {
+            User user = userService.getUserById(id);
+            return ResponseEntity.ok(user);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/student/{id}")
     public ResponseEntity<?> getStudentById(@PathVariable long id){
         try {

@@ -160,4 +160,8 @@ export class UserService {
     this.tokenService.clearToken();
     localStorage.removeItem('user');
   }
+
+  getUserById(id: number): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/users/${id}`, this.getApiConfig());
+  }
 }

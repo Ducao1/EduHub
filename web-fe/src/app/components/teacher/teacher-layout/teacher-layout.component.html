@@ -57,9 +57,13 @@
             <span class="notification-dot-topbar"></span>
           </i>
           <!-- <i class="fas fa-cog"></i> -->
-          <div class="profile-pic-container">
-            <!-- <img src="assets/user-profile.png" alt="User Profile" class="profile-pic" /> -->
+          <div class="profile-pic-container position-relative group-hover">
             <span class="user-text">User</span>
+            <div class="dropdown-menu-custom">
+              <button class="dropdown-item" (click)="viewProfile($event)">Thông tin tài khoản</button>
+              <button class="dropdown-item" (click)="switchToStudent($event)">Chuyển sang học sinh</button>
+              <button class="dropdown-item" (click)="logout($event)">Đăng xuất</button>
+            </div>
           </div>
         </div>
       </div>
