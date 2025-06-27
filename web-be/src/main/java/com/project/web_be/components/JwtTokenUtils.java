@@ -1,5 +1,6 @@
 package com.project.web_be.components;
 
+import com.project.web_be.entities.Role;
 import com.project.web_be.entities.User;
 import com.project.web_be.exceptions.InvalidParamException;
 import io.jsonwebtoken.Claims;
@@ -17,6 +18,7 @@ import java.security.Key;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -27,17 +29,30 @@ public class JwtTokenUtils {
     private int expiration;
     @Value("${jwt.secretKey}")
     private String secretKey;
+    
     public String generateToken(User user) throws Exception{
         //properties => claims
         Map<String, Object> claims = new HashMap<>();
         //this.generateSecretKey();
+        claims.put("email", user.getEmail());
         claims.put("phoneNumber", user.getPhoneNumber());
         claims.put("id", user.getId());
         claims.put("role", user.getRole().getName());
+        
+        // Thêm currentRole vào token
+        String currentRoleName = (user.getCurrentRole() != null) ? user.getCurrentRole().getName() : user.getRole().getName();
+        claims.put("currentRole", currentRoleName);
+        
+        // Thêm tất cả roles vào token
+        List<String> allRoles = user.getRoles().stream()
+                .map(Role::getName)
+                .toList();
+        claims.put("allRoles", allRoles);
+        
         try {
             String token = Jwts.builder()
                     .setClaims(claims)
-                    .setSubject(user.getPhoneNumber())
+                    .setSubject(user.getEmail())
                     .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L))
                     .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                     .compact();
@@ -74,12 +89,22 @@ public class JwtTokenUtils {
         Date expirationDate = this.extractClaim(token, Claims::getExpiration);
         return expirationDate.before(new Date());
     }
-    public String extractPhoneNumber(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+    
+    public String extractCurrentRole(String token) {
+        return extractClaim(token, claims -> claims.get("currentRole", String.class));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<String> extractAllRoles(String token) {
+        return extractClaim(token, claims -> claims.get("allRoles", List.class));
+    }
+    
     public boolean validateToken(String token, UserDetails userDetails) {
-        String phoneNumber = extractPhoneNumber(token);
-        return (phoneNumber.equals(userDetails.getUsername()))
+        String email = extractEmail(token);
+        return (email.equals(userDetails.getUsername()))
                 && !isTokenExpired(token);
     }
 }

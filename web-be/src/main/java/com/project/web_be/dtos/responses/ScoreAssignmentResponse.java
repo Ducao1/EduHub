@@ -14,5 +14,6 @@ public class ScoreAssignmentResponse {
     private float score;
     private Long studentId;
     private String studentName;
-    private String studentPhone;
+    private String studentEmail;
+    private String studentPhoneNumber;
 }

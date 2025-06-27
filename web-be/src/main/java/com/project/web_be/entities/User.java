@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -26,10 +28,12 @@ public class User extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "phone_number", nullable = false, unique = true)
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+    
     private LocalDateTime dob;
     private String avatar;
     private String gender;
@@ -43,17 +47,29 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_roles", 
+        joinColumns = @JoinColumn(name = "user_id"), 
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "current_role_id")
+    private Role currentRole;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-        authorityList.add(new SimpleGrantedAuthority(role.getName().toUpperCase()));
+        String roleToUse = (currentRole != null) ? currentRole.getName() : role.getName();
+        authorityList.add(new SimpleGrantedAuthority(roleToUse.toUpperCase()));
         return authorityList;
     }
 
     @Override
     public String getUsername() {
-        return phoneNumber;
+        return email;
     }
 
     @Override

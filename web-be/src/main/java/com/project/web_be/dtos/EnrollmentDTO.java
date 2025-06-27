@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class EnrollmentDTO {
     @JsonProperty("class_id")
     private Long classId;
-    @JsonProperty("phone_number")
-    private String phoneNumber;
+    @JsonProperty("email")
+    private String email;
 }

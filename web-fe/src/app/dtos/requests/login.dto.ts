@@ -1,9 +1,9 @@
 export class LoginDTO {
-    phone_number: string;
+    email: string;
     password: string;
 
     constructor(data: any) {
-        this.phone_number = data.phoneNumber;
+        this.email = data.email;
         this.password = data.password;
     }
 }

@@ -27,8 +27,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     public Enrollment addStudent(EnrollmentDTO enrollmentDTO) throws Exception {
         Classroom classroom = classroomRepository.findById(enrollmentDTO.getClassId())
                 .orElseThrow(()-> new DataNotFoundException("Classroom doesn't exist"));
-        User student = userRepository.findByPhoneNumber(enrollmentDTO.getPhoneNumber())
-                .orElseThrow(()-> new DataNotFoundException("Phone number doesn't exist"));
+        User student = userRepository.findByEmail(enrollmentDTO.getEmail())
+                .orElseThrow(()-> new DataNotFoundException("Email doesn't exist"));
         boolean isAlreadyEnrolled = enrollmentRepository.existsByClassroomAndStudent(classroom, student);
         if (isAlreadyEnrolled) {
             throw new Exception("Student is already enrolled in this classroom");

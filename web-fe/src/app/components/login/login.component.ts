@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
 
 export class LoginComponent {
   @ViewChild('loginForm') loginForm!: NgForm;
-  phoneNumber: string = '0943220885';
+  email: string = 'hoaiduc@gmail.com';
   password: string = '123456';
   passwordVisible: boolean = false;
 
@@ -39,7 +39,7 @@ export class LoginComponent {
     this.tokenService.clearToken(); // Xóa token và user cũ
 
     const loginDTO: LoginDTO = {
-      phone_number: this.phoneNumber,
+      email: this.email,
       password: this.password
     };
 
@@ -51,28 +51,24 @@ export class LoginComponent {
         this.userService.saveUserData(token);
 
         const payload = this.tokenService.getDecodedToken();
-        const role = payload?.role;
+        const currentRole = payload?.currentRole;
 
-        if (role === 'TEACHER') {
+        if (currentRole === 'TEACHER') {
           this.router.navigate(['/teacher/dashboard']);
-        } else if (role === 'STUDENT') {
+        } else if (currentRole === 'STUDENT') {
           this.router.navigate(['/student/dashboard']);
-        } else {
-          alert('Vai trò không hợp lệ!');
         }
       },
       error: (error: any) => {
         debugger
-        alert(error?.error || 'Đăng nhập thất bại');
+        console.error('Login error:', error);
+        const errorMessage = error?.error?.error || error?.error || 'Đăng nhập thất bại';
+        alert(errorMessage);
       }
     });
   }
-  
-  
-  
 
   createAccount() {
-    debugger
     this.router.navigate(['/register']);
   }
 

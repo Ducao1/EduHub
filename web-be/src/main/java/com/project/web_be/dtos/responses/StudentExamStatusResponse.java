@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class StudentExamStatusResponse {
     private Long studentId;
     private String studentName;
+    private String email;
     private String phoneNumber;
     private ExamStatusType status;
     private LocalDateTime startTime;
@@ -26,6 +27,7 @@ public class StudentExamStatusResponse {
         return StudentExamStatusResponse.builder()
                 .studentId(user.getId())
                 .studentName(user.getFullName())
+                .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .status(examStatus != null ? examStatus.getStatus() : ExamStatusType.NOT_STARTED)
                 .startTime(examStatus != null ? examStatus.getStartTime() : null)

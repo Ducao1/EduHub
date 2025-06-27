@@ -45,10 +45,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
             final String token = authHeader.substring(7);
-            final String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
-            if (phoneNumber != null
+            final String email = jwtTokenUtil.extractEmail(token);
+            if (email != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
-                User userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);
+                User userDetails = (User) userDetailsService.loadUserByUsername(email);
                 if(jwtTokenUtil.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
@@ -70,6 +70,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 Pair.of(String.format("%s/users/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/users/login", apiPrefix), "POST"),
+                Pair.of(String.format("%s/users/available-roles", apiPrefix), "GET"),
+                Pair.of(String.format("%s/users/switch-role", apiPrefix), "POST"),
+                Pair.of(String.format("%s/users/current-role", apiPrefix), "GET"),
+                Pair.of(String.format("%s/users/roles", apiPrefix), "GET"),
+                Pair.of(String.format("%s/users/add-role", apiPrefix), "POST"),
+                Pair.of(String.format("%s/users/remove-role", apiPrefix), "DELETE"),
                 Pair.of(String.format("%s/users/encode", apiPrefix), "POST"),
                 Pair.of(String.format("%s/ws/**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/ws/**", apiPrefix), "POST"),

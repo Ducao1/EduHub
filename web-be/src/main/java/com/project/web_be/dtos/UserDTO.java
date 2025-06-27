@@ -13,12 +13,11 @@ import lombok.NoArgsConstructor;
 public class UserDTO {
     @JsonProperty("full_name")
     private String fullName;
-    @JsonProperty("phone_number")
-    private String phoneNumber;
-
+    
+    @JsonProperty("email")
+    private String email;
     @JsonProperty("password")
     private String password;
-
     @JsonProperty("role_id")
     private Long roleId;
 }

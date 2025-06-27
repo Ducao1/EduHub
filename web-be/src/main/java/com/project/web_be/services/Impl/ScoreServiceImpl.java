@@ -108,7 +108,7 @@ public class ScoreServiceImpl implements ScoreService {
                         .score(score.getScore())
                         .studentId(score.getSubmission().getStudent().getId())
                         .studentName(score.getSubmission().getStudent().getFullName())
-                        .studentPhone(score.getSubmission().getStudent().getPhoneNumber())
+                        .studentEmail(score.getSubmission().getStudent().getEmail())
                         .build());
             }
         }

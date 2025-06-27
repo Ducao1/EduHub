@@ -1,11 +1,13 @@
 export class RegisterDTO {
   full_name: string;
-  phone_number: string;
+  email: string;
   password: string;
+  role_id: number;
 
   constructor(data: any) {
     this.full_name = data.fullName;
-    this.phone_number = data.phoneNumber;
+    this.email = data.email;
     this.password = data.password;
+    this.role_id = data.roleId;
   }
 }

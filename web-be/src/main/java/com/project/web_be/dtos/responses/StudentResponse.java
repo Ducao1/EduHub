@@ -12,16 +12,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StudentResponse {
     private Long id;
+    private String email;
     private String phoneNumber;
-    private String password;
     private String fullName;
 
     public static StudentResponse fromStudent(User user){
         return StudentResponse.builder()
                 .id(user.getId())
                 .fullName(user.getFullName())
+                .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
-                .password(user.getPassword())
                 .build();
     }
 }

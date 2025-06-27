@@ -1,9 +1,13 @@
 package com.project.web_be.controllers;
 
+import com.project.web_be.dtos.SwitchRoleDTO;
 import com.project.web_be.dtos.UserDTO;
 import com.project.web_be.dtos.UserLoginDTO;
+import com.project.web_be.dtos.UserRolesDTO;
+import com.project.web_be.entities.Role;
 import com.project.web_be.entities.Submission;
 import com.project.web_be.entities.User;
+import com.project.web_be.repositories.RoleRepository;
 import com.project.web_be.services.Impl.UserServiceImpl;
 import com.project.web_be.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -19,6 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
     private final UserServiceImpl userService;
+    private final RoleRepository roleRepository;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO){
@@ -51,6 +57,98 @@ public class UserController {
             return ResponseEntity.ok(student);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    @GetMapping("/available-roles")
+    public ResponseEntity<?> getAvailableRoles() {
+        try {
+            List<Role> roles = roleRepository.findAll();
+            return ResponseEntity.ok(roles);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    @PostMapping("/switch-role")
+    public ResponseEntity<?> switchRole(@RequestBody SwitchRoleDTO switchRoleDTO) {
+        try {
+            String newToken = userService.switchRole(switchRoleDTO.getEmail(), switchRoleDTO.getNewRole());
+            Map<String, String> response = new HashMap<>();
+            response.put("token", newToken);
+            response.put("currentRole", switchRoleDTO.getNewRole());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    @GetMapping("/current-role")
+    public ResponseEntity<?> getCurrentRole(@RequestParam String email) {
+        try {
+            String currentRole = userService.getCurrentRole(email);
+            Map<String, String> response = new HashMap<>();
+            response.put("currentRole", currentRole);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    @GetMapping("/roles")
+    public ResponseEntity<?> getUserRoles(@RequestParam String email) {
+        try {
+            User user = userService.getUserByEmail(email);
+            String currentRole = userService.getCurrentRole(email);
+            List<String> allRoles = user.getRoles().stream()
+                    .map(role -> role.getName())
+                    .toList();
+            
+            UserRolesDTO userRolesDTO = UserRolesDTO.builder()
+                    .email(email)
+                    .currentRole(currentRole)
+                    .allRoles(allRoles)
+                    .build();
+            
+            return ResponseEntity.ok(userRolesDTO);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    @PostMapping("/add-role")
+    public ResponseEntity<?> addRoleToUser(@RequestParam String email, @RequestParam String roleName) {
+        try {
+            userService.addRoleToUser(email, roleName);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Role added successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    @DeleteMapping("/remove-role")
+    public ResponseEntity<?> removeRoleFromUser(@RequestParam String email, @RequestParam String roleName) {
+        try {
+            userService.removeRoleFromUser(email, roleName);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Role removed successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }

@@ -42,6 +42,12 @@ public class WebSecurityConfig {
                             .requestMatchers(
                                     String.format("%s/users/register", apiPrefix),
                                     String.format("%s/users/login", apiPrefix),
+                                    String.format("%s/users/available-roles", apiPrefix),
+                                    String.format("%s/users/switch-role", apiPrefix),
+                                    String.format("%s/users/current-role", apiPrefix),
+                                    String.format("%s/users/roles", apiPrefix),
+                                    String.format("%s/users/add-role", apiPrefix),
+                                    String.format("%s/users/remove-role", apiPrefix),
                                     String.format("%s/ws/**", apiPrefix),
                                     String.format("%s/ws/**", apiPrefix),
                                     "ws/**"
