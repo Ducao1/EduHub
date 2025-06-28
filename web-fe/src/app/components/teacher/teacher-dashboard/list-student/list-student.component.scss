@@ -279,3 +279,19 @@
     flex-shrink: 0;
     background-color: #fff;
 }
+
+.export-btn {
+  background-color: #217346;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 12px;
+  transition: background 0.2s;
+}
+.export-btn:hover {
+  background-color: #145a32;
+}

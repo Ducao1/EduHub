@@ -107,4 +107,17 @@ export class ListStudentComponent implements OnInit {
   closeApproveModal() {
     this.showApproveModal = false;
   }
+
+  exportExcel() {
+    const className = this.className ? this.className.replace(/[^a-zA-Z0-9_-]/g, '_') : this.classId;
+    this.enrollmentService.exportStudentsInClassToExcel(this.classId).subscribe((response: any) => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `list_student_${className}.xlsx`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
 }

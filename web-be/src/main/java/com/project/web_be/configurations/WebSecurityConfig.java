@@ -141,6 +141,8 @@ public class WebSecurityConfig {
                                     String.format("%s/enrollments/student/**", apiPrefix)).hasAuthority(Role.STUDENT)
                             .requestMatchers(GET,
                                     String.format("%s/enrollments/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                            .requestMatchers(GET,
+                                    String.format("%s/enrollments/class/*/export", apiPrefix)).hasAuthority(Role.TEACHER)
 
                             .requestMatchers(GET,
                                     String.format("%s/scores/submissions/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)

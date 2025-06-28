@@ -37,4 +37,8 @@ export class EnrollmentService {
   joinClass(joinClassDTO: JoinClassDTO): Observable<any> {
     return this.http.post(this.apiJoinClass, joinClassDTO, this.getApiConfig());
   }
+
+  exportStudentsInClassToExcel(classId: number) {
+    return this.http.get(`${environment.apiBaseUrl}/enrollments/class/${classId}/export`, { responseType: 'blob' });
+  }
 }
