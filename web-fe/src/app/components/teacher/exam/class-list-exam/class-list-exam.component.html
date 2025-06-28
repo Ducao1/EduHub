@@ -2,8 +2,8 @@
 <div class="exam-container">
     <div class="exam-header">
         <div class="search-container">
-            <i class="fas fa-search search-icon" (click)="onSearch()"></i>
-            <input type="text" class="search-input" placeholder="Tìm kiếm bài thi..." [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Tìm kiếm bài thi..." [(ngModel)]="searchTerm" (input)="onSearchInput(searchTerm)">
         </div>
     </div>
     <div class="exam-list">

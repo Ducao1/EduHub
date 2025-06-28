@@ -20,4 +20,6 @@ public interface EnrollmentService {
     List<User> getStudentsByClassId(Long classId);
 
     Enrollment approveStudent(Long enrollmentId) throws Exception;
+
+    List<User> searchStudentsInClass(Long classId, String keyword);
 }

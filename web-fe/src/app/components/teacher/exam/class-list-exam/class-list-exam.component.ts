@@ -6,6 +6,8 @@ import { TeacherNavBarComponent } from "../../teacher-nav-bar/teacher-nav-bar.co
 import { ClassroomService } from '../../../../services/classroom.service';
 import { ExamService } from '../../../../services/exam.service';
 import { FormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-class-list-exam',
@@ -31,6 +33,7 @@ export class ClassListExamComponent implements OnInit {
   visiblePages: number[] = [];
   activeDropdownIndex: number = -1;
   searchTerm: string = '';
+  private searchSubject = new Subject<string>();
 
   constructor(
     private examService: ExamService,
@@ -44,6 +47,11 @@ export class ClassListExamComponent implements OnInit {
     this.classId = Number(this.route.snapshot.paramMap.get('classId'));
     this.loadClassInfo();
     this.loadExams();
+    this.searchSubject.pipe(debounceTime(400)).subscribe(term => {
+      this.currentPage = 0;
+      this.searchTerm = term;
+      this.loadExams();
+    });
   }
 
   loadClassInfo() {
@@ -113,8 +121,7 @@ export class ClassListExamComponent implements OnInit {
     this.router.navigate(['/teacher/exam',this.classId, examId, 'scores']);
   }
 
-  onSearch() {
-    this.currentPage = 0;
-    this.loadExams();
+  onSearchInput(term: string) {
+    this.searchSubject.next(term);
   }
 }

@@ -8,6 +8,10 @@ import { environment } from '../../../../environments/environment';
 import { CommentService } from '../../../../services/comment.service';
 import { UserService } from '../../../../services/user.service';
 import { Comment as IComment } from '../../../../interfaces/comment';
+import { NotificationComponent } from '../../../notification/notification.component';
+import { EnrollmentService } from '../../../../services/enrollment.service';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-detail-teacher-class',
@@ -16,7 +20,8 @@ import { Comment as IComment } from '../../../../interfaces/comment';
     RouterModule, 
     TeacherNavBarComponent,
     FormsModule,
-    CommonModule
+    CommonModule,
+    NotificationComponent
   ],
   templateUrl: './detail-teacher-class.component.html',
   styleUrl: './detail-teacher-class.component.scss',
@@ -40,13 +45,21 @@ export class DetailTeacherClassComponent implements OnInit {
     commentContentMap: { [parentId: number]: string } = {};
   
     openDropdownCommentId: number | null = null;
+    classCode: string = '';
+  
+    notification: { type: 'success' | 'warning' | 'error', message: string } | null = null;
+  
+    studentList: any[] = [];
+    searchTerm: string = '';
+    private searchSubject = new Subject<string>();
   
     constructor(
       private route: ActivatedRoute,
       private classroomService: ClassroomService,
       private commentService: CommentService,
       private userService: UserService,
-      private datePipe: DatePipe
+      private datePipe: DatePipe,
+      private enrollmentService: EnrollmentService
     ) { }
   
     ngOnInit() {
@@ -54,6 +67,14 @@ export class DetailTeacherClassComponent implements OnInit {
       this.currentUserId = this.userService.getUserId();
       this.loadClassInfo();
       this.loadComments();
+      this.loadAllStudentsInClass();
+      this.searchSubject.pipe(debounceTime(300)).subscribe((term) => {
+        if (term && term.trim() !== '') {
+          this.searchStudentsInClass(term);
+        } else {
+          this.loadAllStudentsInClass();
+        }
+      });
     }
   
     loadClassInfo() {
@@ -61,6 +82,7 @@ export class DetailTeacherClassComponent implements OnInit {
         next: (response) => {
           this.className = response.name;
           this.classDescription = response.description || 'Không có mô tả.';
+          this.classCode = response.code || '';
         },
         error: (err) => {
           console.error('Lỗi khi lấy thông tin lớp:', err);
@@ -259,5 +281,52 @@ export class DetailTeacherClassComponent implements OnInit {
           comment.likeCount = (comment.likeCount || 0) + 1;
         });
       }
+    }
+  
+    setNotification(type: 'success' | 'warning' | 'error', message: string) {
+      this.notification = { type, message };
+      setTimeout(() => {
+        this.notification = null;
+      }, 3000);
+    }
+  
+    refreshClassCode() {
+      this.classroomService.refreshClassCode(this.classId).subscribe({
+        next: (response) => {
+          debugger
+          this.classCode = response.code || '';
+          this.setNotification('success', 'Làm mới mã lớp thành công!');
+        },
+        error: (err) => {
+          this.setNotification('error', 'Làm mới mã lớp thất bại!');
+          this.loadClassInfo();
+        }
+      });
+    }
+  
+    loadAllStudentsInClass() {
+      this.enrollmentService.getAllStudentInClass(this.classId).subscribe({
+        next: (res) => {
+          this.studentList = res;
+        },
+        error: (err) => {
+          this.studentList = [];
+        }
+      });
+    }
+  
+    onSearchInput(term: string) {
+      this.searchSubject.next(term.trim());
+    }
+  
+    searchStudentsInClass(term: string) {
+      this.enrollmentService.searchStudentsInClass(this.classId, term).subscribe({
+        next: (res) => {
+          this.studentList = res;
+        },
+        error: (err) => {
+          this.studentList = [];
+        }
+      });
     }
 }

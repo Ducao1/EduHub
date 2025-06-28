@@ -87,4 +87,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         enrollment.setConfirm(true);
         return enrollmentRepository.save(enrollment);
     }
+
+    @Override
+    public List<User> searchStudentsInClass(Long classId, String keyword) {
+        return enrollmentRepository.searchStudentsInClass(classId, keyword);
+    }
 }

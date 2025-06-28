@@ -119,4 +119,18 @@ public class EnrollmentController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @GetMapping("/class/{classId}/search")
+    public ResponseEntity<?> searchStudentsInClass(@PathVariable Long classId, @RequestParam String keyword) {
+        try {
+            String trimmedKeyword = keyword == null ? "" : keyword.trim();
+            List<User> studentList = enrollmentService.searchStudentsInClass(classId, trimmedKeyword);
+            List<StudentResponse> studentResponses = studentList.stream()
+                    .map(StudentResponse::fromStudent)
+                    .toList();
+            return ResponseEntity.ok(studentResponses);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

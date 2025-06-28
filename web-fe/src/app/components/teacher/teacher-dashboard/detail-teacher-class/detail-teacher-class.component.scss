@@ -419,3 +419,56 @@
   color: #FF3040;
   border: none;
 }
+
+.class-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.class-code-box {
+  display: flex;
+  align-items: center;
+  background: #f5f7fa;
+  border: 1px solid #dadce0;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 15px;
+  margin-left: 16px;
+}
+
+.class-code-label {
+  color: #5f6368;
+  margin-right: 4px;
+}
+
+.class-code-value {
+  font-weight: 600;
+  color: #217346;
+  margin-right: 8px;
+}
+
+.refresh-btn {
+  background: none;
+  border: none;
+  color: #217346;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 4px;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.refresh-btn:hover {
+  background: #e0f2e9;
+}
+
+.notification-fixed-container {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  z-index: 1000;
+  min-width: 320px;
+  max-width: 400px;
+}

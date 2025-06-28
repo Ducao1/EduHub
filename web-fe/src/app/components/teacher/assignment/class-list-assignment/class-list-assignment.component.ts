@@ -6,6 +6,8 @@ import { TeacherNavBarComponent } from '../../teacher-nav-bar/teacher-nav-bar.co
 import { AssignmentDTO } from '../../../../dtos/requests/assignment.dto';
 import { ClassroomService } from '../../../../services/classroom.service';
 import { FormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-class-list-assignment',
@@ -30,6 +32,7 @@ export class ClassListAssignmentComponent implements OnInit {
   visiblePages: number[] = [];
   activeDropdownIndex: number = -1;
   searchTerm: string = '';
+  private searchSubject = new Subject<string>();
 
   constructor(
     private assignmentService: AssignmentService,
@@ -44,6 +47,11 @@ export class ClassListAssignmentComponent implements OnInit {
     this.classId = Number(this.route.snapshot.paramMap.get('classId'));
     this.loadClassInfo();
     this.loadAssignments();
+    this.searchSubject.pipe(debounceTime(400)).subscribe(term => {
+      this.currentPage = 0;
+      this.searchTerm = term;
+      this.loadAssignments();
+    });
   }
 
   loadClassInfo() {
@@ -131,8 +139,7 @@ export class ClassListAssignmentComponent implements OnInit {
     this.router.navigate(['/teacher/assignment',this.classId, id, 'scores']);
   }
 
-  onSearch() {
-    this.currentPage = 0;
-    this.loadAssignments();
+  onSearchInput(term: string) {
+    this.searchSubject.next(term);
   }
 }

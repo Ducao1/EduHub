@@ -61,6 +61,16 @@ public class ClassroomController {
         }
     }
 
+    @PutMapping("/{id}/refresh-code")
+    public ResponseEntity<?> refreshClassCode(@PathVariable long id) {
+        try {
+            Classroom classroom = classroomService.updateClassCode(id);
+            return ResponseEntity.ok(ClassResponse.fromClassroom(classroom));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/teacher/{teacherId}")
     public ResponseEntity<?> getAllClassByTeacherId(@PathVariable Long teacherId) {
         try {

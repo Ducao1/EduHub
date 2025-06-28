@@ -2,8 +2,8 @@
 <div class="assignment-container">
     <div class="assignment-header">
         <div class="search-container">
-            <input type="text" class="search-input" placeholder="Tìm kiếm bài tập..." [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
-            <i class="fas fa-search search-icon" (click)="onSearch()"></i>
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Tìm kiếm bài tập..." [(ngModel)]="searchTerm" (input)="onSearchInput(searchTerm)">
         </div>
         <a class="btn-create-assignment" routerLink="/teacher/add-assignment/{{classId}}">
             <i class="fas fa-plus-circle me-2"></i>Giao bài tập

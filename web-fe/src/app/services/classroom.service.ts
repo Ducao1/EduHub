@@ -48,4 +48,8 @@ export class ClassroomService {
   getStudentsByClassId(classId: number) {
     throw new Error('Method not implemented.');
   }
+
+  refreshClassCode(classId: number): Observable<any> {
+    return this.http.put(`${environment.apiBaseUrl}/classes/${classId}/refresh-code`, {});
+  }
 }

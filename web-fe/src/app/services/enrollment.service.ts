@@ -41,4 +41,8 @@ export class EnrollmentService {
   exportStudentsInClassToExcel(classId: number) {
     return this.http.get(`${environment.apiBaseUrl}/enrollments/class/${classId}/export`, { responseType: 'blob' });
   }
+
+  searchStudentsInClass(classId: number, keyword: string): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/enrollments/class/${classId}/search`, { params: { keyword } });
+  }
 }

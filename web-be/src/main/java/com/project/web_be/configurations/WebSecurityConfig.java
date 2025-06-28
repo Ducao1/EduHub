@@ -72,6 +72,8 @@ public class WebSecurityConfig {
                                     String.format("%s/classes/teacher/**", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(PUT,
                                     String.format("%s/classes/**", apiPrefix)).hasAuthority(Role.TEACHER)
+                            .requestMatchers(PUT,
+                                    String.format("%s/classes/*/refresh-code", apiPrefix)).hasAuthority(Role.TEACHER)
 
                             .requestMatchers(POST,
                                     String.format("%s/assignments/add", apiPrefix)).hasAuthority(Role.TEACHER)
@@ -143,6 +145,8 @@ public class WebSecurityConfig {
                                     String.format("%s/enrollments/**", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(GET,
                                     String.format("%s/enrollments/class/*/export", apiPrefix)).hasAuthority(Role.TEACHER)
+                            .requestMatchers(GET,
+                                    String.format("%s/enrollments/class/*/search", apiPrefix)).hasAuthority(Role.TEACHER)
 
                             .requestMatchers(GET,
                                     String.format("%s/scores/submissions/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)
