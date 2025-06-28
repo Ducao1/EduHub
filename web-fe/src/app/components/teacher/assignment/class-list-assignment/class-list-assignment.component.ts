@@ -5,13 +5,15 @@ import { AssignmentService } from '../../../../services/assignment.service';
 import { TeacherNavBarComponent } from '../../teacher-nav-bar/teacher-nav-bar.component';
 import { AssignmentDTO } from '../../../../dtos/requests/assignment.dto';
 import { ClassroomService } from '../../../../services/classroom.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-class-list-assignment',
   imports: [
     CommonModule,
     RouterModule,
-    TeacherNavBarComponent
+    TeacherNavBarComponent,
+    FormsModule
   ],
   templateUrl: './class-list-assignment.component.html',
   styleUrl: './class-list-assignment.component.scss',
@@ -27,6 +29,7 @@ export class ClassListAssignmentComponent implements OnInit {
   totalPages: number = 0;
   visiblePages: number[] = [];
   activeDropdownIndex: number = -1;
+  searchTerm: string = '';
 
   constructor(
     private assignmentService: AssignmentService,
@@ -55,7 +58,7 @@ export class ClassListAssignmentComponent implements OnInit {
   }
 
   loadAssignments(): void {
-    this.assignmentService.getAssignmentsByClassId(this.classId, this.currentPage, this.pageSize).subscribe({
+    this.assignmentService.getAssignmentsByClassId(this.classId, this.currentPage, this.pageSize, this.searchTerm).subscribe({
       next: (response) => {
         debugger
         this.assignments = response.content;
@@ -126,5 +129,10 @@ export class ClassListAssignmentComponent implements OnInit {
 
   goToScoreList(id: number) {
     this.router.navigate(['/teacher/assignment',this.classId, id, 'scores']);
+  }
+
+  onSearch() {
+    this.currentPage = 0;
+    this.loadAssignments();
   }
 }

@@ -118,48 +118,91 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-}
+    margin-bottom: 18px;
+    gap: 16px;
 
-.search-container {
-    position: relative;
-    flex-grow: 0;
-    width: 400px;
-    margin-right: 20px;
-}
+    .search-container {
+        position: relative;
+        width: 400px;
+        margin-right: 0;
+        display: flex;
+        align-items: center;
+        background: #f5f6fa;
+        border-radius: 8px;
+        padding: 0 14px;
+        height: 40px;
+        border: 1px solid #e0e3eb;
+        .search-icon {
+            color: #b0b3b8;
+            font-size: 1.1rem;
+            margin-right: 8px;
+        }
+        .search-input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 1rem;
+            flex: 1;
+            padding: 8px 0;
+        }
+    }
 
-.search-input {
-    width: 100%;
-    padding: 10px 40px 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-}
+    > div[style*="display: flex"] {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
 
-.search-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-}
+    .btn-approve {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #22c55e;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 18px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.18s;
+        box-shadow: 0 1px 4px rgba(34,197,94,0.08);
+        i {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        &:hover {
+            background: #16a34a;
+        }
+    }
 
-.btn-add-student {
-    background: #0052B4;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    white-space: nowrap;
-
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    .btn-add-student {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 18px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.18s;
+        box-shadow: 0 1px 4px rgba(37,99,235,0.08);
+        i {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        &:hover {
+            background: #1d4ed8;
+            color: #fff;
+        }
     }
 }
 

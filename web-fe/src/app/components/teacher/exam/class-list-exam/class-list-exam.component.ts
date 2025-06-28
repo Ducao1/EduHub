@@ -4,6 +4,8 @@ import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { ClassExamService } from '../../../../services/class-exam.service';
 import { TeacherNavBarComponent } from "../../teacher-nav-bar/teacher-nav-bar.component";
 import { ClassroomService } from '../../../../services/classroom.service';
+import { ExamService } from '../../../../services/exam.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-class-list-exam',
@@ -11,8 +13,9 @@ import { ClassroomService } from '../../../../services/classroom.service';
   imports: [
     CommonModule,
     RouterModule,
-    TeacherNavBarComponent
-],
+    TeacherNavBarComponent,
+    FormsModule
+  ],
   templateUrl: './class-list-exam.component.html',
   styleUrl: './class-list-exam.component.scss',
   providers: [DatePipe]
@@ -27,9 +30,10 @@ export class ClassListExamComponent implements OnInit {
   totalPages: number = 0;
   visiblePages: number[] = [];
   activeDropdownIndex: number = -1;
+  searchTerm: string = '';
 
   constructor(
-    private classExamService: ClassExamService,
+    private examService: ExamService,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
     private router: Router,
@@ -55,16 +59,14 @@ export class ClassListExamComponent implements OnInit {
 
 
   loadExams(): void {
-    this.classExamService.getExamByClass(this.classId, this.currentPage, this.pageSize).subscribe({
-      next: (response) => {
-        debugger
+    this.examService.getExamsByClassId(this.classId, this.currentPage, this.pageSize, this.searchTerm).subscribe({
+      next: (response: any) => {
         this.exams = response.content;
         this.totalElements = response.totalElements;
         this.totalPages = response.totalPages;
         this.updateVisiblePages();
       },
-      error: (err) => {
-        debugger
+      error: (err: any) => {
         alert(`Lỗi khi lấy danh sách bài thi: ${err.error}`);
       }
     });
@@ -109,5 +111,10 @@ export class ClassListExamComponent implements OnInit {
 
   viewScores(examId: number) {
     this.router.navigate(['/teacher/exam',this.classId, examId, 'scores']);
+  }
+
+  onSearch() {
+    this.currentPage = 0;
+    this.loadExams();
   }
 }

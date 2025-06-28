@@ -35,7 +35,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         }
         Enrollment newEnrollment = Enrollment.builder()
                 .classroom(classroom)
-                .student(student).build();
+                .student(student)
+                .confirm(true)
+                .build();
 
         return enrollmentRepository.save(newEnrollment);
     }
@@ -56,7 +58,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         Enrollment newEnrollment = Enrollment.builder()
                 .classroom(existingClassroom)
-                .student(existingStudent).build();
+                .student(existingStudent)
+                .confirm(false)
+                .build();
 
         return enrollmentRepository.save(newEnrollment);
     }
@@ -68,11 +72,19 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public List<User> getAllStudentInClass(Long id){
-        return enrollmentRepository.findStudentsByClassroomId(id);
+        List<Enrollment> enrollments = enrollmentRepository.findByClassroomIdAndConfirmTrue(id);
+        return enrollments.stream().map(Enrollment::getStudent).toList();
     }
 
     @Override
     public List<User> getStudentsByClassId(Long classId) {
         return enrollmentRepository.findStudentsByClassroomId(classId);
+    }
+
+    public Enrollment approveStudent(Long enrollmentId) throws Exception {
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+            .orElseThrow(() -> new DataNotFoundException("Enrollment not found"));
+        enrollment.setConfirm(true);
+        return enrollmentRepository.save(enrollment);
     }
 }

@@ -35,4 +35,12 @@ export class ScoreService {
   getExamScoresByStudentId(studentId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiBase}/exams/student/${studentId}`);
   }
+
+  exportAssignmentScoresToExcel(assignmentId: number) {
+    return this.http.get(`${this.apiBase}/assignments/${assignmentId}/export`, { responseType: 'blob' });
+  }
+
+  exportExamScoresToExcel(examId: number) {
+    return this.http.get(`${this.apiBase}/exams/${examId}/export`, { responseType: 'blob' });
+  }
 }

@@ -3,6 +3,9 @@
     <div class="score-list-container">
         <div class="score-list-header">
             <h2 class="assignment-title">{{ examTitle }}</h2>
+            <div class="header-actions">
+              <button class="export-btn" (click)="exportExcel()">Xuất Excel</button>
+            </div>
         </div>
 
         <div class="score-table-container">

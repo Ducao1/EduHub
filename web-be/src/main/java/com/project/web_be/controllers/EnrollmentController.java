@@ -61,4 +61,14 @@ public class EnrollmentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PutMapping("/approve/{enrollmentId}")
+    public ResponseEntity<?> approveStudent(@PathVariable Long enrollmentId) {
+        try {
+            Enrollment enrollment = enrollmentService.approveStudent(enrollmentId);
+            return ResponseEntity.ok(enrollment);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

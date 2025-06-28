@@ -18,4 +18,6 @@ public interface EnrollmentService {
     List<User> getAllStudentInClass(Long id);
 
     List<User> getStudentsByClassId(Long classId);
+
+    Enrollment approveStudent(Long enrollmentId) throws Exception;
 }

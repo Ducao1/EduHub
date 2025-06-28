@@ -21,4 +21,5 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     @Query("SELECT e.student FROM Enrollment e WHERE e.classroom.id = :classroomId")
     List<User> findStudentsByClassroomId(@Param("classroomId") Long classroomId);
 
+    List<Enrollment> findByClassroomIdAndConfirmTrue(Long classId);
 }

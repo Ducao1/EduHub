@@ -6,9 +6,14 @@
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" class="search-input" placeholder="Tìm kiếm sinh viên theo tên, mã hoặc email...">
             </div>
-            <a class="btn-add-student" routerLink="/teacher/class/{{classId}}/add-student">
-                <i class="fas fa-plus-circle me-2"></i>Thêm sinh viên
-            </a>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <button class="btn-approve" (click)="onApprove()">
+                  <i class="fas fa-check me-2"></i>Duyệt
+                </button>
+                <a class="btn-add-student" routerLink="/teacher/class/{{classId}}/add-student">
+                    <i class="fas fa-plus-circle me-2"></i>Thêm
+                </a>
+            </div>
         </div>
 
         <div class="student-table-container">
@@ -66,4 +71,8 @@
             </nav>
         </div>
     </div>
+</div>
+
+<div *ngIf="showApproveModal">
+  <app-approve-student [classId]="classId" (close)="closeApproveModal()"></app-approve-student>
 </div>

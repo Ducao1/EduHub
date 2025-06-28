@@ -3,6 +3,9 @@
     <div class="score-list-container">
         <div class="score-list-header">
             <h2 class="assignment-title">{{ assignmentTitle }}</h2>
+            <div class="header-actions">
+                <button class="export-btn" (click)="exportExcel()">Xuất Excel</button>
+            </div>
         </div>
 
         <div class="score-table-container">
@@ -11,6 +14,7 @@
                     <tr>
                         <th>STT</th>
                         <th>Họ và tên</th>
+                        <th>Email</th>
                         <th>Điểm</th>
                     </tr>
                 </thead>
@@ -18,6 +22,7 @@
                     <tr *ngFor="let score of paginatedScores; let i = index">
                         <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                         <td>{{ score.studentName }}</td>
+                        <td>{{score.studentEmail}}</td>
                         <td>{{ score.score }}</td>
                     </tr>
                 </tbody>

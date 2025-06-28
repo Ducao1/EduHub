@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgModule } from '@angular/core';
+import { Component, NgModule, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { EnrollmentService } from '../../../../services/enrollment.service';
 import { TeacherNavBarComponent } from "../../teacher-nav-bar/teacher-nav-bar.component";
 import { User } from '../../../../interfaces/user';
 import { ClassroomService } from '../../../../services/classroom.service';
+import { ApproveStudentComponent } from '../approve-student/approve-student.component';
 
 @Component({
   selector: 'app-list-student',
@@ -12,12 +13,13 @@ import { ClassroomService } from '../../../../services/classroom.service';
   imports: [
     CommonModule,
     RouterModule,
-    TeacherNavBarComponent
+    TeacherNavBarComponent,
+    ApproveStudentComponent
 ],
   templateUrl: './list-student.component.html',
   styleUrl: './list-student.component.scss'
 })
-export class ListStudentComponent {
+export class ListStudentComponent implements OnInit {
   classId!: number;
   className!: string;
   students: User[] = [];
@@ -27,6 +29,7 @@ export class ListStudentComponent {
   pageSize: number = 10;
   totalPages: number = 0;
   visiblePages: number[] = [];
+  showApproveModal = false;
 
   constructor(
     private enrollmentService: EnrollmentService,
@@ -95,5 +98,13 @@ export class ListStudentComponent {
 
     return new Array(endPage - startPage + 1).fill(0)
         .map((_, index) => startPage + index);
+  }
+
+  onApprove() {
+    this.showApproveModal = true;
+  }
+
+  closeApproveModal() {
+    this.showApproveModal = false;
   }
 }

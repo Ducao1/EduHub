@@ -79,4 +79,16 @@ export class ListScoreAssignmentComponent implements OnInit {
     }
     return new Array(endPage - startPage + 1).fill(0).map((_, index) => startPage + index);
   }
+
+  exportExcel() {
+    this.scoreService.exportAssignmentScoresToExcel(this.assignmentId).subscribe((response: any) => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Scores_${this.assignmentTitle || 'assignment'}.xlsx`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
 }

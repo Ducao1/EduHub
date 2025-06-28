@@ -13,7 +13,8 @@ export interface ScoreAssignmentResponse {
   score: number;
   studentId: number;
   studentName: string;
-  studentPhone: string;
+  studentPhoneNumber: string;
+  studentEmail: string;
 }
 
 export interface ScoreExamResponse {
