@@ -1,7 +1,13 @@
-<form (ngSubmit)="joinClass()">
-  <div class="mb-3">
-    <label for="code" class="form-label">Mã lớp</label>
-    <input type="text" id="code" class="form-control" placeholder="Nhập mã lớp" [(ngModel)]="code" name="code">
-  </div>
-  <button type="submit" class="btn btn-primary w-100">Tham gia lớp</button>
-</form>
+<app-notification *ngIf="notificationMessage" [type]="notificationType" [message]="notificationMessage" class="fixed-notification" (close)="closeNotification()"></app-notification>
+<button class="back-btn fixed-back-btn" type="button" (click)="goBack()">
+  <i class="fas fa-arrow-left"></i> Quay lại
+</button>
+<div class="join-class-wrapper">
+  <form (ngSubmit)="joinClass()" class="join-class-form">
+    <div class="mb-3">
+      <label for="code" class="form-label">Mã lớp</label>
+      <input type="text" id="code" class="form-control" placeholder="Nhập mã lớp" [(ngModel)]="code" name="code">
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Tham gia lớp</button>
+  </form>
+</div>
