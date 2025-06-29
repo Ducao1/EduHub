@@ -161,19 +161,27 @@
       }
 
       .profile-pic-container {
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #e9ecef;
-        color: #333;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
 
         .user-text {
           font-size: 0.8rem;
           font-weight: 500;
         }
+      }
+
+      .profile-avatar-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 0;
+        border: 1px solid #ccc;
+        display: block;
       }
     }
   }
@@ -200,5 +208,45 @@
     left: -250px;
     transition: left 0.3s ease;
     z-index: 1030;
+  }
+}
+
+.dropdown-menu-custom {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: auto;
+  transform: none;
+  min-width: 180px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 9999;
+  padding: 8px 0;
+  border: 1px solid #ccc;
+  display: block;
+  height: auto;
+  min-height: unset;
+
+  .dropdown-item {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    text-align: left;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    border-radius: 0;
+
+    &:hover {
+      background: #f2f6fa;
+      color: #0052B4;
+    }
+    &:active {
+      background: #e3eefd;
+    }
   }
 }

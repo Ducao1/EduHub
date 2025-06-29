@@ -14,4 +14,5 @@ export interface Comment {
     attachments: Attachment[];
     likedByCurrentUser?: boolean;
     likeCount?: number;
+    avatar?: string;
 } 

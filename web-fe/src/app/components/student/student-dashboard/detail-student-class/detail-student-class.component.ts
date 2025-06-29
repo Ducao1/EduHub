@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { StudentNavBarComponent } from '../../student-nav-bar/student-nav-bar.component';
 import { UserService } from '../../../../services/user.service';
 import { environment } from '../../../../../environments/environment';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-detail-student-class',
@@ -41,6 +42,9 @@ export class DetailStudentClassComponent implements OnInit {
 
   openDropdownCommentId: number | null = null;
 
+  currentUserAvatar: string = '';
+  currentUserName: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private classroomService: ClassroomService,
@@ -52,6 +56,12 @@ export class DetailStudentClassComponent implements OnInit {
   ngOnInit() {
     this.classId = Number(this.route.snapshot.paramMap.get('classId'));
     this.currentUserId = this.userService.getUserId();
+    if (this.currentUserId) {
+      this.userService.getUserById(this.currentUserId).subscribe(user => {
+        this.currentUserAvatar = user.avatar || '';
+        this.currentUserName = user.fullName || '';
+      });
+    }
     this.loadClassInfo();
     this.loadComments();
   }
@@ -73,37 +83,54 @@ export class DetailStudentClassComponent implements OnInit {
   loadComments() {
     this.commentService.getAllCommentsByClassId(this.classId).subscribe({
       next: (allComments) => {
-        // Lọc comment cha
-        const parentComments = allComments.filter(c => !c.parentCommentId);
-        // Gán subComment cho từng comment cha và sắp xếp subComment từ cũ nhất tới mới nhất
-        parentComments.forEach(parent => {
-          parent.subComments = allComments
-            .filter(c => c.parentCommentId === parent.id)
-            .sort((a, b) => {
-              const dateA = Array.isArray(a.createdAt)
-                ? new Date(a.createdAt[0], a.createdAt[1] - 1, a.createdAt[2], a.createdAt[3], a.createdAt[4], a.createdAt[5])
-                : new Date(a.createdAt);
-              const dateB = Array.isArray(b.createdAt)
-                ? new Date(b.createdAt[0], b.createdAt[1] - 1, b.createdAt[2], b.createdAt[3], b.createdAt[4], b.createdAt[5])
-                : new Date(b.createdAt);
-              return dateA.getTime() - dateB.getTime(); // cũ nhất tới mới nhất
-            });
-          (parent as any).likedByCurrentUser = (parent as any).likedByCurrentUser ?? false;
-          (parent as any).likeCount = (parent as any).likeCount ?? 0;
-          parent.subComments.forEach((sub: any) => {
-            sub.likedByCurrentUser = sub.likedByCurrentUser ?? false;
-            sub.likeCount = sub.likeCount ?? 0;
-          });
+        // Lấy tất cả userId duy nhất từ comments và subComments
+        const userIds = new Set<number>();
+        allComments.forEach(c => {
+          userIds.add(c.userId);
+          if (c.subComments) c.subComments.forEach((sc: any) => userIds.add(sc.userId));
         });
-        // Sắp xếp comment cha từ mới nhất tới cũ nhất
-        this.comments = parentComments.sort((a, b) => {
-          const dateA = Array.isArray(a.createdAt)
-            ? new Date(a.createdAt[0], a.createdAt[1] - 1, a.createdAt[2], a.createdAt[3], a.createdAt[4], a.createdAt[5])
-            : new Date(a.createdAt);
-          const dateB = Array.isArray(b.createdAt)
-            ? new Date(b.createdAt[0], b.createdAt[1] - 1, b.createdAt[2], b.createdAt[3], b.createdAt[4], b.createdAt[5])
-            : new Date(b.createdAt);
-          return dateB.getTime() - dateA.getTime();
+        const userRequests = Array.from(userIds).map(id => this.userService.getUserById(id));
+        forkJoin(userRequests).subscribe((users: any[]) => {
+          const userMap = new Map<number, any>();
+          users.forEach(u => userMap.set(u.id, u));
+          // Gán avatar cho từng comment và subComment
+          allComments.forEach(c => {
+            c.avatar = userMap.get(c.userId)?.avatar || '';
+            if (c.subComments) {
+              c.subComments.forEach((sc: any) => {
+                sc.avatar = userMap.get(sc.userId)?.avatar || '';
+              });
+            }
+          });
+          // Sắp xếp lại comments như cũ
+          const parentComments = allComments.filter(c => !c.parentCommentId);
+          parentComments.forEach(parent => {
+            parent.subComments = allComments.filter(c => c.parentCommentId === parent.id)
+              .sort((a, b) => {
+                const dateA = Array.isArray(a.createdAt)
+                  ? new Date(a.createdAt[0], a.createdAt[1] - 1, a.createdAt[2], a.createdAt[3], a.createdAt[4], a.createdAt[5])
+                  : new Date(a.createdAt);
+                const dateB = Array.isArray(b.createdAt)
+                  ? new Date(b.createdAt[0], b.createdAt[1] - 1, b.createdAt[2], b.createdAt[3], b.createdAt[4], b.createdAt[5])
+                  : new Date(b.createdAt);
+                return dateA.getTime() - dateB.getTime();
+              });
+            (parent as any).likedByCurrentUser = (parent as any).likedByCurrentUser ?? false;
+            (parent as any).likeCount = (parent as any).likeCount ?? 0;
+            parent.subComments.forEach((sub: any) => {
+              sub.likedByCurrentUser = sub.likedByCurrentUser ?? false;
+              sub.likeCount = sub.likeCount ?? 0;
+            });
+          });
+          this.comments = parentComments.sort((a, b) => {
+            const dateA = Array.isArray(a.createdAt)
+              ? new Date(a.createdAt[0], a.createdAt[1] - 1, a.createdAt[2], a.createdAt[3], a.createdAt[4], a.createdAt[5])
+              : new Date(a.createdAt);
+            const dateB = Array.isArray(b.createdAt)
+              ? new Date(b.createdAt[0], b.createdAt[1] - 1, b.createdAt[2], b.createdAt[3], b.createdAt[4], b.createdAt[5])
+              : new Date(b.createdAt);
+            return dateB.getTime() - dateA.getTime();
+          });
         });
       },
       error: (err) => {
@@ -176,7 +203,11 @@ export class DetailStudentClassComponent implements OnInit {
 
   getAttachmentUrl(filePath: string): string {
     const filename = filePath.split(/[\\/]/).pop();
-    return `${environment.apiBaseUrl}/comments/files/view/${filename}`;
+    return `http://localhost:8080/uploads/comments/${filename}`;
+  }
+
+  isImage(filePath: string): boolean {
+    return /\.(jpg|jpeg|png|gif|bmp)$/i.test(filePath);
   }
 
   toggleReply(commentId: number): void {

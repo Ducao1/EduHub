@@ -77,7 +77,7 @@
                     <tbody>
                         <tr *ngFor="let task of allTasks; let i = index">
                             <td class="text-center">{{ i + 1 }}</td>
-                            <td class="text-left">{{ task.title }}</td>
+                            <td class="text-center">{{ task.title }}</td>
                             <td class="text-center">
                                 <span class="task-type" [class.assignment]="task.taskType === 'ASSIGNMENT'" [class.exam]="task.taskType === 'EXAM'">
                                     {{ getTypeText(task.taskType) }}
