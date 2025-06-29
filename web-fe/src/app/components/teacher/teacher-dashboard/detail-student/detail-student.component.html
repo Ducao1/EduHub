@@ -1,0 +1,110 @@
+<div class="page-container">
+    <app-teacher-nav-bar [className]="className"></app-teacher-nav-bar>
+    
+    <!-- Notification -->
+    <div class="notification-wrapper" *ngIf="showNotification">
+        <app-notification 
+            [type]="notificationType"
+            [message]="notificationMessage"
+            (close)="hideNotification()">
+        </app-notification>
+    </div>
+    
+    <div class="detail-student-container">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-btn" (click)="onBack()">
+                <i class="fas fa-arrow-left"></i>
+                Quay lại
+            </button>
+            <h1 class="page-title">Theo dõi sinh viên</h1>
+        </div>
+
+        <!-- Student Info Card -->
+        <div class="student-info-card" *ngIf="student">
+            <div class="student-avatar">
+                <img [src]="getAvatarUrl(student.avatar)" 
+                     [alt]="student.fullName" 
+                     class="avatar-img">
+            </div>
+            <div class="student-details">
+                <h2 class="student-name">{{ student.fullName }}</h2>
+                <p class="student-email">{{ student.email }}</p>
+                <p class="student-phone">{{ student.phoneNumber || 'Chưa cập nhật số điện thoại' }}</p>
+                <div class="student-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-user"></i>
+                        {{ getGenderText(student.gender) }}
+                    </span>
+                    <span class="meta-item" *ngIf="student.dob">
+                        <i class="fas fa-birthday-cake"></i>
+                        {{ formatDate(student.dob) }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score List Container -->
+        <div class="score-list-container">
+            <div class="score-header">
+                <h2 class="score-title">Bảng điểm tổng hợp</h2>
+                <p class="score-subtitle">Theo dõi trạng thái nộp bài và điểm số của sinh viên</p>
+            </div>
+            
+            <div class="score-table-container">
+                <div *ngIf="loading" class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Đang tải dữ liệu...</p>
+                </div>
+                
+                <table *ngIf="!loading" class="table score-table">
+                    <colgroup>
+                        <col style="width:5%">
+                        <col style="width:40%">
+                        <col style="width:15%">
+                        <col style="width:20%">
+                        <col style="width:20%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên bài tập/Bài thi</th>
+                            <th>Loại</th>
+                            <th>Trạng thái</th>
+                            <th>Điểm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let task of allTasks; let i = index">
+                            <td class="text-center">{{ i + 1 }}</td>
+                            <td class="text-left">{{ task.title }}</td>
+                            <td class="text-center">
+                                <span class="task-type" [class.assignment]="task.taskType === 'ASSIGNMENT'" [class.exam]="task.taskType === 'EXAM'">
+                                    {{ getTypeText(task.taskType) }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="status-badge" [class]="'status-' + task.status.toLowerCase()">
+                                    {{ getStatusText(task.status) }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span *ngIf="task.score !== null && task.score !== undefined" class="score-value">
+                                    {{ task.score | number:'1.1-2' }}
+                                </span>
+                                <span *ngIf="task.score === null || task.score === undefined" class="no-score">
+                                    Chưa có điểm
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div *ngIf="!loading && allTasks.length === 0" class="no-scores">
+                    <i class="fas fa-clipboard-list"></i>
+                    <p>Chưa có bài tập hoặc bài thi nào</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

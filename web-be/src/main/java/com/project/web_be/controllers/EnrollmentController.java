@@ -18,6 +18,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.ByteArrayOutputStream;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import com.project.web_be.repositories.ClassroomRepository;
 
 @RestController
@@ -79,6 +81,20 @@ public class EnrollmentController {
         }
     }
 
+    @DeleteMapping("/class/{classId}/student/{studentId}")
+    public ResponseEntity<?> removeStudentFromClass(@PathVariable Long classId, @PathVariable Long studentId) {
+        try {
+            enrollmentService.removeStudentFromClass(classId, studentId);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Xóa sinh viên khỏi lớp thành công");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
     @GetMapping("/class/{classId}/export")
     public ResponseEntity<byte[]> exportStudentsInClassToExcel(@PathVariable Long classId) {
         try {
@@ -137,10 +153,7 @@ public class EnrollmentController {
     @GetMapping("/class/{classId}/pending")
     public ResponseEntity<?> getPendingStudentsByClassId(@PathVariable Long classId) {
         try {
-            List<User> pendingList = enrollmentService.getPendingStudentsInClass(classId);
-            List<StudentResponse> studentResponses = pendingList.stream()
-                    .map(StudentResponse::fromStudent)
-                    .toList();
+            List<StudentResponse> studentResponses = enrollmentService.getPendingStudentsInClass(classId);
             return ResponseEntity.ok(studentResponses);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

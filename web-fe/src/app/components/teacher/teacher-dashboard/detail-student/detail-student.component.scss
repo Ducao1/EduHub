@@ -1,0 +1,329 @@
+/* Notification Styles */
+.notification-wrapper {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 400px;
+}
+
+/* Page Container */
+.page-container {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.detail-student-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #fff;
+  border: 1px solid #e1e5e9;
+  border-radius: 6px;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.back-btn:hover {
+  background: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+/* Student Info Card */
+.student-info-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.student-avatar {
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e9ecef;
+}
+
+.student-details {
+  flex: 1;
+}
+
+.student-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+}
+
+.student-email {
+  font-size: 16px;
+  color: #6c757d;
+  margin: 0 0 4px 0;
+}
+
+.student-phone {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 0 0 12px 0;
+}
+
+.student-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.meta-item i {
+  color: #007bff;
+}
+
+/* Score List Container */
+.score-list-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.score-header {
+  padding: 24px 24px 16px 24px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.score-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 4px 0;
+}
+
+.score-subtitle {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 0;
+}
+
+.score-table-container {
+  padding: 0;
+  overflow-x: auto;
+}
+
+/* Table Styles */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead th {
+  background: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  padding: 16px 12px;
+  border-bottom: 2px solid #e9ecef;
+  text-align: center;
+  font-size: 14px;
+}
+
+.table tbody td {
+  padding: 16px 12px;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+
+/* Task Type Badges */
+.task-type {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.task-type.assignment {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.task-type.exam {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-not_submitted {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-submitted {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.status-late {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.status-graded {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+/* Score Values */
+.score-value {
+  font-weight: 600;
+  color: #2e7d32;
+  font-size: 16px;
+}
+
+.no-score {
+  color: #6c757d;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Loading and Empty States */
+.loading {
+  text-align: center;
+  padding: 60px 0;
+  color: #6c757d;
+}
+
+.loading i {
+  font-size: 32px;
+  margin-bottom: 16px;
+  color: #007bff;
+}
+
+.loading p {
+  font-size: 16px;
+  margin: 0;
+}
+
+.no-scores {
+  text-align: center;
+  color: #6c757d;
+  padding: 60px 0;
+}
+
+.no-scores i {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+  color: #dee2e6;
+}
+
+.no-scores p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .detail-student-container {
+    padding: 16px;
+  }
+  
+  .student-info-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .student-meta {
+    justify-content: center;
+  }
+  
+  .score-header {
+    padding: 20px 16px 12px 16px;
+  }
+  
+  .table thead th,
+  .table tbody td {
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+  
+  .task-type,
+  .status-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .table {
+    font-size: 12px;
+  }
+  
+  .table thead th,
+  .table tbody td {
+    padding: 8px 4px;
+  }
+}

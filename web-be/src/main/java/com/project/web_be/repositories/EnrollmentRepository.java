@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
@@ -27,4 +28,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     List<User> searchStudentsInClass(@Param("classId") Long classId, @Param("keyword") String keyword);
 
     List<Enrollment> findByClassroomIdAndConfirmFalse(Long classroomId);
+
+    Optional<Enrollment> findByClassroomIdAndStudentId(Long classId, Long studentId);
 }

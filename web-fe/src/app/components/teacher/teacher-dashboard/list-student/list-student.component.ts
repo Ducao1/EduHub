@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgModule, OnInit } from '@angular/core';
+import { Component, NgModule, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { EnrollmentService } from '../../../../services/enrollment.service';
 import { TeacherNavBarComponent } from "../../teacher-nav-bar/teacher-nav-bar.component";
@@ -7,6 +7,8 @@ import { User } from '../../../../interfaces/user';
 import { ClassroomService } from '../../../../services/classroom.service';
 import { debounceTime, Subject } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { NotificationComponent } from '../../../notification/notification.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-student',
@@ -15,12 +17,14 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     RouterModule,
     TeacherNavBarComponent,
-    FormsModule
+    FormsModule,
+    NotificationComponent
 ],
   templateUrl: './list-student.component.html',
   styleUrl: './list-student.component.scss'
 })
 export class ListStudentComponent implements OnInit {
+
   classId!: number;
   className!: string;
   students: User[] = [];
@@ -34,26 +38,46 @@ export class ListStudentComponent implements OnInit {
   pendingStudents: User[] = [];
 
   studentList: any[] = [];
-    searchTerm: string = '';
-    private searchSubject = new Subject<string>();
+  searchTerm: string = '';
+  private searchSubject = new Subject<string>();
+
+  // Dropdown management
+  activeDropdownIndex: number = -1;
+
+  // Notification management
+  showNotification: boolean = false;
+  notificationType: 'success' | 'warning' | 'error' = 'success';
+  notificationMessage: string = '';
 
   constructor(
     private enrollmentService: EnrollmentService,
     private route: ActivatedRoute,
-    private classroomService: ClassroomService
+    private classroomService: ClassroomService,
+    private router: Router
   ) { }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    // Close dropdown if clicking outside
+    if (this.activeDropdownIndex !== -1) {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.dropdown-container')) {
+        this.closeDropdown();
+      }
+    }
+  }
 
   ngOnInit() {
     this.classId = Number(this.route.snapshot.paramMap.get('classId'));
     this.loadClassInfo();
     this.loadAllStudent();
-      this.searchSubject.pipe(debounceTime(300)).subscribe((term) => {
-        if (term && term.trim() !== '') {
-          this.searchStudentsInClass(term);
-        } else {
-          this.loadAllStudent();
-        }
-      });
+    this.searchSubject.pipe(debounceTime(300)).subscribe((term) => {
+      if (term && term.trim() !== '') {
+        this.searchStudentsInClass(term);
+      } else {
+        this.loadAllStudent();
+      }
+    });
   }
 
   loadClassInfo() {
@@ -80,7 +104,7 @@ export class ListStudentComponent implements OnInit {
       },
       error: (err) => {
         debugger
-        alert(`Lỗi khi lấy danh sách sinh viên: ${err.message}`);
+        this.showNotificationMessage('error', `Lỗi khi lấy danh sách sinh viên: ${err.message}`);
       }
     })
   }
@@ -102,20 +126,18 @@ export class ListStudentComponent implements OnInit {
 
   generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
     const maxVisiblePages = 5;
-    const halfVisiblePages = Math.floor(maxVisiblePages / 2);
-
-    let startPage = Math.max(currentPage - halfVisiblePages, 1);
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
-    return new Array(endPage - startPage + 1).fill(0)
-        .map((_, index) => startPage + index);
+    return Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
   }
-
-  
 
   exportExcel() {
     const className = this.className ? this.className.replace(/[^a-zA-Z0-9_-]/g, '_') : this.classId;
@@ -127,42 +149,97 @@ export class ListStudentComponent implements OnInit {
       a.download = `list_student_${className}.xlsx`;
       a.click();
       window.URL.revokeObjectURL(url);
+      this.showNotificationMessage('success', 'Xuất Excel thành công!');
     });
   }
 
   onSearchInput(term: string) {
-      this.searchSubject.next(term.trim());
-    }
+    this.searchSubject.next(term.trim());
+  }
   
-    searchStudentsInClass(term: string) {
-      this.enrollmentService.searchStudentsInClass(this.classId, term).subscribe({
-        next: (res) => {
-          this.studentList = res;
-        },
-        error: (err) => {
-          this.studentList = [];
-        }
-      });
-    }
+  searchStudentsInClass(term: string) {
+    this.enrollmentService.searchStudentsInClass(this.classId, term).subscribe({
+      next: (res) => {
+        this.studentList = res;
+      },
+      error: (err) => {
+        this.studentList = [];
+      }
+    });
+  }
 
   approveAll() {
     this.enrollmentService.approveAllPendingStudents(this.classId).subscribe({
       next: () => {
         debugger
         this.pendingStudents = [];
+        this.showNotificationMessage('success', 'Đã duyệt tất cả sinh viên thành công!');
       },
-      error: () => {}
+      error: (err) => {
+        this.showNotificationMessage('error', 'Lỗi khi duyệt sinh viên');
+      }
     });
   }
 
-  approveStudent(student: User) {
-    this.enrollmentService.approveStudent(student.id).subscribe({
+  approveStudent(student: any) {
+    this.enrollmentService.approveStudent(student.enrollmentId).subscribe({
       next: () => {
-        debugger
-        this.pendingStudents = this.pendingStudents.filter(s => s.id !== student.id);
+        this.pendingStudents = this.pendingStudents.filter(s => s.enrollmentId !== student.enrollmentId);
+        this.showNotificationMessage('success', `Đã duyệt sinh viên ${student.fullName} thành công!`);
       },
-      error: () => {}
+      error: (err) => {
+        this.showNotificationMessage('error', 'Lỗi khi duyệt sinh viên');
+      }
     });
+  }
+
+  // Dropdown methods
+  toggleDropdown(index: number, event: Event) {
+    event.stopPropagation();
+    this.activeDropdownIndex = this.activeDropdownIndex === index ? -1 : index;
+  }
+
+  closeDropdown() {
+    this.activeDropdownIndex = -1;
+  }
+
+  // Action methods
+  followStudent(student: User) {
+    console.log('Theo dõi sinh viên:', student.fullName);
+    // Chuyển hướng đến trang chi tiết sinh viên
+    this.router.navigate(['/teacher/class', this.classId, 'student', student.id]);
+    this.closeDropdown();
+  }
+
+  removeStudentFromClass(studentId: number, studentName: string) {
+    if (confirm(`Bạn có chắc chắn muốn xóa sinh viên "${studentName}" khỏi lớp học này?`)) {
+      this.enrollmentService.removeStudentFromClass(this.classId, studentId).subscribe({
+        next: (response) => {
+          this.showNotificationMessage('success', `Đã xóa sinh viên "${studentName}" khỏi lớp thành công!`);
+          this.loadAllStudent(); // Reload danh sách sinh viên
+        },
+        error: (error) => {
+          this.showNotificationMessage('error', `Lỗi khi xóa sinh viên: ${error.error?.message || error.message}`);
+        }
+      });
+    }
+    this.closeDropdown();
+  }
+
+  // Notification methods
+  showNotificationMessage(type: 'success' | 'warning' | 'error', message: string) {
+    this.notificationType = type;
+    this.notificationMessage = message;
+    this.showNotification = true;
+    
+    // Auto hide notification after 5 seconds
+    setTimeout(() => {
+      this.hideNotification();
+    }, 5000);
+  }
+
+  hideNotification() {
+    this.showNotification = false;
   }
 
   onApprove() {

@@ -57,4 +57,8 @@ export class EnrollmentService {
   approveAllPendingStudents(classId: number): Observable<any> {
     return this.http.put(`${environment.apiBaseUrl}/enrollments/class/${classId}/approve-all`, {});
   }
+
+  removeStudentFromClass(classId: number, studentId: number): Observable<any> {
+    return this.http.delete(`${environment.apiBaseUrl}/enrollments/class/${classId}/student/${studentId}`);
+  }
 }

@@ -15,6 +15,7 @@ public class StudentResponse {
     private String email;
     private String phoneNumber;
     private String fullName;
+    private Long enrollmentId;
 
     public static StudentResponse fromStudent(User user){
         return StudentResponse.builder()
@@ -22,6 +23,17 @@ public class StudentResponse {
                 .fullName(user.getFullName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
+                .build();
+    }
+
+    public static StudentResponse fromEnrollment(com.project.web_be.entities.Enrollment enrollment) {
+        User user = enrollment.getStudent();
+        return StudentResponse.builder()
+                .id(user.getId())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .enrollmentId(enrollment.getId())
                 .build();
     }
 }

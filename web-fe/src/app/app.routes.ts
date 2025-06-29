@@ -13,6 +13,7 @@ import { AddExamComponent } from './components/teacher/exam/add-exam/add-exam.co
 import { AddAssignmentComponent } from './components/teacher/assignment/add-assignment/add-assignment.component';
 import { AddStudentComponent } from './components/teacher/teacher-dashboard/add-student/add-student.component';
 import { ListStudentComponent } from './components/teacher/teacher-dashboard/list-student/list-student.component';
+import { DetailStudentComponent } from './components/teacher/teacher-dashboard/detail-student/detail-student.component';
 import { TeacherListAssignmentComponent } from './components/teacher/assignment/teacher-list-assignment/teacher-list-assignment.component';
 import { ClassListAssignmentComponent } from './components/teacher/assignment/class-list-assignment/class-list-assignment.component';
 import { DetailAssignmentComponent } from './components/teacher/assignment/detail-assignment/detail-assignment.component';
@@ -67,6 +68,7 @@ export const routes: Routes = [
       { path: 'detail-class/:classId', component: DetailTeacherClassComponent },
       { path: 'class/:classId', component: ListStudentComponent },
       { path: 'class/:classId/add-student', component: AddStudentComponent },
+      { path: 'class/:classId/student/:studentId', component: DetailStudentComponent },
 
       { path: 'detail-exam/:id', component: DetailExamComponent },
       { path: 'add-exam', component: AddExamComponent },

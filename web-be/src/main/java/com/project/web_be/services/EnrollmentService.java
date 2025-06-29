@@ -5,6 +5,7 @@ import com.project.web_be.dtos.JoinClassDTO;
 import com.project.web_be.entities.Classroom;
 import com.project.web_be.entities.Enrollment;
 import com.project.web_be.entities.User;
+import com.project.web_be.dtos.responses.StudentResponse;
 
 import java.util.List;
 
@@ -23,7 +24,9 @@ public interface EnrollmentService {
 
     List<User> searchStudentsInClass(Long classId, String keyword);
 
-    List<User> getPendingStudentsInClass(Long classId);
+    List<StudentResponse> getPendingStudentsInClass(Long classId);
 
     void approveAllPendingStudents(Long classId) throws Exception;
+
+    void removeStudentFromClass(Long classId, Long studentId) throws Exception;
 }

@@ -1,5 +1,15 @@
 <div class="page-container">
     <app-teacher-nav-bar [className]="className"></app-teacher-nav-bar>
+    
+    <!-- Notification -->
+    <div class="notification-wrapper" *ngIf="showNotification">
+        <app-notification
+            [type]="notificationType"
+            [message]="notificationMessage"
+            (close)="hideNotification()">
+        </app-notification>
+    </div>
+    
     <div class="student-list-container">
         <div class="student-list-header">
             <div class="search-container">
@@ -35,9 +45,26 @@
                         <td>{{student.email}}</td>
                         <td>{{ student.phoneNumber }}</td>
                         <td>
-                            <button class="btn-action btn-delete" title="Xóa sinh viên">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </button>
+                            <div class="dropdown-container">
+                                <button class="btn-action btn-dropdown" 
+                                        title="Tùy chọn"
+                                        (click)="toggleDropdown(i, $event)">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="dropdown-menu" 
+                                     [class.show]="activeDropdownIndex === i">
+                                    <button class="dropdown-item" 
+                                            (click)="followStudent(student)">
+                                        <i class="fas fa-eye"></i>
+                                        Theo dõi
+                                    </button>
+                                    <button class="dropdown-item" 
+                                            (click)="removeStudentFromClass(student.id, student.fullName)">
+                                        <i class="fas fa-trash"></i>
+                                        Xóa
+                                    </button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -96,3 +123,6 @@
         </div>
     </div>
 </div>
+
+<!-- Click outside to close dropdown -->
+<div class="dropdown-backdrop" *ngIf="activeDropdownIndex !== -1" (click)="closeDropdown()"></div>

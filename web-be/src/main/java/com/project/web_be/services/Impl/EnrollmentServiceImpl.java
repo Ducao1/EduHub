@@ -2,6 +2,7 @@ package com.project.web_be.services.Impl;
 
 import com.project.web_be.dtos.EnrollmentDTO;
 import com.project.web_be.dtos.JoinClassDTO;
+import com.project.web_be.dtos.responses.StudentResponse;
 import com.project.web_be.entities.Classroom;
 import com.project.web_be.entities.Enrollment;
 import com.project.web_be.entities.User;
@@ -94,9 +95,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
-    public List<User> getPendingStudentsInClass(Long classId) {
+    public List<StudentResponse> getPendingStudentsInClass(Long classId) {
         List<Enrollment> enrollments = enrollmentRepository.findByClassroomIdAndConfirmFalse(classId);
-        return enrollments.stream().map(Enrollment::getStudent).toList();
+        return enrollments.stream().map(StudentResponse::fromEnrollment).toList();
     }
 
     @Override
@@ -106,5 +107,23 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             enrollment.setConfirm(true);
         }
         enrollmentRepository.saveAll(enrollments);
+    }
+
+    @Override
+    public void removeStudentFromClass(Long classId, Long studentId) throws Exception {
+        // Kiểm tra lớp có tồn tại không
+        Classroom classroom = classroomRepository.findById(classId)
+                .orElseThrow(() -> new DataNotFoundException("Lớp học không tồn tại"));
+        
+        // Kiểm tra sinh viên có tồn tại không
+        User student = userRepository.findById(studentId)
+                .orElseThrow(() -> new DataNotFoundException("Sinh viên không tồn tại"));
+        
+        // Tìm enrollment
+        Enrollment enrollment = enrollmentRepository.findByClassroomIdAndStudentId(classId, studentId)
+                .orElseThrow(() -> new DataNotFoundException("Sinh viên không đăng ký trong lớp học này"));
+        
+        // Xóa enrollment
+        enrollmentRepository.delete(enrollment);
     }
 }

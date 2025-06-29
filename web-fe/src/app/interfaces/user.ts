@@ -11,4 +11,5 @@ export interface User {
   avatar?: string;
   password: string;
   role: Role;
+  enrollmentId?: number;
 }
