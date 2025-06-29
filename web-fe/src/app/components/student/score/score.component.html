@@ -1,111 +1,212 @@
 <app-student-nav-bar [className]="className"></app-student-nav-bar>
 <div class="page-container">
   <div class="score-list-container">
-    <div class="score-columns">
-      <div class="score-column">
-        <div class="score-title">Điểm bài tập</div>
-        <div class="score-table-container">
-          <table class="table score-table">
-            <colgroup>
-              <col style="width:12%">
-              <col style="width:60%">
-              <col style="width:28%">
-            </colgroup>
-            <thead>
-              <tr>
-                <th>STT</th>
-                <th>Tên bài tập</th>
-                <th>Điểm</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let score of assignmentScores; let i = index">
-                <td class="text-center">{{ i + 1 }}</td>
-                <td class="text-left">{{ score.title }}</td>
-                <td class="text-center">{{ score.score }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div *ngIf="assignmentScores.length === 0" class="no-scores">
-            <i class="fas fa-users"></i>
-            <p>Chưa có điểm bài tập nào</p>
-          </div>
-        </div>
+    <div class="score-header">
+      <h2 class="score-title">Bảng điểm tổng hợp</h2>
+    </div>
+    
+    <div class="score-table-container">
+      <div *ngIf="isLoading" class="loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Đang tải dữ liệu...</p>
       </div>
-      <div class="score-column">
-        <div class="score-title">Điểm bài thi</div>
-        <div class="score-table-container">
-          <table class="table score-table">
-            <colgroup>
-              <col style="width:12%">
-              <col style="width:60%">
-              <col style="width:28%">
-            </colgroup>
-            <thead>
-              <tr>
-                <th>STT</th>
-                <th>Tên bài thi</th>
-                <th>Điểm</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let score of examScores; let i = index">
-                <td class="text-center">{{ i + 1 }}</td>
-                <td class="text-left">{{ score.title }}</td>
-                <td class="text-center">{{ score.score }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div *ngIf="examScores.length === 0" class="no-scores">
-            <i class="fas fa-users"></i>
-            <p>Chưa có điểm bài thi nào</p>
-          </div>
-        </div>
+      
+      <table *ngIf="!isLoading" class="table score-table">
+        <colgroup>
+          <col style="width:5%">
+          <col style="width:40%">
+          <col style="width:15%">
+          <col style="width:20%">
+          <col style="width:20%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Tên bài tập/Bài thi</th>
+            <th>Loại</th>
+            <th>Trạng thái</th>
+            <th>Điểm</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of allTasks; let i = index">
+            <td class="text-center">{{ i + 1 }}</td>
+            <td class="text-left">{{ task.title }}</td>
+            <td class="text-center">
+              <span class="task-type" [class.assignment]="task.taskType === 'ASSIGNMENT'" [class.exam]="task.taskType === 'EXAM'">
+                {{ getTypeText(task.taskType) }}
+              </span>
+            </td>
+            <td class="text-center">
+              <span class="status-badge" [class]="'status-' + task.status.toLowerCase()">
+                {{ getStatusText(task.status) }}
+              </span>
+            </td>
+            <td class="text-center">
+              <span *ngIf="task.score !== null && task.score !== undefined" class="score-value">
+                {{ task.score | number:'1.1-2' }}
+              </span>
+              <span *ngIf="task.score === null || task.score === undefined" class="no-score">
+                Chưa có điểm
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div *ngIf="!isLoading && allTasks.length === 0" class="no-scores">
+        <i class="fas fa-clipboard-list"></i>
+        <p>Chưa có bài tập hoặc bài thi nào</p>
       </div>
     </div>
   </div>
 </div>
+
 <style>
 .score-list-container {
   padding: 16px;
   background: #fafbfc;
   border-radius: 10px;
 }
-.score-columns {
-  display: flex;
-  gap: 24px;
+
+.score-header {
+  margin-bottom: 20px;
 }
-.score-column {
-  flex: 1 1 0;
-  min-width: 0;
-}
+
 .score-title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 600;
-  margin-bottom: 16px;
+  color: #2c3e50;
+  margin: 0;
 }
+
 .score-table-container {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   padding: 16px;
+  overflow-x: auto;
 }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 .table thead th {
   background: #f6f8fa;
   color: #6c757d;
   font-weight: 600;
+  padding: 12px 8px;
+  border-bottom: 2px solid #e9ecef;
+  text-align: center;
 }
+
+.table tbody td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: middle;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
 .text-center { text-align: center; }
 .text-left { text-align: left; }
+
+.task-type {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.task-type.assignment {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.task-type.exam {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-not_submitted {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-submitted {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.status-late {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.status-graded {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.score-value {
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.no-score {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 0;
+  color: #6c757d;
+}
+
+.loading i {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
 .no-scores {
   text-align: center;
   color: #aaa;
-  padding: 16px 0 0 0;
+  padding: 40px 0;
 }
-@media (max-width: 900px) {
-  .score-columns {
-    flex-direction: column;
-    gap: 16px;
+
+.no-scores i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .score-table-container {
+    padding: 8px;
+  }
+  
+  .table thead th,
+  .table tbody td {
+    padding: 8px 4px;
+    font-size: 14px;
+  }
+  
+  .task-type,
+  .status-badge {
+    font-size: 11px;
+    padding: 2px 6px;
   }
 }
 </style>

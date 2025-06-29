@@ -5,7 +5,8 @@ import { EnrollmentService } from '../../../../services/enrollment.service';
 import { TeacherNavBarComponent } from "../../teacher-nav-bar/teacher-nav-bar.component";
 import { User } from '../../../../interfaces/user';
 import { ClassroomService } from '../../../../services/classroom.service';
-import { ApproveStudentComponent } from '../approve-student/approve-student.component';
+import { debounceTime, Subject } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-list-student',
@@ -14,7 +15,7 @@ import { ApproveStudentComponent } from '../approve-student/approve-student.comp
     CommonModule,
     RouterModule,
     TeacherNavBarComponent,
-    ApproveStudentComponent
+    FormsModule
 ],
   templateUrl: './list-student.component.html',
   styleUrl: './list-student.component.scss'
@@ -29,7 +30,12 @@ export class ListStudentComponent implements OnInit {
   pageSize: number = 10;
   totalPages: number = 0;
   visiblePages: number[] = [];
-  showApproveModal = false;
+  isPopupVisible: boolean = false;
+  pendingStudents: User[] = [];
+
+  studentList: any[] = [];
+    searchTerm: string = '';
+    private searchSubject = new Subject<string>();
 
   constructor(
     private enrollmentService: EnrollmentService,
@@ -41,14 +47,23 @@ export class ListStudentComponent implements OnInit {
     this.classId = Number(this.route.snapshot.paramMap.get('classId'));
     this.loadClassInfo();
     this.loadAllStudent();
+      this.searchSubject.pipe(debounceTime(300)).subscribe((term) => {
+        if (term && term.trim() !== '') {
+          this.searchStudentsInClass(term);
+        } else {
+          this.loadAllStudent();
+        }
+      });
   }
 
   loadClassInfo() {
     this.classroomService.getClassById(this.classId).subscribe({
       next: (response) => {
+        debugger
         this.className = response.name;
       },
       error: (err) => {
+        debugger
         console.error('Lỗi khi lấy thông tin lớp:', err);
       }
     });
@@ -100,13 +115,7 @@ export class ListStudentComponent implements OnInit {
         .map((_, index) => startPage + index);
   }
 
-  onApprove() {
-    this.showApproveModal = true;
-  }
-
-  closeApproveModal() {
-    this.showApproveModal = false;
-  }
+  
 
   exportExcel() {
     const className = this.className ? this.className.replace(/[^a-zA-Z0-9_-]/g, '_') : this.classId;
@@ -119,5 +128,72 @@ export class ListStudentComponent implements OnInit {
       a.click();
       window.URL.revokeObjectURL(url);
     });
+  }
+
+  onSearchInput(term: string) {
+      this.searchSubject.next(term.trim());
+    }
+  
+    searchStudentsInClass(term: string) {
+      this.enrollmentService.searchStudentsInClass(this.classId, term).subscribe({
+        next: (res) => {
+          this.studentList = res;
+        },
+        error: (err) => {
+          this.studentList = [];
+        }
+      });
+    }
+
+  approveAll() {
+    this.enrollmentService.approveAllPendingStudents(this.classId).subscribe({
+      next: () => {
+        debugger
+        this.pendingStudents = [];
+      },
+      error: () => {}
+    });
+  }
+
+  approveStudent(student: User) {
+    this.enrollmentService.approveStudent(student.id).subscribe({
+      next: () => {
+        debugger
+        this.pendingStudents = this.pendingStudents.filter(s => s.id !== student.id);
+      },
+      error: () => {}
+    });
+  }
+
+  onApprove() {
+    this.togglePopup();
+  }
+
+  togglePopup() {
+    this.isPopupVisible = !this.isPopupVisible;
+    if (this.isPopupVisible) {
+      this.enrollmentService.getPendingStudentsInClass(this.classId).subscribe({
+        next: (res) => {
+          debugger
+          this.pendingStudents = res;
+        },
+        error: (err) => {
+          debugger
+          this.pendingStudents = [];
+        }
+      });
+    } else {
+      window.location.reload();
+    }
+  }
+
+  openApprovePopup(classId: number) {
+    this.togglePopup();
+  }
+
+  closePopup(event: any) {
+    if (event.target.classList.contains('popup-overlay')) {
+      this.isPopupVisible = false;
+    }
   }
 }

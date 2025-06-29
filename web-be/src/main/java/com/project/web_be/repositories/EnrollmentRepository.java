@@ -25,4 +25,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
     @Query("SELECT e.student FROM Enrollment e WHERE e.classroom.id = :classId AND (LOWER(e.student.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(e.student.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR e.student.phoneNumber LIKE CONCAT('%', :keyword, '%'))")
     List<User> searchStudentsInClass(@Param("classId") Long classId, @Param("keyword") String keyword);
+
+    List<Enrollment> findByClassroomIdAndConfirmFalse(Long classroomId);
 }

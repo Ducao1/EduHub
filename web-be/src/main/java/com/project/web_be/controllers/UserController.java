@@ -5,6 +5,7 @@ import com.project.web_be.dtos.UserDTO;
 import com.project.web_be.dtos.UserLoginDTO;
 import com.project.web_be.dtos.UserRolesDTO;
 import com.project.web_be.dtos.UpdateUserDTO;
+import com.project.web_be.dtos.responses.StudentTaskWithStudentResponse;
 import com.project.web_be.entities.Role;
 import com.project.web_be.entities.Submission;
 import com.project.web_be.entities.User;
@@ -175,6 +176,30 @@ public class UserController {
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{studentId}/tasks/by-class")
+    public ResponseEntity<?> getStudentTasksByClass(@PathVariable Long studentId) {
+        try {
+            StudentTaskWithStudentResponse response = userService.getStudentTasksByClass(studentId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/{studentId}/tasks/class/{classId}")
+    public ResponseEntity<?> getStudentTasksInClass(@PathVariable Long studentId, @PathVariable Long classId) {
+        try {
+            StudentTaskWithStudentResponse response = userService.getStudentTasksInClass(studentId, classId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }

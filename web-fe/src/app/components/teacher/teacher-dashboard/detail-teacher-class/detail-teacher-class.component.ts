@@ -49,9 +49,7 @@ export class DetailTeacherClassComponent implements OnInit {
   
     notification: { type: 'success' | 'warning' | 'error', message: string } | null = null;
   
-    studentList: any[] = [];
-    searchTerm: string = '';
-    private searchSubject = new Subject<string>();
+    
   
     constructor(
       private route: ActivatedRoute,
@@ -67,14 +65,7 @@ export class DetailTeacherClassComponent implements OnInit {
       this.currentUserId = this.userService.getUserId();
       this.loadClassInfo();
       this.loadComments();
-      this.loadAllStudentsInClass();
-      this.searchSubject.pipe(debounceTime(300)).subscribe((term) => {
-        if (term && term.trim() !== '') {
-          this.searchStudentsInClass(term);
-        } else {
-          this.loadAllStudentsInClass();
-        }
-      });
+      
     }
   
     loadClassInfo() {
@@ -304,29 +295,6 @@ export class DetailTeacherClassComponent implements OnInit {
       });
     }
   
-    loadAllStudentsInClass() {
-      this.enrollmentService.getAllStudentInClass(this.classId).subscribe({
-        next: (res) => {
-          this.studentList = res;
-        },
-        error: (err) => {
-          this.studentList = [];
-        }
-      });
-    }
-  
-    onSearchInput(term: string) {
-      this.searchSubject.next(term.trim());
-    }
-  
-    searchStudentsInClass(term: string) {
-      this.enrollmentService.searchStudentsInClass(this.classId, term).subscribe({
-        next: (res) => {
-          this.studentList = res;
-        },
-        error: (err) => {
-          this.studentList = [];
-        }
-      });
-    }
+    
+    
 }

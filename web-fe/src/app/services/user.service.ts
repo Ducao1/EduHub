@@ -185,4 +185,12 @@ export class UserService {
       { headers }
     );
   }
+
+  getStudentTasksByClass(studentId: number): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/users/${studentId}/tasks/by-class`, this.getApiConfig());
+  }
+
+  getStudentTasksInClass(studentId: number, classId: number): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/users/${studentId}/tasks/class/${classId}`, this.getApiConfig());
+  }
 }

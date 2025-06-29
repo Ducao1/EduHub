@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { StudentNavBarComponent } from "../student-nav-bar/student-nav-bar.component";
 import { ActivatedRoute } from '@angular/router';
-import { ScoreService } from '../../../services/score.service';
 import { UserService } from '../../../services/user.service';
 import { ClassroomService } from '../../../services/classroom.service';
 
@@ -17,14 +16,13 @@ import { ClassroomService } from '../../../services/classroom.service';
 })
 export class ScoreComponent implements OnInit {
   classId!: number;
-  assignmentScores: any[] = [];
-  examScores: any[] = [];
+  allTasks: any[] = [];
   studentId!: number;
   className!: string;
+  isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
-    private scoreService: ScoreService,
     private userService: UserService,
     private classroomService: ClassroomService
   ) { }
@@ -35,8 +33,7 @@ export class ScoreComponent implements OnInit {
     if (typeof userId === 'number') {
       this.studentId = userId;
       this.loadClassInfo();
-      this.loadAssignmentScores();
-      this.loadExamScores();
+      this.loadStudentTasks();
     }
   }
 
@@ -51,17 +48,49 @@ export class ScoreComponent implements OnInit {
     });
   }
 
-  loadAssignmentScores() {
-    this.scoreService.getAssignmentScoresByStudentId(this.studentId).subscribe({
-      next: (res) => this.assignmentScores = res,
-      error: () => this.assignmentScores = []
+  loadStudentTasks() {
+    this.isLoading = true;
+    this.userService.getStudentTasksInClass(this.studentId, this.classId).subscribe({
+      next: (response) => {
+        if (response && response.classTasks && response.classTasks.length > 0) {
+          const classTask = response.classTasks[0]; // Get the first class
+          this.allTasks = [
+            ...classTask.assignments.map((assignment: any) => ({
+              ...assignment,
+              taskType: 'ASSIGNMENT'
+            })),
+            ...classTask.exams.map((exam: any) => ({
+              ...exam,
+              taskType: 'EXAM'
+            }))
+          ];
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy danh sách bài tập và bài thi:', err);
+        this.allTasks = [];
+        this.isLoading = false;
+      }
     });
   }
 
-  loadExamScores() {
-    this.scoreService.getExamScoresByStudentId(this.studentId).subscribe({
-      next: (res) => this.examScores = res,
-      error: () => this.examScores = []
-    });
+  getStatusText(status: string): string {
+    switch (status) {
+      case 'NOT_SUBMITTED':
+        return 'Chưa nộp';
+      case 'SUBMITTED':
+        return 'Đã nộp';
+      case 'LATE':
+        return 'Nộp muộn';
+      case 'GRADED':
+        return 'Đã chấm điểm';
+      default:
+        return status;
+    }
+  }
+
+  getTypeText(type: string): string {
+    return type === 'ASSIGNMENT' ? 'Bài tập' : 'Bài thi';
   }
 }

@@ -45,4 +45,16 @@ export class EnrollmentService {
   searchStudentsInClass(classId: number, keyword: string): Observable<any> {
     return this.http.get(`${environment.apiBaseUrl}/enrollments/class/${classId}/search`, { params: { keyword } });
   }
+
+  getPendingStudentsInClass(classId: number): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/enrollments/class/${classId}/pending`);
+  }
+
+  approveStudent(enrollmentId: number): Observable<any> {
+    return this.http.put(`${environment.apiBaseUrl}/enrollments/approve/${enrollmentId}`, {});
+  }
+
+  approveAllPendingStudents(classId: number): Observable<any> {
+    return this.http.put(`${environment.apiBaseUrl}/enrollments/class/${classId}/approve-all`, {});
+  }
 }

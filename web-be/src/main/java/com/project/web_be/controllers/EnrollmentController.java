@@ -133,4 +133,27 @@ public class EnrollmentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/class/{classId}/pending")
+    public ResponseEntity<?> getPendingStudentsByClassId(@PathVariable Long classId) {
+        try {
+            List<User> pendingList = enrollmentService.getPendingStudentsInClass(classId);
+            List<StudentResponse> studentResponses = pendingList.stream()
+                    .map(StudentResponse::fromStudent)
+                    .toList();
+            return ResponseEntity.ok(studentResponses);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/class/{classId}/approve-all")
+    public ResponseEntity<?> approveAllPendingStudents(@PathVariable Long classId) {
+        try {
+            enrollmentService.approveAllPendingStudents(classId);
+            return ResponseEntity.ok("All pending students approved");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

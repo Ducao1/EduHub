@@ -22,4 +22,8 @@ public interface EnrollmentService {
     Enrollment approveStudent(Long enrollmentId) throws Exception;
 
     List<User> searchStudentsInClass(Long classId, String keyword);
+
+    List<User> getPendingStudentsInClass(Long classId);
+
+    void approveAllPendingStudents(Long classId) throws Exception;
 }

@@ -54,6 +54,10 @@ public class WebSecurityConfig {
                                     "ws/**"
                             )
                             .permitAll()
+                            .requestMatchers(GET,
+                                    String.format("%s/users/*/tasks/by-class", apiPrefix)).hasAnyAuthority(Role.STUDENT, Role.TEACHER)
+                            .requestMatchers(GET,
+                                    String.format("%s/users/*/tasks/class/*", apiPrefix)).hasAnyAuthority(Role.STUDENT, Role.TEACHER)
                             .requestMatchers(POST,
                                     String.format("%s/user/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)
 

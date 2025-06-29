@@ -92,4 +92,19 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     public List<User> searchStudentsInClass(Long classId, String keyword) {
         return enrollmentRepository.searchStudentsInClass(classId, keyword);
     }
+
+    @Override
+    public List<User> getPendingStudentsInClass(Long classId) {
+        List<Enrollment> enrollments = enrollmentRepository.findByClassroomIdAndConfirmFalse(classId);
+        return enrollments.stream().map(Enrollment::getStudent).toList();
+    }
+
+    @Override
+    public void approveAllPendingStudents(Long classId) throws Exception {
+        List<Enrollment> enrollments = enrollmentRepository.findByClassroomIdAndConfirmFalse(classId);
+        for (Enrollment enrollment : enrollments) {
+            enrollment.setConfirm(true);
+        }
+        enrollmentRepository.saveAll(enrollments);
+    }
 }

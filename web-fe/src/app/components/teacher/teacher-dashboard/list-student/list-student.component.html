@@ -4,12 +4,12 @@
         <div class="student-list-header">
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Tìm kiếm sinh viên theo tên, mã hoặc email...">
+                <input type="text" class="search-input" placeholder="Tìm kiếm sinh viên theo tên, mã hoặc email..." [(ngModel)]="searchTerm" (input)="onSearchInput(searchTerm)">
             </div>
             <div style="display: flex; gap: 12px; align-items: center;">
                 <button class="export-btn" (click)="exportExcel()">Xuất Excel</button>
                 <button class="btn-approve" (click)="onApprove()">
-                  <i class="fas fa-check me-2"></i>Duyệt
+                  <i class="fa-solid fa-circle-check"></i>Duyệt
                 </button>
                 <a class="btn-add-student" routerLink="/teacher/class/{{classId}}/add-student">
                     <i class="fas fa-plus-circle me-2"></i>Thêm
@@ -74,6 +74,25 @@
     </div>
 </div>
 
-<div *ngIf="showApproveModal">
-  <app-approve-student [classId]="classId" (close)="closeApproveModal()"></app-approve-student>
+<div class="popup-overlay" *ngIf="isPopupVisible" (click)="closePopup($event)">
+    <div class="popup-content" (click)="$event.stopPropagation()">
+        <div class="popup-header">
+            <h5>Duyệt sinh viên vào lớp</h5>
+            <button class="close-button" (click)="togglePopup()">×</button>
+        </div>
+        <div class="popup-body">
+            <div *ngIf="pendingStudents.length === 0" class="no-pending">Không có sinh viên chờ duyệt.</div>
+            <div *ngFor="let student of pendingStudents" class="student-approve-card">
+                <div class="student-info">
+                    <div class="student-name">{{ student.fullName }}</div>
+                    <div class="student-email">{{ student.email }}</div>
+                </div>
+                <button class="btn btn-primary btn-approve-card" (click)="approveStudent(student)">Duyệt</button>
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button class="btn btn-secondary" (click)="togglePopup()">Hủy</button>
+            <button class="btn btn-primary" [disabled]="pendingStudents.length === 0" (click)="approveAll()">Duyệt tất cả</button>
+        </div>
+    </div>
 </div>

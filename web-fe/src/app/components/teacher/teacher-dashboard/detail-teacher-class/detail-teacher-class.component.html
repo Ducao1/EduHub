@@ -171,32 +171,4 @@
       </div>
     </div>
   </div>
-  <div class="student-list-section">
-    <div class="search-container">
-      <input type="text" class="search-input" placeholder="Tìm kiếm sinh viên theo tên, mã hoặc email..." [(ngModel)]="searchTerm" (input)="onSearchInput(searchTerm)">
-    </div>
-    <table class="student-table">
-      <thead>
-        <tr>
-          <th>STT</th>
-          <th>Họ và tên</th>
-          <th>Email</th>
-          <th>Số điện thoại</th>
-          <th>Hành động</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let student of studentList; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ student.fullName }}</td>
-          <td>{{ student.email }}</td>
-          <td>{{ student.phoneNumber }}</td>
-          <td><!-- Hành động --></td>
-        </tr>
-        <tr *ngIf="studentList.length === 0">
-          <td colspan="5" style="text-align:center; color:#888;">Không có sinh viên nào</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 </div>
