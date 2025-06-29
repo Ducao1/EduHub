@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { NotificationComponent } from '../notification/notification.component';
 import { User } from '../../interfaces/user';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -25,7 +26,11 @@ export class ProfileComponent implements OnInit {
   avatarPreviewUrl: string | null = null;
   notification: { type: 'success' | 'warning' | 'error', title: string, message: string } | null = null;
 
-  constructor(private userService: UserService, private location: Location) { }
+  constructor(
+    private userService: UserService,
+    private location: Location,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     const userId = this.userService.getUserId();
@@ -96,6 +101,7 @@ export class ProfileComponent implements OnInit {
       next: (res) => {
         this.notification = { type: 'success', title: 'Completed', message: 'Cập nhật thành công!' };
         setTimeout(() => this.notification = null, 3000);
+        window.location.reload();
       },
       error: (err) => {
         debugger

@@ -57,8 +57,16 @@
             <span class="notification-dot-topbar"></span>
           </i>
           <!-- <i class="fas fa-cog"></i> -->
-          <div class="profile-pic-container position-relative group-hover">
-            <div class="dropdown-menu-custom">
+          <div class="profile-pic-container" (click)="toggleDropdown()">
+            <ng-container *ngIf="userInfo">
+              <img *ngIf="userInfo.avatar"
+                   [src]="userInfo.avatar.startsWith('http') ? userInfo.avatar : 'http://localhost:8080' + userInfo.avatar"
+                   alt="avatar"
+                   class="profile-avatar-img"
+                   style="width: 40px; height: 40px; object-fit: cover; border-radius: 0; border: 1px solid #ccc;" />
+              <span *ngIf="!userInfo.avatar" class="user-text">{{ userInfo.fullName ? userInfo.fullName.charAt(0).toUpperCase() : '?' }}</span>
+            </ng-container>
+            <div class="dropdown-menu-custom" *ngIf="dropdownOpen">
               <button class="dropdown-item" (click)="viewProfile($event)">Thông tin tài khoản</button>
               <button class="dropdown-item" (click)="switchToStudent($event)">Chuyển sang học sinh</button>
               <button class="dropdown-item" (click)="logout($event)">Đăng xuất</button>

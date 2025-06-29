@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TokenService } from '../../../services/token.service';
 import { UserService } from '../../../services/user.service';
+import { User } from '../../../interfaces/user';
 
 @Component({
   selector: 'app-teacher-layout',
@@ -16,6 +17,7 @@ import { UserService } from '../../../services/user.service';
 export class TeacherLayoutComponent {
   dropdownOpen = false;
   userId!: number;
+  userInfo: User | null = null;
   constructor(
     private router: Router,
     private userService: UserService,
@@ -23,6 +25,12 @@ export class TeacherLayoutComponent {
   ){}
   ngOnInit(){
     this.userId = this.userService.getUserId() ?? 0;
+    if (this.userId) {
+      this.userService.getUserById(this.userId).subscribe({
+        next: (user) => this.userInfo = user,
+        error: () => this.userInfo = null
+      });
+    }
   }
 
   toggleDropdown() {
