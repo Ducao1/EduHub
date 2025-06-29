@@ -85,3 +85,16 @@
     </div>
   </div>
 </div>
+
+<app-notification *ngIf="notificationMessage" [type]="notificationType" [message]="notificationMessage" class="fixed-notification" (close)="closeNotification()"></app-notification>
+
+<div class="confirmation-popup-overlay" *ngIf="showConfirmSwitchPopup">
+  <div class="confirmation-popup-card">
+    <h3 class="popup-title">Xác Nhận Chuyển Vai Trò</h3>
+    <!-- <p class="popup-message">Bạn có chắc chắn muốn chuyển sang vai trò học sinh?</p> -->
+    <div class="popup-actions">
+      <button class="btn btn-secondary" (click)="cancelSwitchRole()">Hủy</button>
+      <button class="btn btn-primary" (click)="confirmSwitchToStudent()">Xác Nhận</button>
+    </div>
+  </div>
+</div>
