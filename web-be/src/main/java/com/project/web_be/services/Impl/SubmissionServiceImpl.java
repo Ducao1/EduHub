@@ -34,6 +34,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final AttachmentRepository attachmentRepository;
+    private final ScoreRepository scoreRepository;
 
     private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
     private static final String UPLOAD_DIR = "uploads/";
@@ -227,14 +228,17 @@ public class SubmissionServiceImpl implements SubmissionService {
             }
         }
 
+        // Tạo và lưu điểm số vào database
         Score savedScore = Score.builder()
                 .score(score)
                 .submission(savedSubmission)
                 .build();
 
-        savedSubmission.setScore(savedScore);
-
-        return savedSubmission;
+        Score persistedScore = scoreRepository.save(savedScore);
+        savedSubmission.setScore(persistedScore);
+        
+        // Lưu lại submission để đảm bảo relationship được cập nhật
+        return submissionRepository.save(savedSubmission);
     }
 
     public List<Submission> getStudentSubmissions(Long examId, Long studentId) {

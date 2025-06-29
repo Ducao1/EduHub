@@ -255,7 +255,7 @@ public class UserServiceImpl implements UserService {
             List<StudentTaskResponse> assignmentTasks = new ArrayList<>();
             
             for (Assignment assignment : assignments) {
-                Optional<Submission> submissionOpt = submissionRepository.findByStudentIdAndAssignmentId(studentId, assignment.getId());
+                Optional<Submission> submissionOpt = submissionRepository.findByStudentIdAndAssignmentIdWithScore(studentId, assignment.getId());
                 
                 StudentTaskResponse task = StudentTaskResponse.builder()
                         .id(assignment.getId())
@@ -267,7 +267,12 @@ public class UserServiceImpl implements UserService {
                         .className(classroom.getName())
                         .isSubmitted(submissionOpt.isPresent())
                         .submittedAt(submissionOpt.map(Submission::getSubmittedAt).orElse(null))
-                        .score(submissionOpt.flatMap(s -> Optional.ofNullable(s.getScore()).map(score -> (double) score.getScore())).orElse(null))
+                        .score(submissionOpt.flatMap(s -> {
+                            if (s.getScore() != null) {
+                                return Optional.of((double) s.getScore().getScore());
+                            }
+                            return Optional.empty();
+                        }).orElse(null))
                         .status(determineStatus(assignment.getDueDate(), submissionOpt))
                         .build();
                 
@@ -279,8 +284,9 @@ public class UserServiceImpl implements UserService {
             List<StudentTaskResponse> examTasks = new ArrayList<>();
             
             for (ClassExam classExam : classExams) {
-                Optional<Submission> submissionOpt = submissionRepository.findByExamIdAndStudentId(classExam.getExam().getId(), studentId)
-                        .stream().findFirst();
+                List<Submission> submissions = submissionRepository.findByExamIdAndStudentIdWithScore(classExam.getExam().getId(), studentId);
+                Optional<Submission> submissionOpt = submissions.stream()
+                        .max((s1, s2) -> s1.getSubmittedAt().compareTo(s2.getSubmittedAt()));
                 
                 StudentTaskResponse task = StudentTaskResponse.builder()
                         .id(classExam.getExam().getId())
@@ -292,7 +298,12 @@ public class UserServiceImpl implements UserService {
                         .className(classroom.getName())
                         .isSubmitted(submissionOpt.isPresent())
                         .submittedAt(submissionOpt.map(Submission::getSubmittedAt).orElse(null))
-                        .score(submissionOpt.flatMap(s -> Optional.ofNullable(s.getScore()).map(score -> (double) score.getScore())).orElse(null))
+                        .score(submissionOpt.flatMap(s -> {
+                            if (s.getScore() != null) {
+                                return Optional.of((double) s.getScore().getScore());
+                            }
+                            return Optional.empty();
+                        }).orElse(null))
                         .status(determineStatus(classExam.getDueDate(), submissionOpt))
                         .build();
                 
@@ -358,7 +369,7 @@ public class UserServiceImpl implements UserService {
         List<StudentTaskResponse> assignmentTasks = new ArrayList<>();
         
         for (Assignment assignment : assignments) {
-            Optional<Submission> submissionOpt = submissionRepository.findByStudentIdAndAssignmentId(studentId, assignment.getId());
+            Optional<Submission> submissionOpt = submissionRepository.findByStudentIdAndAssignmentIdWithScore(studentId, assignment.getId());
             
             StudentTaskResponse task = StudentTaskResponse.builder()
                     .id(assignment.getId())
@@ -370,7 +381,12 @@ public class UserServiceImpl implements UserService {
                     .className(classroom.getName())
                     .isSubmitted(submissionOpt.isPresent())
                     .submittedAt(submissionOpt.map(Submission::getSubmittedAt).orElse(null))
-                    .score(submissionOpt.flatMap(s -> Optional.ofNullable(s.getScore()).map(score -> (double) score.getScore())).orElse(null))
+                    .score(submissionOpt.flatMap(s -> {
+                        if (s.getScore() != null) {
+                            return Optional.of((double) s.getScore().getScore());
+                        }
+                        return Optional.empty();
+                    }).orElse(null))
                     .status(determineStatus(assignment.getDueDate(), submissionOpt))
                     .build();
             
@@ -382,8 +398,9 @@ public class UserServiceImpl implements UserService {
         List<StudentTaskResponse> examTasks = new ArrayList<>();
         
         for (ClassExam classExam : classExams) {
-            Optional<Submission> submissionOpt = submissionRepository.findByExamIdAndStudentId(classExam.getExam().getId(), studentId)
-                    .stream().findFirst();
+            List<Submission> submissions = submissionRepository.findByExamIdAndStudentIdWithScore(classExam.getExam().getId(), studentId);
+            Optional<Submission> submissionOpt = submissions.stream()
+                    .max((s1, s2) -> s1.getSubmittedAt().compareTo(s2.getSubmittedAt()));
             
             StudentTaskResponse task = StudentTaskResponse.builder()
                     .id(classExam.getExam().getId())
@@ -395,7 +412,12 @@ public class UserServiceImpl implements UserService {
                     .className(classroom.getName())
                     .isSubmitted(submissionOpt.isPresent())
                     .submittedAt(submissionOpt.map(Submission::getSubmittedAt).orElse(null))
-                    .score(submissionOpt.flatMap(s -> Optional.ofNullable(s.getScore()).map(score -> (double) score.getScore())).orElse(null))
+                    .score(submissionOpt.flatMap(s -> {
+                        if (s.getScore() != null) {
+                            return Optional.of((double) s.getScore().getScore());
+                        }
+                        return Optional.empty();
+                    }).orElse(null))
                     .status(determineStatus(classExam.getDueDate(), submissionOpt))
                     .build();
             
