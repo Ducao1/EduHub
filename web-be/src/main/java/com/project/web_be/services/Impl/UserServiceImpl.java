@@ -135,21 +135,20 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
         
-        // Kiểm tra user có role này không
-        boolean hasRole = user.getRoles().stream()
-                .anyMatch(role -> role.getName().equals(newRoleName));
-        
-        if (!hasRole) {
-            throw new InvalidParamException("User does not have this role: " + newRoleName);
-        }
-        
         // Tìm role object
         Role newRole = roleRepository.findByName(newRoleName)
                 .orElseThrow(() -> new DataNotFoundException("Role not found: " + newRoleName));
-        
+
+        // Nếu user chưa có role này thì tự động thêm
+        boolean hasRole = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals(newRoleName));
+        if (!hasRole) {
+            user.getRoles().add(newRole);
+        }
+
         user.setCurrentRole(newRole);
         userRepository.save(user);
-        
+
         // Generate new token với role mới
         return jwtTokenUtil.generateToken(user);
     }

@@ -57,6 +57,25 @@
         </div>
       </div>
 
+      <!-- Confirmation Popup -->
+      <div class="confirm-switch-popup" *ngIf="showConfirmSwitchPopup">
+        <div class="confirm-switch-content">
+          <p class="confirm-title">Xác Nhận Chuyển Vai Trò</p>
+          <div class="popup-actions">
+            <button class="btn btn-cancel" (click)="cancelSwitchRole()">Huỷ</button>
+            <button class="btn btn-confirm" (click)="confirmSwitchToTeacher()">Xác Nhận</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification -->
+      <app-notification
+        *ngIf="notificationMessage"
+        [type]="notificationType"
+        [message]="notificationMessage"
+        (close)="closeNotification()"
+      ></app-notification>
+
       <!-- Divider -->
       <div class="divider"></div>
 

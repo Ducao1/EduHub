@@ -71,6 +71,7 @@ export class TeacherLayoutComponent {
           if (res.token) {
             debugger
             this.tokenService.saveToken(res.token);
+            this.userService.saveUserData(res.token);
             const currentRole = res.currentRole || localStorage.getItem('currentRole') || 'STUDENT';
             this.notificationType = 'success';
             this.notificationMessage = 'Chuyển vai trò thành công!';
