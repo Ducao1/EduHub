@@ -140,28 +140,6 @@ export class ExamStatusService {
     });
   }
 
-  private updateLocalStatus(examStatus: ExamStatus): void {
-    const currentStatuses = this.statusSubject.value;
-    const index = currentStatuses.findIndex(s => s.student?.id === examStatus.student?.id);
-    if (index !== -1) {
-      currentStatuses[index] = examStatus;
-    } else {
-      currentStatuses.push(examStatus);
-    }
-    this.statusSubject.next([...currentStatuses]);
-  }
-
-  private updateLocalStudentStatus(studentStatus: StudentExamStatusDTO): void {
-    const currentStatuses = this.studentStatusSubject.value;
-    const index = currentStatuses.findIndex(s => s.studentId === studentStatus.studentId);
-    if (index !== -1) {
-      currentStatuses[index] = studentStatus;
-    } else {
-      currentStatuses.push(studentStatus);
-    }
-    this.studentStatusSubject.next([...currentStatuses]);
-  }
-
   subscribeToExamStatus(examId: number): Observable<ExamStatus[]> {
     this.executeWhenConnected(() => {
       if (this.stompClient && this.stompClient.connected) {

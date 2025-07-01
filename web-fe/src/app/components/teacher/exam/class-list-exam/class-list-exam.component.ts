@@ -69,12 +69,14 @@ export class ClassListExamComponent implements OnInit {
   loadExams(): void {
     this.examService.getExamsByClassId(this.classId, this.currentPage, this.pageSize, this.searchTerm).subscribe({
       next: (response: any) => {
+        debugger
         this.exams = response.content;
         this.totalElements = response.totalElements;
         this.totalPages = response.totalPages;
         this.updateVisiblePages();
       },
       error: (err: any) => {
+        debugger
         alert(`Lỗi khi lấy danh sách bài thi: ${err.error}`);
       }
     });

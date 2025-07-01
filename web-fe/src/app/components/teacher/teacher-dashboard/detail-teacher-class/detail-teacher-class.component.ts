@@ -10,8 +10,6 @@ import { UserService } from '../../../../services/user.service';
 import { Comment as IComment } from '../../../../interfaces/comment';
 import { NotificationComponent } from '../../../notification/notification.component';
 import { EnrollmentService } from '../../../../services/enrollment.service';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -212,7 +210,7 @@ export class DetailTeacherClassComponent implements OnInit {
   
     getAttachmentUrl(filePath: string): string {
       const filename = filePath.split(/[\\/]/).pop();
-      return `${environment.apiBaseUrl}/comments/files/view/${filename}`;
+      return `http://localhost:8080/uploads/comments/${filename}`;
     }
   
     toggleReply(commentId: number): void {
@@ -320,6 +318,7 @@ export class DetailTeacherClassComponent implements OnInit {
       });
     }
   
-    
-    
+    isImage(filePath: string): boolean {
+      return /\.(jpg|jpeg|png|gif|bmp)$/i.test(filePath);
+    }
 }

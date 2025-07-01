@@ -6,6 +6,7 @@ import { AssignmentDTO } from '../../../../dtos/requests/assignment.dto';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../../../services/user.service';
 import { Assignment } from '../../../../interfaces/assigment';
+import { NotificationComponent } from '../../../notification/notification.component';
 
 @Component({
   selector: 'app-add-assignment',
@@ -13,7 +14,8 @@ import { Assignment } from '../../../../interfaces/assigment';
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    NotificationComponent
   ],
   templateUrl: './add-assignment.component.html',
   styleUrl: './add-assignment.component.scss'
@@ -28,6 +30,9 @@ export class AddAssignmentComponent implements OnInit {
   attachment: File | null = null;
   selectedFiles: File[] = [];
   totalFileSize: number = 0;
+  showNotification = false;
+  notificationType: 'success' | 'warning' | 'error' = 'success';
+  notificationMessage = '';
 
   constructor(
     private assignmentService: AssignmentService,
@@ -65,13 +70,21 @@ export class AddAssignmentComponent implements OnInit {
     }
     this.assignmentService.addAssignment(formData).subscribe({
       next: (response) => {
-        debugger
-        alert('Bài tập được tạo thành công!');
-        this.router.navigate([`/teacher/class/assignments/${this.classId}`]);
+        this.showNotification = true;
+        this.notificationType = 'success';
+        this.notificationMessage = 'Bài tập được tạo thành công!';
+        setTimeout(() => {
+          this.showNotification = false;
+          this.router.navigate([`/teacher/class/assignments/${this.classId}`]);
+        }, 2000);
       },
       error: (error) => {
-        debugger
-        alert(error.error || 'Đã xảy ra lỗi khi tạo bài tập!');
+        this.showNotification = true;
+        this.notificationType = 'error';
+        this.notificationMessage = error.error || 'Đã xảy ra lỗi khi tạo bài tập!';
+        setTimeout(() => {
+          this.showNotification = false;
+        }, 3000);
       }
     });
   }
@@ -93,5 +106,9 @@ export class AddAssignmentComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/teacher/assignment', this.classId]);
+  }
+
+  onNotificationClose() {
+    this.showNotification = false;
   }
 }

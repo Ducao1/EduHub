@@ -65,6 +65,10 @@ export class TakeExamComponent implements OnInit, OnDestroy {
     }
     this.showConfirmationDialog();
     this.restoreStartTime();
+    const studentId = this.userService.getUserId() ?? 0;
+    if (studentId) {
+      this.examStatusService.updateStatus(this.examId, studentId, ExamStatusType.IN_PROGRESS, this.classId);
+    }
   }
 
   ngOnDestroy() {

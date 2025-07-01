@@ -1,4 +1,13 @@
 <div class="add-class-container">
+
+    <app-notification 
+      *ngIf="showNotification"
+      [type]="notificationType"
+      [message]="notificationMessage"
+      (close)="closeNotification()">
+    </app-notification>
+  
+
   <div class="add-class-card">
     <h2 class="add-class-title">Tạo lớp học mới</h2>
     <form (ngSubmit)="createClass()" #addClassForm="ngForm">

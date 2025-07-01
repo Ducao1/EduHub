@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -171,6 +172,10 @@ public class WebSecurityConfig {
                                     String.format("%s/comments/files/view/**", apiPrefix)).hasAnyAuthority(Role.STUDENT, Role.TEACHER)
                             .requestMatchers(GET,
                                     String.format("%s/comments/files/**", apiPrefix)).hasAnyAuthority(Role.STUDENT, Role.TEACHER)
+//                            .requestMatchers(GET,
+//                                    String.format("%s/exam-activity", apiPrefix)).hasAuthority(Role.TEACHER)
+                            .requestMatchers(HttpMethod.GET, "/api/v1/exam-activity").permitAll()
+
                             .anyRequest().permitAll();
                     //.anyRequest().permitAll();
 

@@ -123,3 +123,9 @@
         </div>
     </div>
 </div>
+
+<app-notification *ngIf="showNotification"
+  [type]="notificationType"
+  [message]="notificationMessage"
+  (close)="onNotificationClose()">
+</app-notification>

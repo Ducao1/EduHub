@@ -70,7 +70,7 @@ export class ConfirmExamComponent implements OnInit {
   confirm(): void {
     const studentId = this.userService.getUserId() ?? 0;
     if (studentId) {
-      this.examStatusService.updateStatus(this.examId, studentId, ExamStatusType.PENDING, this.classId);
+      this.examStatusService.updateStatus(this.examId, studentId, ExamStatusType.IN_PROGRESS, this.classId);
     }
     this.router.navigate(['/take-exam', this.examId, 'class', this.classId]);
   }

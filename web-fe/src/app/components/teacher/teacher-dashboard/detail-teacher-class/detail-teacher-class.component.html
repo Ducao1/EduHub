@@ -77,10 +77,22 @@
       <div class="post-content">
         {{ comment.content }}
         <div *ngIf="comment.attachments && comment.attachments.length > 0" class="comment-attachments">
-          <a *ngFor="let attachment of comment.attachments" [href]="getAttachmentUrl(attachment.filePath)"
-            target="_blank" class="attachment-link">
-            {{ attachment.fileName }}
-          </a>
+          <ng-container *ngFor="let attachment of comment.attachments">
+            <a *ngIf="isImage(attachment.filePath)"
+               [href]="getAttachmentUrl(attachment.filePath)"
+               target="_blank"
+               class="attachment-link"
+               style="display: inline-block; margin-right: 8px;">
+              <img [src]="getAttachmentUrl(attachment.filePath)" style="max-width: 200px; max-height: 200px; vertical-align: middle;" />
+            </a>
+            <a *ngIf="!isImage(attachment.filePath)"
+               [href]="getAttachmentUrl(attachment.filePath)"
+               [attr.download]="attachment.fileName"
+               class="attachment-link"
+               style="margin-right: 8px;">
+              {{ attachment.fileName }}
+            </a>
+          </ng-container>
         </div>
       </div>
       <div class="comment-section">

@@ -1,12 +1,14 @@
 .notification-container {
-  position: relative;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
   display: flex;
   align-items: center;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   padding: 16px 24px;
-  margin-bottom: 12px;
   min-width: 320px;
   max-width: 400px;
   font-size: 16px;

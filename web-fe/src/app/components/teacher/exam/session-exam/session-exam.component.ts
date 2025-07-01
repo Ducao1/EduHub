@@ -24,8 +24,6 @@ export class SessionExamComponent implements OnInit, OnDestroy {
   examName: string = '';
   className: string = '';
   classId: number = 0;
-  teacherName: string = 'Cù Việt Dũng';
-  timeRemaining: string = '01:30:00';
   activities: { message: string; timestamp: Date }[] = [];
   selectedTab: string = 'students';
   examStatuses: ExamStatus[] = [];
@@ -34,6 +32,8 @@ export class SessionExamComponent implements OnInit, OnDestroy {
   students: StudentExamStatus[] = [];
   private subscriptions: Subscription[] = [];
   private recentActivityStudents: Set<number> = new Set();
+  allLogs: any[] = [];
+  logsByStudent: { [studentId: string]: any[] } = {};
 
   constructor(
     private datePipe: DatePipe,
@@ -69,13 +69,21 @@ export class SessionExamComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Khôi phục activity log từ cache trước khi lấy từ server
-    this.restoreActivityLogFromCache();
+    // 1. Lấy toàn bộ log vi phạm đã lưu trong DB khi vào trang
+    this.examStatusService.fetchActivityLog(this.examId, this.classId).subscribe((logs: any[]) => {
+      debugger
+      this.allLogs = logs;
+      this.logsByStudent = {};
+      logs.forEach(log => {
+        debugger
+        if (!this.logsByStudent[log.studentId]) {
+          this.logsByStudent[log.studentId] = [];
+        }
+        this.logsByStudent[log.studentId].push(log);
+      });
+    });
 
-    // Lấy lại toàn bộ log hoạt động khi vào trang
-    this.fetchActivityLog();
-
-    // Đăng ký nhận log hoạt động sinh viên
+    // 2. Lắng nghe log realtime qua WebSocket
     this.examStatusService.subscribeToStudentActivityLog(
       this.examId,
       this.classId,
@@ -167,7 +175,7 @@ export class SessionExamComponent implements OnInit, OnDestroy {
     return date.toLocaleTimeString('vi-VN');
   }
 
-  private getActivityMessage(activity: any): string {
+  public getActivityMessage(activity: any): string {
     switch (activity.activityType) {
       case 'FULLSCREEN_EXIT':
         return `Sinh viên ${activity.studentId} thoát chế độ toàn màn hình`;
@@ -322,4 +330,15 @@ export class SessionExamComponent implements OnInit, OnDestroy {
       .filter(log => log.message.includes(`Sinh viên ${studentId} `))
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   }
+
+  getStudentIds(): string[] {
+    return Object.keys(this.logsByStudent);
+  }
+
+  formatDate(dateArray: number[]): string {
+    const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
+    const jsDate = new Date(year, month - 1, day, hour, minute, second);
+    return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
+  }
+
 }

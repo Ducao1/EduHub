@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import com.project.web_be.repositories.ExamActivityRepository;
 import com.project.web_be.dtos.ExamActivityDTO;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.stream.Collectors;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-@Controller
+@RestController
 @RequestMapping("${api.prefix}")
 @RequiredArgsConstructor
 public class ExamActivityWebSocketController {

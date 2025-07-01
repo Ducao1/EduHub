@@ -15,3 +15,9 @@
         </tr>
     </tbody>
 </table>
+
+<app-notification *ngIf="showNotification"
+  [type]="notificationType"
+  [message]="notificationMessage"
+  (close)="onNotificationClose()">
+</app-notification>

@@ -10,6 +10,7 @@ import { AssignExamDTO } from '../../../dtos/requests/assign-exam.dto';
 import { Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { NotificationComponent } from '../../notification/notification.component';
 
 @Component({
   selector: 'app-exams',
@@ -18,6 +19,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
     CommonModule,
     RouterModule,
     FormsModule,
+    NotificationComponent
   ],
   templateUrl: './exam.component.html',
   styleUrls: ['./exam.component.scss']
@@ -42,6 +44,10 @@ export class ExamComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
+
+  showNotification = false;
+  notificationType: 'success' | 'warning' | 'error' = 'success';
+  notificationMessage = '';
 
   constructor(
     private examService: ExamService,
@@ -159,33 +165,42 @@ export class ExamComponent implements OnInit, OnDestroy {
 
   assignExamToClass(examId: number) {
     if (this.selectedClassId === 0) {
-      alert('Vui lòng chọn lớp học');
+      this.showNotification = true;
+      this.notificationType = 'warning';
+      this.notificationMessage = 'Vui lòng chọn lớp học';
+      setTimeout(() => { this.showNotification = false; }, 2000);
       return;
     }
-    
     // Find the exam details
     const exam = this.exams.find(e => e.id === examId);
     if (!exam) {
-      alert('Không tìm thấy thông tin bài kiểm tra');
+      this.showNotification = true;
+      this.notificationType = 'error';
+      this.notificationMessage = 'Không tìm thấy thông tin bài kiểm tra';
+      setTimeout(() => { this.showNotification = false; }, 2000);
       return;
     }
-    
     const assignExamDTO: AssignExamDTO = {
       class_id: this.selectedClassId,
       exam_id: this.examId,
       assigned_date: this.assignedDate,
       due_date: this.dueDate
     };
-    
     this.classExamService.assignExamtoClass(assignExamDTO).subscribe({
       next: (response: any) => {
-        debugger
-        alert('Giao bài kiểm tra thành công!');
-        this.isPopupVisible = false;
+        this.showNotification = true;
+        this.notificationType = 'success';
+        this.notificationMessage = 'Giao bài kiểm tra thành công!';
+        setTimeout(() => {
+          this.showNotification = false;
+          this.isPopupVisible = false;
+        }, 2000);
       },
       error: (error: any) => {
-        debugger
-        alert(error.error);
+        this.showNotification = true;
+        this.notificationType = 'error';
+        this.notificationMessage = error.error || 'Giao bài kiểm tra thất bại!';
+        setTimeout(() => { this.showNotification = false; }, 3000);
       }
     });
   }
@@ -210,5 +225,9 @@ export class ExamComponent implements OnInit, OnDestroy {
   getDurationMinutes(duration: number): number {
     if (!duration) return 0;
     return Math.ceil(duration / 60000);
+  }
+
+  onNotificationClose() {
+    this.showNotification = false;
   }
 }
