@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { RegisterDTO } from '../../dtos/requests/register.dto';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { NotificationComponent } from '../notification/notification.component';
 
 @Component({
   selector: 'app-register',
@@ -17,6 +19,8 @@ import { RegisterDTO } from '../../dtos/requests/register.dto';
     FooterComponent,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
+    NotificationComponent
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
@@ -25,15 +29,30 @@ export class RegisterComponent {
   fullName: string = '';
   email: string = '';
   password: string = '';
-  roleId: number = 1; // Default to STUDENT
+  roleId: number = 1;
   passwordVisible: boolean = false;
   availableRoles: any[] = [];
   isLoading: boolean = false;
+  form: FormGroup;
+  passwordError: string = '';
+  confirmPasswordError: string = '';
+  emailError: string = '';
+  fullNameError: string = '';
+  notificationMessage: string = '';
+  notificationType: 'success' | 'warning' | 'error' = 'success';
 
   constructor(
     private router: Router,
-    private userService: UserService
-  ) { }
+    private userService: UserService,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      fullName: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', [Validators.required]]
+    }, { validators: this.passwordsMatchValidator });
+  }
 
   ngOnInit() {
     this.loadAvailableRoles();
@@ -42,7 +61,11 @@ export class RegisterComponent {
   loadAvailableRoles() {
     this.userService.getAvailableRoles().subscribe({
       next: (roles: any) => {
-        this.availableRoles = roles;
+        this.availableRoles = roles.filter((role: any) => role.name !== 'ADMIN');
+        const studentRole = this.availableRoles.find((role: any) => role.name === 'STUDENT');
+        if (studentRole) {
+          this.roleId = studentRole.id;
+        }
       },
       error: (error: any) => {
         console.error('Error loading roles:', error);
@@ -50,34 +73,69 @@ export class RegisterComponent {
     });
   }
 
+  passwordsMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordsMismatch: true };
+  }
+
   register() {
-    if (!this.fullName || !this.email || !this.password) {
-      alert('Vui lòng điền đầy đủ thông tin!');
+    this.fullNameError = '';
+    this.emailError = '';
+    this.passwordError = '';
+    this.confirmPasswordError = '';
+    this.notificationMessage = '';
+    this.notificationType = 'success';
+
+    if (this.form.invalid) {
+      const fullNameCtrl = this.form.get('fullName');
+      const emailCtrl = this.form.get('email');
+      const passwordCtrl = this.form.get('password');
+      const confirmPasswordCtrl = this.form.get('confirmPassword');
+      if (fullNameCtrl?.hasError('required')) {
+        this.fullNameError = 'Họ tên không được để trống';
+      }
+      if (emailCtrl?.hasError('required')) {
+        this.emailError = 'Email không được để trống';
+      } else if (emailCtrl?.hasError('email')) {
+        this.emailError = 'Email sai định dạng';
+      }
+      if (passwordCtrl?.hasError('required')) {
+        this.passwordError = 'Mật khẩu không được để trống';
+      } else if (passwordCtrl?.hasError('minlength')) {
+        this.passwordError = 'Mật khẩu có độ dài tối thiểu 8 ký tự';
+      }
+      if (confirmPasswordCtrl?.hasError('required')) {
+        this.confirmPasswordError = 'Nhập lại mật khẩu không được để trống';
+      } else if (this.form.hasError('passwordsMismatch')) {
+        this.confirmPasswordError = 'Nhập lại mật khẩu không khớp';
+      }
       return;
     }
 
     this.isLoading = true;
-
     const registerDTO: RegisterDTO = {
-      full_name: this.fullName,
-      email: this.email,
-      password: this.password,
+      full_name: this.form.value.fullName,
+      email: this.form.value.email,
+      password: this.form.value.password,
       role_id: this.roleId
     };
-
     this.userService.register(registerDTO).subscribe({
       next: (response: any) => {
-        debugger
         this.isLoading = false;
-        alert('Đăng ký thành công! Vui lòng đăng nhập.');
-        this.router.navigate(['/login']);
+        this.notificationType = 'success';
+        this.notificationMessage = 'Đăng ký thành công! Vui lòng đăng nhập.';
+        setTimeout(() => {
+          this.notificationMessage = '';
+          this.router.navigate(['/login']);
+        }, 2000);
       },
       error: (error: any) => {
-        debugger
         this.isLoading = false;
-        console.error('Registration error:', error);
         const errorMessage = error?.error?.error || error?.error || 'Đăng ký thất bại';
-        alert(errorMessage);
+        this.notificationType = 'error';
+        this.notificationMessage = errorMessage;
+        setTimeout(() => this.notificationMessage = '', 3000);
       }
     });
   }
@@ -88,5 +146,9 @@ export class RegisterComponent {
 
   goToLogin() {
     this.router.navigate(['/login']);
+  }
+
+  closeNotification() {
+    this.notificationMessage = '';
   }
 }

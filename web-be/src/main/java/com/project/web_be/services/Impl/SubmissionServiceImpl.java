@@ -36,7 +36,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final AttachmentRepository attachmentRepository;
     private final ScoreRepository scoreRepository;
 
-    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;
     private static final String UPLOAD_DIR = "uploads/";
     
     public boolean isValidFileType(String contentType) {
@@ -54,16 +54,11 @@ public class SubmissionServiceImpl implements SubmissionService {
         User existingStudent = userRepository.findById(studentId)
                 .orElseThrow(() -> new DataNotFoundException("Student not found"));
 
-        // Tạo submission trước
         Submission submission = new Submission();
         submission.setAssignment(existingAssignment);
         submission.setStudent(existingStudent);
         submission.setSubmittedAt(LocalDateTime.now());
-        
-        // Lưu submission để có ID
         Submission savedSubmission = submissionRepository.save(submission);
-
-        // Tạo attachment cho submission
         createAttachmentForSubmission(file, savedSubmission);
 
         return savedSubmission;
@@ -89,8 +84,6 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         Path filePath = uploadPath.resolve(fileName);
         Files.write(filePath, file.getBytes());
-
-        // Tạo attachment entity
         Attachment attachment = Attachment.builder()
                 .fileName(fileName)
                 .filePath(UPLOAD_DIR + fileName)
@@ -117,13 +110,11 @@ public class SubmissionServiceImpl implements SubmissionService {
         Optional<Submission> submissionOpt = submissionRepository.findByStudentIdAndAssignmentId(userId, assignmentId);
         if (submissionOpt.isPresent()) {
             Submission submission = submissionOpt.get();
-            // Xóa file vật lý nếu cần
             if (submission.getAttachments() != null) {
                 for (Attachment att : submission.getAttachments()) {
                     try {
                         Files.deleteIfExists(Paths.get(att.getFilePath()));
                     } catch (IOException e) {
-                        // log error nếu cần
                     }
                 }
             }
@@ -228,7 +219,6 @@ public class SubmissionServiceImpl implements SubmissionService {
             }
         }
 
-        // Tạo và lưu điểm số vào database
         Score savedScore = Score.builder()
                 .score(score)
                 .submission(savedSubmission)
@@ -236,8 +226,6 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         Score persistedScore = scoreRepository.save(savedScore);
         savedSubmission.setScore(persistedScore);
-        
-        // Lưu lại submission để đảm bảo relationship được cập nhật
         return submissionRepository.save(savedSubmission);
     }
 
@@ -279,7 +267,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                 }
             }
         }
-        int correctCount = (int) studentPoint; // hoặc có thể trả về số câu đúng nếu muốn
+        int correctCount = (int) studentPoint;
         Float score = null;
         if (totalPoint > 0) {
             score = (10.0f / totalPoint) * studentPoint;

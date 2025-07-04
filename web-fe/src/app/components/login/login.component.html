@@ -2,18 +2,21 @@
 <div class="login-page-container d-flex justify-content-center align-items-center vh-100">
   <div class="login-card card p-4 shadow-lg">
     <h3 class="text-center mb-4">Đăng nhập</h3>
-    <form #loginForm="ngForm" (ngSubmit)="login()">
+    <form [formGroup]="form" #loginForm="ngForm" (ngSubmit)="login()">
       <div class="form-group mb-3">
         <input type="email" class="form-control" id="email" placeholder="Nhập email" name="email"
-          [(ngModel)]="email" required>
+          formControlName="email" required>
+        <div *ngIf="emailError" class="text-danger mt-1 small">{{ emailError }}</div>
       </div>
       <div class="form-group mb-3 password-group">
         <input [type]="passwordVisible ? 'text' : 'password'" class="form-control" id="password" placeholder="Mật khẩu" name="password"
-          [(ngModel)]="password" required>
-        <span class="password-toggle" (click)="togglePasswordVisibility()">
+          formControlName="password" required>
+        <span class="password-toggle" (click)="togglePasswordVisibility()" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer;">
           <i class="fas" [ngClass]="{'fa-eye': !passwordVisible, 'fa-eye-slash': passwordVisible}"></i>
         </span>
+        <div *ngIf="passwordError" class="text-danger mt-1 small">{{ passwordError }}</div>
       </div>
+      <div *ngIf="loginError" class="text-danger text-center mb-2 small">{{ loginError }}</div>
       <div class="forgot-password text-end mb-3">
         <a href="#">Quên mật khẩu?</a>
       </div>

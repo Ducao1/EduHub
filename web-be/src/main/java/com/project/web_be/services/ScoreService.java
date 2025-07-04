@@ -15,5 +15,4 @@ public interface ScoreService {
 
     List<StudentScoreResponse> getExamScoresByStudentId(Long studentId);
     List<StudentScoreResponse> getAssignmentScoresByStudentId(Long studentId);
-//    List<Score> getScoresByUserId(Long userId);
 }

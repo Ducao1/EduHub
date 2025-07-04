@@ -185,13 +185,4 @@ public class ScoreController {
             return ResponseEntity.internalServerError().build();
         }
     }
-
-//    @GetMapping("/users/{id}")
-//    public ResponseEntity<?> getScoresByUserId(@PathVariable Long id) {
-//        try {
-//            return ResponseEntity.ok(scoreService.getScoresByUserId(id));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
 }

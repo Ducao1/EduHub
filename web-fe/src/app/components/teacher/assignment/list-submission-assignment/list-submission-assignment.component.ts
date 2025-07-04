@@ -31,13 +31,11 @@ export class ListSubmissionAssignmentComponent {
   className: string = '';
   hasSubmitted: Map<number, boolean> = new Map();
 
-  // Pagination properties
   currentPage: number = 1;
   pageSize: number = 10;
   totalPages: number = 1;
   visiblePages: number[] = [];
 
-  // Search properties
   searchTerm: string = '';
   filteredStudents: any[] = [];
   paginatedStudents: any[] = [];
@@ -135,8 +133,6 @@ export class ListSubmissionAssignmentComponent {
     return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
   }
 
-
-  // Search and pagination methods
   filterStudents() {
     if (!this.searchTerm.trim()) {
       this.filteredStudents = [...this.students];
@@ -185,7 +181,6 @@ export class ListSubmissionAssignmentComponent {
   }
 
   viewSubmission(studentId: number) {
-    // Navigate to view submission details
     this.router.navigate(['/teacher/assignment', this.assignmentId, 'submission', studentId]);
   }
 }

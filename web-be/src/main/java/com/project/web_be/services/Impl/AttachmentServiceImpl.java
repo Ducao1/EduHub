@@ -60,21 +60,18 @@ public class AttachmentServiceImpl implements AttachmentService {
             String originalFileName = file.getOriginalFilename();
             String fileExtension = getFileExtension(originalFileName);
             String fileName = UUID.randomUUID().toString() + fileExtension;
-            
-            // Create uploads directory if it doesn't exist
+
             Path uploadPath = Paths.get(UPLOAD_DIR);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
-            
-            // Save file to disk
+
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(file.getInputStream(), filePath);
-            
-            // Create attachment entity - chỉ lưu đường dẫn tương đối
+
             Attachment attachment = Attachment.builder()
                     .fileName(fileName)
-                    .filePath(UPLOAD_DIR + fileName) // Chỉ lưu đường dẫn tương đối
+                    .filePath(UPLOAD_DIR + fileName)
                     .submission(submission)
                     .comment(comment)
                     .build();
@@ -119,8 +116,6 @@ public class AttachmentServiceImpl implements AttachmentService {
         try {
             Attachment attachment = attachmentRepository.findById(id)
                     .orElseThrow(() -> new DataNotFoundException("Attachment not found with id: " + id));
-            
-            // Delete file from disk - sử dụng đường dẫn tương đối
             try {
                 Path filePath = Paths.get(attachment.getFilePath());
                 Files.deleteIfExists(filePath);

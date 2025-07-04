@@ -2,7 +2,6 @@
   <div class="add-question-card">
     <h2 class="add-question-title">Thêm câu hỏi</h2>
     <form (ngSubmit)="saveQuestion()" #addQuestionForm="ngForm">
-      <!-- Nội dung câu hỏi -->
       <div class="form-group">
         <label for="content">Nội dung câu hỏi</label>
         <input type="text" id="content" name="content" class="form-control" [(ngModel)]="questionDTO.question_text" placeholder="Nhập câu hỏi..." required #contentField="ngModel">
@@ -10,7 +9,6 @@
           Vui lòng nhập nội dung câu hỏi.
         </div>
       </div>
-      <!-- Loại câu hỏi -->
       <div class="form-group">
         <label for="type">Loại câu hỏi</label>
         <select id="type" name="type" class="form-control" [(ngModel)]="questionDTO.type" required>
@@ -19,12 +17,10 @@
 
         </select>
       </div>
-      <!-- Điểm số -->
       <div class="form-group">
         <label for="point">Điểm số</label>
         <input type="number" id="point" name="point" class="form-control" [(ngModel)]="questionDTO.point" min="0" required>
       </div>
-      <!-- Đáp án -->
       <div class="form-group">
         <label>Đáp án</label>
         <div *ngIf="questionDTO.type === 'SINGLE_CHOICE'">

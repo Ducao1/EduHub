@@ -53,7 +53,7 @@ export class ScoreComponent implements OnInit {
     this.userService.getStudentTasksInClass(this.studentId, this.classId).subscribe({
       next: (response) => {
         if (response && response.classTasks && response.classTasks.length > 0) {
-          const classTask = response.classTasks[0]; // Get the first class
+          const classTask = response.classTasks[0];
           this.allTasks = [
             ...classTask.assignments.map((assignment: any) => ({
               ...assignment,

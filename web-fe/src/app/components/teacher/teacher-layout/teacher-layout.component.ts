@@ -5,13 +5,15 @@ import { TokenService } from '../../../services/token.service';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../interfaces/user';
 import { NotificationComponent } from '../../notification/notification.component';
+import { ChatbotComponent } from '../../chatbot/chatbot.component';
 
 @Component({
   selector: 'app-teacher-layout',
   imports: [
     CommonModule,
     RouterModule,
-    NotificationComponent
+    NotificationComponent,
+    ChatbotComponent
   ],
   templateUrl: './teacher-layout.component.html',
   styleUrl: './teacher-layout.component.scss'
@@ -64,7 +66,7 @@ export class TeacherLayoutComponent {
 
   confirmSwitchToStudent() {
     this.showConfirmSwitchPopup = false;
-    const email = this.userInfo?.email;
+    const email = this.userInfo?.email; 
     if (email) {
       this.userService.switchRole(email, 'STUDENT').subscribe({
         next: (res: any) => {
@@ -105,5 +107,15 @@ export class TeacherLayoutComponent {
 
   closeNotification() {
     this.notificationMessage = '';
+  }
+
+  goToDashboard() {
+    const payload = this.tokenService.getDecodedToken();
+    const currentRole = payload?.currentRole || localStorage.getItem('currentRole');
+    if (currentRole === 'TEACHER') {
+      this.router.navigate(['/teacher/dashboard']);
+    } else {
+      this.router.navigate(['/student/dashboard']);
+    }
   }
 }

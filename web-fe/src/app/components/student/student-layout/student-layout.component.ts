@@ -5,13 +5,15 @@ import { UserService } from '../../../services/user.service';
 import { TokenService } from '../../../services/token.service';
 import { User } from '../../../interfaces/user';
 import { NotificationComponent } from '../../notification/notification.component';
+import { ChatbotComponent } from '../../chatbot/chatbot.component';
 
 @Component({
   selector: 'app-student-layout',
   imports: [
     CommonModule,
     RouterModule,
-    NotificationComponent
+    NotificationComponent,
+    ChatbotComponent
   ],
   templateUrl: './student-layout.component.html',
   styleUrl: './student-layout.component.scss'
@@ -105,5 +107,15 @@ export class StudentLayoutComponent {
 
   closeNotification() {
     this.notificationMessage = '';
+  }
+
+  goToDashboard() {
+    const payload = this.tokenService.getDecodedToken();
+    const currentRole = payload?.currentRole || localStorage.getItem('currentRole');
+    if (currentRole === 'TEACHER') {
+      this.router.navigate(['/teacher/dashboard']);
+    } else {
+      this.router.navigate(['/student/dashboard']);
+    }
   }
 }

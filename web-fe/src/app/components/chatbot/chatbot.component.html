@@ -1,0 +1,32 @@
+<div class="chatbot-float">
+  <div *ngIf="!showChatBox" class="chatbot-icon" (click)="toggleChatBox()">
+    <svg width="60" height="60" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="48" fill="#2196f3"/>
+      <ellipse cx="50" cy="50" rx="28" ry="18" fill="#fff"/>
+      <ellipse cx="60" cy="60" rx="12" ry="8" fill="#fff"/>
+      <circle cx="42" cy="50" r="2.5" fill="#2196f3"/>
+      <circle cx="50" cy="50" r="2.5" fill="#2196f3"/>
+      <circle cx="58" cy="50" r="2.5" fill="#2196f3"/>
+    </svg>
+  </div>
+  <div *ngIf="showChatBox" class="chatbot-container">
+    <div class="chatbot-header">
+      <span class="chatbot-title">EduHub AI Chat</span>
+      <button class="close-btn" (click)="toggleChatBox()">&times;</button>
+    </div>
+    <div class="chat-window">
+      <div *ngFor="let msg of chat" [ngClass]="msg.from === 'user' ? 'user' : 'ai'" style="display: flex;">
+        <span class="bubble" 
+          [innerHTML]="msg.from === 'ai' ? msg.html : msg.text">
+        </span>
+      </div>
+      <div *ngIf="loading" class="ai loading">AI đang trả lời...</div>
+    </div>
+    <form (ngSubmit)="sendMessage()" class="chat-input-row">
+      <input [(ngModel)]="message" name="message" class="chat-input" placeholder="Nhập tin nhắn..." [disabled]="loading" autocomplete="off" />
+      <button type="submit" class="send-btn" [disabled]="loading || !message.trim()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </form>
+  </div>
+</div>

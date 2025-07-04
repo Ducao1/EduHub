@@ -171,7 +171,6 @@ export class ExamComponent implements OnInit, OnDestroy {
       setTimeout(() => { this.showNotification = false; }, 2000);
       return;
     }
-    // Find the exam details
     const exam = this.exams.find(e => e.id === examId);
     if (!exam) {
       this.showNotification = true;

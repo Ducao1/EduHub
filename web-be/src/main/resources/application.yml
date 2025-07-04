@@ -27,9 +27,16 @@ spring:
             scope: openid,profile,email
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
 api:
-  prefix: api/v1
+  prefix: /api/v1
 
 jwt:
   expiration: 86400000
   secretKey: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
+
+gemini:
+  api:
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+    key: AIzaSyBTqkrG61DwQh3BgjbLaLkZA-RE16zgddU
+  timeout: 30000
+  max-retries: 3
 

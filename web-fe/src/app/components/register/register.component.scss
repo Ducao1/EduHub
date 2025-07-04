@@ -1,15 +1,14 @@
 .register-page-container {
-    /* Styles for the container to center the card */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f8f9fa; /* Light grey background */
+    background-color: #f8f9fa;
 }
 
 .register-card {
-    width: 400px; /* Fixed width as in the image */
-    max-width: 95%; /* Ensure responsiveness on smaller screens */
+    width: 400px;
+    max-width: 95%;
     padding: 24px;
     background: #fff;
     border-radius: 8px;
@@ -19,49 +18,10 @@
 .register-header,
 h3 {
     text-align: center;
-    margin-bottom: 16px; /* Adjust margin */
-    color: #333; /* Darken title color */
+    margin-bottom: 16px;
+    color: #333;
     font-weight: 600;
 }
-
-/* Removed role toggle styles */
-/*
-.role-toggle {
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    overflow: hidden;
-
-    .btn {
-        border: none;
-        border-radius: 0;
-        font-weight: 500;
-        transition: all 0.3s ease;
-
-        &:first-child {
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-        }
-        &:last-child {
-             border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-
-        &.btn-primary {
-            background-color: #4a5fd1;
-            border-color: #4a5fd1;
-            color: white;
-        }
-
-        &.btn-light {
-            background-color: #fff;
-            color: #6c757d;
-            &:hover {
-                 background-color: #f8f9fa;
-            }
-        }
-    }
-}
-*/
 
 .form-group {
     margin-bottom: 16px;
@@ -73,12 +33,12 @@ h3 {
 }
 
 .form-control {
-     border-radius: 5px; /* Rounded corners for inputs */
-    padding: 10px 15px; /* Adjust padding */
+     border-radius: 5px;
+    padding: 10px 15px;
     font-size: 16px;
     &:focus {
-        border-color: #4a5fd1; /* Highlight color on focus */
-        box-shadow: 0 0 0 0.25rem rgba(74, 95, 209, 0.25); /* Matching shadow */
+        border-color: #4a5fd1;
+        box-shadow: 0 0 0 0.25rem rgba(74, 95, 209, 0.25);
     }
 }
 
@@ -89,9 +49,9 @@ h3 {
         right: 15px;
         transform: translateY(-50%);
         cursor: pointer;
-        color: #6c757d; /* Icon color */
+        color: #6c757d;
         &:hover {
-            color: #333; /* Darken icon on hover */
+            color: #333;
         }
     }
 }
@@ -109,7 +69,7 @@ h3 {
 }
 
 .btn-register {
-     background-color: #0052B4; /* Button background color */
+     background-color: #0052B4;
     border-color: #0052B4;
     padding: 10px;
     font-size: 18px;
@@ -117,13 +77,13 @@ h3 {
     border-radius: 5px;
     transition: background-color 0.3s ease;
     &:hover {
-        background-color: #3a4dbd; /* Darker shade on hover */
+        background-color: #3a4dbd;
         border-color: #3a4dbd;
     }
 }
 
 .login-link a {
-    color: #007bff; /* Blue link color */
+    color: #007bff;
     text-decoration: none;
     &:hover {
         text-decoration: underline;
@@ -137,7 +97,7 @@ h3 {
     color: #6c757d;
     span {
         padding: 0 10px;
-        background-color: #fff; /* Match card background */
+        background-color: #fff;
         position: relative;
         z-index: 1;
     }
@@ -145,7 +105,7 @@ h3 {
         content: '';
         flex-grow: 1;
         height: 1px;
-        background-color: #dee2e6; /* Light grey line */
+        background-color: #dee2e6;
         position: relative;
         top: 50%;
         transform: translateY(-50%);

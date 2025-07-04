@@ -29,15 +29,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
-        registration.setMessageSizeLimit(64 * 1024); // 64KB
-        registration.setSendTimeLimit(10 * 1000); // 10 seconds
-        registration.setSendBufferSizeLimit(256 * 1024); // 256KB
+        registration.setMessageSizeLimit(64 * 1024);
+        registration.setSendTimeLimit(10 * 1000);
+        registration.setSendBufferSizeLimit(256 * 1024);
     }
 
     @Bean
     public ThreadPoolTaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(20); // Hỗ trợ 10 luồng đồng thời
+        scheduler.setPoolSize(20);
         scheduler.setThreadNamePrefix("WebSocket-");
         scheduler.initialize();
         return scheduler;

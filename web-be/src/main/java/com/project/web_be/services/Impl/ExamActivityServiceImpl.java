@@ -15,26 +15,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ExamActivityServiceImpl implements ExamActivityService {
     private final ExamActivityRepository examActivityRepository;
-
-    // Lưu trữ tạm thời số lượng hoạt động theo examId, classId, studentId trong khoảng thời gian gần đây
     private final Map<String, Integer> activityCountMap = new HashMap<>();
-    private static final int MAX_ACTIVITIES_PER_MINUTE = 5; // Giới hạn tối đa 5 hoạt động/phút
-    private static final long ACTIVITY_WINDOW_MINUTES = 1; // Cửa sổ thời gian 1 phút
+    private static final int MAX_ACTIVITIES_PER_MINUTE = 5;
+    private static final long ACTIVITY_WINDOW_MINUTES = 1;
 
     @Override
     public ExamActivity saveActivity(ExamActivity activity) {
-        // 1. Kiểm tra tính hợp lệ
         validateActivity(activity);
-
-        // 2. Kiểm tra tần suất hoạt động
         checkActivityFrequency(activity);
-
-        // 3. Lưu vào cơ sở dữ liệu
         ExamActivity savedActivity = examActivityRepository.save(activity);
-
-        // 4. Xử lý logic bổ sung
         processAdditionalLogic(savedActivity);
-
         return savedActivity;
     }
 
@@ -49,14 +39,10 @@ public class ExamActivityServiceImpl implements ExamActivityService {
         String key = activity.getExamId() + "_" + activity.getClassId() + "_" + activity.getStudentId();
         LocalDateTime now = LocalDateTime.now();
         int currentCount = activityCountMap.getOrDefault(key, 0);
-
-        // Lọc các hoạt động cũ hơn ACTIVITY_WINDOW_MINUTES
         activityCountMap.entrySet().removeIf(entry -> {
             long diff = Duration.between(activity.getTimestamp(), now).toMinutes();
             return diff > ACTIVITY_WINDOW_MINUTES;
         });
-
-        // Cập nhật số lượng hoạt động
         if (currentCount >= MAX_ACTIVITIES_PER_MINUTE) {
             throw new IllegalStateException("Tần suất hoạt động quá cao cho sinh viên " + activity.getStudentId() +
                     " trong bài thi " + activity.getExamId());
@@ -65,13 +51,10 @@ public class ExamActivityServiceImpl implements ExamActivityService {
     }
 
     private void processAdditionalLogic(ExamActivity activity) {
-        // Xử lý logic bổ sung dựa trên loại hoạt động
         if ("EXAM_SUBMITTED".equals(activity.getActivityType())) {
             System.out.println("Sinh viên " + activity.getStudentId() + " đã nộp bài thi " + activity.getExamId());
-            // Có thể gọi service khác như NotificationService
         } else if ("FULLSCREEN_EXIT".equals(activity.getActivityType()) || "TAB_CHANGE".equals(activity.getActivityType())) {
             System.out.println("Cảnh báo: Sinh viên " + activity.getStudentId() + " có hành vi đáng ngờ (" + activity.getActivityType() + ")");
-            // Gửi cảnh báo qua service hoặc WebSocket nếu cần
         }
     }
 }
