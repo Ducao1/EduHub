@@ -88,25 +88,25 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("/api/v1/chat", "POST")
         );
 
-//        String requestPath = request.getServletPath();
-//        String requestMethod = request.getMethod();
-//
-//        for (Pair<String, String> bypassToken : bypassTokens) {
-//            if (requestPath.contains(bypassToken.getFirst())
-//                    && requestMethod.equals(bypassToken.getSecond())) {
-//                System.out.println("Request Path: " + requestPath + ", Method: " + requestMethod);
-//                return true;
-//            }
-//        }
         String requestPath = request.getServletPath();
         String requestMethod = request.getMethod();
 
         for (Pair<String, String> bypassToken : bypassTokens) {
-            if (requestPath.equals(bypassToken.getFirst()) && requestMethod.equals(bypassToken.getSecond())) {
-                System.out.println("Bypass token for Path: " + requestPath + ", Method: " + requestMethod);
+            if (requestPath.contains(bypassToken.getFirst())
+                    && requestMethod.equals(bypassToken.getSecond())) {
+                System.out.println("Request Path: " + requestPath + ", Method: " + requestMethod);
                 return true;
             }
         }
+//        String requestPath = request.getServletPath();
+//        String requestMethod = request.getMethod();
+//
+//        for (Pair<String, String> bypassToken : bypassTokens) {
+//            if (requestPath.equals(bypassToken.getFirst()) && requestMethod.equals(bypassToken.getSecond())) {
+//                System.out.println("Bypass token for Path: " + requestPath + ", Method: " + requestMethod);
+//                return true;
+//            }
+//        }
 
         return false;
     }
