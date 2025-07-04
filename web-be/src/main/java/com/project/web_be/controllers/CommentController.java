@@ -182,9 +182,6 @@ public class CommentController {
             User currentUser = (User) authentication.getPrincipal();
             return currentUser.getId();
         }
-        
-        // For testing purposes - you can set a default user ID
-        // In production, this should throw an exception
-        return 1L; // Default user ID for testing
+        return 1L;
     }
 } 

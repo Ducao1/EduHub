@@ -31,19 +31,13 @@ public class JwtTokenUtils {
     private String secretKey;
     
     public String generateToken(User user) throws Exception{
-        //properties => claims
         Map<String, Object> claims = new HashMap<>();
-        //this.generateSecretKey();
         claims.put("email", user.getEmail());
         claims.put("phoneNumber", user.getPhoneNumber());
         claims.put("id", user.getId());
         claims.put("role", user.getRole().getName());
-        
-        // Thêm currentRole vào token
         String currentRoleName = (user.getCurrentRole() != null) ? user.getCurrentRole().getName() : user.getRole().getName();
         claims.put("currentRole", currentRoleName);
-        
-        // Thêm tất cả roles vào token
         List<String> allRoles = user.getRoles().stream()
                 .map(Role::getName)
                 .toList();

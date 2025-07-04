@@ -8,28 +8,37 @@
   }
   
 .login-card {
-    width: 400px; /* Fixed width as in the image */
-    max-width: 95%; /* Ensure responsiveness on smaller screens */
+    width: 400px;
+    max-width: 95%;
     border-radius: 10px;
-    /* Shadow is already applied by Bootstrap's shadow-lg */
 }
 
+.sidebar {
+    .sidebar-header {
+      .sidebar-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+        padding: 10px 0;
+      }
+    }}
+
 h3 {
-    color: #333; /* Darken title color */
+    color: #333;
     font-weight: 600;
 }
 
 .form-group {
-    position: relative; /* Needed for absolute positioning of password toggle */
+    position: relative;
 }
 
 .form-control {
-    border-radius: 5px; /* Rounded corners for inputs */
-    padding: 10px 15px; /* Adjust padding */
+    border-radius: 5px;
+    padding: 10px 15px;
     font-size: 16px;
     &:focus {
-        border-color: #0052B4; /* Highlight color on focus */
-        box-shadow: 0 0 0 0.25rem rgba(74, 95, 209, 0.25); /* Matching shadow */
+        border-color: #0052B4;
+        box-shadow: 0 0 0 0.25rem rgba(74, 95, 209, 0.25);
     }
 }
 
@@ -40,15 +49,15 @@ h3 {
         right: 15px;
         transform: translateY(-50%);
         cursor: pointer;
-        color: #6c757d; /* Icon color */
+        color: #6c757d;
         &:hover {
-            color: #333; /* Darken icon on hover */
+            color: #333;
         }
     }
 }
 
 .forgot-password a {
-    color: #007bff; /* Blue link color */
+    color: #007bff;
     text-decoration: none;
     &:hover {
         text-decoration: underline;
@@ -56,7 +65,7 @@ h3 {
 }
 
 .btn-login {
-    background-color: #0052B4; /* Button background color */
+    background-color: #0052B4;
     border-color: #0052B4;
     padding: 10px;
     font-size: 18px;
@@ -64,13 +73,13 @@ h3 {
     border-radius: 5px;
     transition: background-color 0.3s ease;
     &:hover {
-        background-color: #3a4dbd; /* Darker shade on hover */
+        background-color: #3a4dbd;
         border-color: #3a4dbd;
     }
 }
 
 .signup-link a {
-    color: #007bff; /* Blue link color */
+    color: #007bff;
     text-decoration: none;
     &:hover {
         text-decoration: underline;
@@ -84,7 +93,7 @@ h3 {
     color: #6c757d;
     span {
         padding: 0 10px;
-        background-color: #fff; /* Match card background */
+        background-color: #fff;
         position: relative;
         z-index: 1;
     }
@@ -92,7 +101,7 @@ h3 {
         content: '';
         flex-grow: 1;
         height: 1px;
-        background-color: #dee2e6; /* Light grey line */
+        background-color: #dee2e6;
         position: relative;
         top: 50%;
         transform: translateY(-50%);

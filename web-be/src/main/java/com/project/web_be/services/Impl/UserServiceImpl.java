@@ -67,8 +67,6 @@ public class UserServiceImpl implements UserService {
         if(userRepository.existsByEmail(email)) {
             throw new DataIntegrityViolationException("Email already exists");
         }
-
-        // Lấy role theo roleId, nếu không có thì mặc định STUDENT
         Role role = roleRepository.findById(userDTO.getRoleId() != null ? userDTO.getRoleId() : 1L)
                 .orElseThrow(() -> new DataNotFoundException("Role not found"));
 
@@ -84,8 +82,6 @@ public class UserServiceImpl implements UserService {
                 .currentRole(role)
                 .roles(new HashSet<>())
                 .build();
-
-        // Thêm role vào Set roles
         newUser.getRoles().add(role);
 
         return userRepository.save(newUser);
@@ -106,8 +102,6 @@ public class UserServiceImpl implements UserService {
         if(!passwordEncoder.matches(userLoginDTO.getPassword(), existingUser.getPassword())) {
                 throw new BadCredentialsException("password not match");
         }
-
-        // Set current role to default role if not set
         if (existingUser.getCurrentRole() == null) {
             existingUser.setCurrentRole(existingUser.getRole());
             userRepository.save(existingUser);
@@ -134,22 +128,15 @@ public class UserServiceImpl implements UserService {
     public String switchRole(String email, String newRoleName) throws Exception {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
-        
-        // Tìm role object
         Role newRole = roleRepository.findByName(newRoleName)
                 .orElseThrow(() -> new DataNotFoundException("Role not found: " + newRoleName));
-
-        // Nếu user chưa có role này thì tự động thêm
         boolean hasRole = user.getRoles().stream()
                 .anyMatch(role -> role.getName().equals(newRoleName));
         if (!hasRole) {
             user.getRoles().add(newRole);
         }
-
         user.setCurrentRole(newRole);
         userRepository.save(user);
-
-        // Generate new token với role mới
         return jwtTokenUtil.generateToken(user);
     }
 
@@ -195,15 +182,10 @@ public class UserServiceImpl implements UserService {
         if (!user.getRoles().contains(role)) {
             throw new InvalidParamException("User does not have this role");
         }
-        
-        // Không cho phép xóa role hiện tại nếu đó là role duy nhất
         if (user.getCurrentRole() != null && user.getCurrentRole().getName().equals(roleName) && user.getRoles().size() == 1) {
             throw new InvalidParamException("Cannot remove the only role from user");
         }
-        
         user.getRoles().remove(role);
-        
-        // Nếu đang xóa role hiện tại, chuyển về role mặc định
         if (user.getCurrentRole() != null && user.getCurrentRole().getName().equals(roleName)) {
             user.setCurrentRole(user.getRole());
         }
@@ -235,11 +217,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public StudentTaskWithStudentResponse getStudentTasksByClass(Long studentId) throws Exception {
-        // Kiểm tra sinh viên có tồn tại không
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new DataNotFoundException("Student not found"));
-
-        // Lấy danh sách lớp mà sinh viên đã đăng ký
         List<Enrollment> enrollments = enrollmentRepository.findAll().stream()
                 .filter(e -> e.getStudent().getId().equals(studentId))
                 .collect(Collectors.toList());
@@ -248,8 +227,6 @@ public class UserServiceImpl implements UserService {
 
         for (Enrollment enrollment : enrollments) {
             Classroom classroom = enrollment.getClassroom();
-            
-            // Lấy bài tập của lớp
             List<Assignment> assignments = assignmentRepository.findByClassroomId(classroom.getId(), null).getContent();
             List<StudentTaskResponse> assignmentTasks = new ArrayList<>();
             
@@ -277,8 +254,6 @@ public class UserServiceImpl implements UserService {
                 
                 assignmentTasks.add(task);
             }
-
-            // Lấy bài thi của lớp
             List<ClassExam> classExams = classExamRepository.findByClassroomId(classroom.getId(), null).getContent();
             List<StudentTaskResponse> examTasks = new ArrayList<>();
             
@@ -308,8 +283,6 @@ public class UserServiceImpl implements UserService {
                 
                 examTasks.add(task);
             }
-
-            // Tính toán summary cho lớp
             StudentTaskByClassResponse.TaskSummary summary = calculateTaskSummary(assignmentTasks, examTasks);
 
             StudentTaskByClassResponse classTask = StudentTaskByClassResponse.builder()
@@ -323,8 +296,6 @@ public class UserServiceImpl implements UserService {
 
             classTasks.add(classTask);
         }
-
-        // Tính toán overall summary
         StudentTaskWithStudentResponse.OverallSummary overallSummary = calculateOverallSummary(classTasks);
 
         return StudentTaskWithStudentResponse.builder()
@@ -338,19 +309,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public StudentTaskWithStudentResponse getStudentTasksInClass(Long studentId, Long classId) throws Exception {
-        // Kiểm tra sinh viên có tồn tại không
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new DataNotFoundException("Student not found"));
-
-        // Kiểm tra sinh viên có đăng ký lớp này không
         boolean isEnrolled = enrollmentRepository.findAll().stream()
                 .anyMatch(e -> e.getStudent().getId().equals(studentId) && e.getClassroom().getId().equals(classId));
         
         if (!isEnrolled) {
             throw new DataNotFoundException("Student is not enrolled in this class");
         }
-
-        // Lấy thông tin lớp
         Classroom classroom = null;
         for (Enrollment enrollment : enrollmentRepository.findAll()) {
             if (enrollment.getStudent().getId().equals(studentId) && enrollment.getClassroom().getId().equals(classId)) {
@@ -363,7 +329,6 @@ public class UserServiceImpl implements UserService {
             throw new DataNotFoundException("Class not found");
         }
 
-        // Lấy bài tập của lớp
         List<Assignment> assignments = assignmentRepository.findByClassroomId(classroom.getId(), null).getContent();
         List<StudentTaskResponse> assignmentTasks = new ArrayList<>();
         
@@ -391,8 +356,6 @@ public class UserServiceImpl implements UserService {
             
             assignmentTasks.add(task);
         }
-
-        // Lấy bài thi của lớp
         List<ClassExam> classExams = classExamRepository.findByClassroomId(classroom.getId(), null).getContent();
         List<StudentTaskResponse> examTasks = new ArrayList<>();
         
@@ -422,8 +385,6 @@ public class UserServiceImpl implements UserService {
             
             examTasks.add(task);
         }
-
-        // Tính toán summary cho lớp
         StudentTaskByClassResponse.TaskSummary summary = calculateTaskSummary(assignmentTasks, examTasks);
 
         StudentTaskByClassResponse classTask = StudentTaskByClassResponse.builder()
@@ -437,8 +398,6 @@ public class UserServiceImpl implements UserService {
 
         List<StudentTaskByClassResponse> classTasks = new ArrayList<>();
         classTasks.add(classTask);
-
-        // Tính toán overall summary
         StudentTaskWithStudentResponse.OverallSummary overallSummary = calculateOverallSummary(classTasks);
 
         return StudentTaskWithStudentResponse.builder()
@@ -473,12 +432,11 @@ public class UserServiceImpl implements UserService {
         int totalAssignments = assignments.size();
         int submittedAssignments = (int) assignments.stream().filter(StudentTaskResponse::isSubmitted).count();
         int gradedAssignments = (int) assignments.stream().filter(a -> a.getScore() != null).count();
-        
+
         int totalExams = exams.size();
         int submittedExams = (int) exams.stream().filter(StudentTaskResponse::isSubmitted).count();
         int gradedExams = (int) exams.stream().filter(e -> e.getScore() != null).count();
-        
-        // Tính điểm trung bình
+
         List<Double> allScores = new ArrayList<>();
         allScores.addAll(assignments.stream().map(StudentTaskResponse::getScore).filter(s -> s != null).collect(Collectors.toList()));
         allScores.addAll(exams.stream().map(StudentTaskResponse::getScore).filter(s -> s != null).collect(Collectors.toList()));
@@ -492,7 +450,7 @@ public class UserServiceImpl implements UserService {
                 .totalExams(totalExams)
                 .submittedExams(submittedExams)
                 .gradedExams(gradedExams)
-                .averageScore(Math.round(averageScore * 100.0) / 100.0) // Làm tròn 2 chữ số thập phân
+                .averageScore(Math.round(averageScore * 100.0) / 100.0)
                 .build();
     }
 
@@ -514,8 +472,7 @@ public class UserServiceImpl implements UserService {
             totalExams += summary.getTotalExams();
             submittedExams += summary.getSubmittedExams();
             gradedExams += summary.getGradedExams();
-            
-            // Thu thập tất cả điểm số
+
             classTask.getAssignments().stream()
                     .map(StudentTaskResponse::getScore)
                     .filter(s -> s != null)
@@ -537,7 +494,7 @@ public class UserServiceImpl implements UserService {
                 .totalExams(totalExams)
                 .submittedExams(submittedExams)
                 .gradedExams(gradedExams)
-                .overallAverageScore(Math.round(overallAverageScore * 100.0) / 100.0) // Làm tròn 2 chữ số thập phân
+                .overallAverageScore(Math.round(overallAverageScore * 100.0) / 100.0)
                 .build();
     }
 }

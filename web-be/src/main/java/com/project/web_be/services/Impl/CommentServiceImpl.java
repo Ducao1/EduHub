@@ -63,8 +63,6 @@ public class CommentServiceImpl implements CommentService {
                 .build();
         
         Comment savedComment = commentRepository.save(comment);
-        
-        // Handle file uploads if files are provided
         if (createCommentDTO.getFiles() != null && !createCommentDTO.getFiles().isEmpty()) {
             List<Attachment> attachments = new ArrayList<>();
             for (MultipartFile file : createCommentDTO.getFiles()) {
@@ -85,29 +83,21 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private Attachment saveFile(MultipartFile file, Comment comment) throws IOException {
-        // Create upload directory if it doesn't exist
         Path uploadPath = Paths.get(UPLOAD_DIR);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
-        
-        // Generate unique filename
         String originalFilename = file.getOriginalFilename();
         String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String uniqueFilename = UUID.randomUUID().toString() + "_" + System.currentTimeMillis() + fileExtension;
-        
-        // Save file to disk
         Path filePath = uploadPath.resolve(uniqueFilename);
         Files.copy(file.getInputStream(), filePath);
-        
-        // Create attachment entity
+
         Attachment attachment = Attachment.builder()
                 .fileName(originalFilename)
                 .filePath(filePath.toString())
                 .comment(comment)
                 .build();
-        
-        // Save to database
         return attachmentRepository.save(attachment);
     }
 

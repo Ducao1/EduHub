@@ -111,19 +111,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public void removeStudentFromClass(Long classId, Long studentId) throws Exception {
-        // Kiểm tra lớp có tồn tại không
         Classroom classroom = classroomRepository.findById(classId)
                 .orElseThrow(() -> new DataNotFoundException("Lớp học không tồn tại"));
-        
-        // Kiểm tra sinh viên có tồn tại không
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new DataNotFoundException("Sinh viên không tồn tại"));
-        
-        // Tìm enrollment
         Enrollment enrollment = enrollmentRepository.findByClassroomIdAndStudentId(classId, studentId)
                 .orElseThrow(() -> new DataNotFoundException("Sinh viên không đăng ký trong lớp học này"));
-        
-        // Xóa enrollment
         enrollmentRepository.delete(enrollment);
     }
 }

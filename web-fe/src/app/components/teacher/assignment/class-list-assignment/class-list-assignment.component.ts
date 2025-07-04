@@ -25,8 +25,8 @@ export class ClassListAssignmentComponent implements OnInit {
   assignments: any[] = [];
   classId!: number;
   className!: string;
-  currentPage: number = 0; // Start with page 0 for API
-  pageSize: number = 6; // Adjust as needed
+  currentPage: number = 0;
+  pageSize: number = 6;
   totalElements: number = 0;
   totalPages: number = 0;
   visiblePages: number[] = [];

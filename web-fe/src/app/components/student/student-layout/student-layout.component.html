@@ -1,24 +1,20 @@
 <div class="container-fluid px-0">
   <div class="row g-0 min-vh-100">
-    <!-- Sidebar 2/12 -->
     <div class="col-md-2 sidebar-container">
       <div class="sidebar d-flex flex-column justify-content-between h-100">
         <div>
-          <!-- Logo/App Name Section -->
           <div class="sidebar-header text-center mb-4">
-            <h5 class="sidebar-title">EduHub</h5>
+            <h5 class="sidebar-title" (click)="goToDashboard()">EduHub</h5>
           </div>
           <ul class="nav flex-column">
             <li class="nav-item">
               <a class="nav-link" routerLink="/student/dashboard" routerLinkActive="active">
-                <!-- <i class="fas fa-home me-3"></i> -->
                 Lớp học
               </a>
             </li>
           </ul>
         </div>
 
-        <!-- Sign Out -->
         <ul class="nav flex-column mt-3">
           <li class="nav-item">
             <a class="nav-link sign-out-link" (click)="logout()">
@@ -31,14 +27,12 @@
     </div>
 
     <div class="col-md-10 content-area d-flex flex-column">
-      <!-- Topbar -->
       <div class="topbar">
         <div class="topbar-icons">
           <i class="fas fa-moon"></i>
           <i class="fas fa-bell notification-icon">
             <span class="notification-dot-topbar"></span>
           </i>
-          <!-- <i class="fas fa-cog"></i> -->
           <div class="profile-pic-container" (click)="toggleDropdown()">
             <ng-container *ngIf="userInfo">
               <img *ngIf="userInfo.avatar"
@@ -57,7 +51,6 @@
         </div>
       </div>
 
-      <!-- Confirmation Popup -->
       <div class="confirm-switch-popup" *ngIf="showConfirmSwitchPopup">
         <div class="confirm-switch-content">
           <p class="confirm-title">Xác Nhận Chuyển Vai Trò</p>
@@ -67,22 +60,20 @@
           </div>
         </div>
       </div>
-
-      <!-- Notification -->
       <app-notification
         *ngIf="notificationMessage"
         [type]="notificationType"
         [message]="notificationMessage"
-        (close)="closeNotification()"
-      ></app-notification>
-
-      <!-- Divider -->
+        (close)="closeNotification()">
+      </app-notification>
       <div class="divider"></div>
-
-      <!-- Main Content Area -->
       <div class="main-content flex-grow-1 overflow-auto">
         <router-outlet></router-outlet>
       </div>
     </div>
   </div>
+</div>
+
+<div class="chatbot-float">
+  <app-chatbot></app-chatbot>
 </div>

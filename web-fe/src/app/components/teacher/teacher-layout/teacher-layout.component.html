@@ -6,7 +6,7 @@
         <div>
           <!-- Logo/App Name Section -->
           <div class="sidebar-header text-center mb-4">
-            <h5 class="sidebar-title">EduHub</h5>
+            <h5 class="sidebar-title" (click)="goToDashboard()">EduHub</h5>
           </div>
           <ul class="nav flex-column">
             <li class="nav-item">
@@ -97,4 +97,8 @@
       <button class="btn btn-primary" (click)="confirmSwitchToStudent()">Xác Nhận</button>
     </div>
   </div>
+</div>
+
+<div class="chatbot-float">
+  <app-chatbot></app-chatbot>
 </div>

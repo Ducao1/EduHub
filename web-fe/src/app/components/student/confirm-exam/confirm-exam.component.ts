@@ -41,11 +41,6 @@ export class ConfirmExamComponent implements OnInit {
     const cachedExam = this.examCacheService.getExam(this.examId);
     if (cachedExam) {
       this.exam = cachedExam;
-      // if (!cachedExam.classExams?.some((ce: any) => ce.classroom?.id === this.classId)) {
-      //   console.error('Class ID không hợp lệ cho bài thi');
-      //   alert('Lớp không được giao bài thi này');
-      //   this.router.navigate(['/student/dashboard']);
-      // }
       return;
     }
 
@@ -53,11 +48,6 @@ export class ConfirmExamComponent implements OnInit {
       next: (exam) => {
         this.exam = exam;
         this.examCacheService.setExam(this.examId, exam);
-        // if (!exam.classExams?.some((ce: any) => ce.classroom?.id === this.classId)) {
-        //   console.error('Class ID không hợp lệ cho bài thi');
-        //   alert('Lớp không được giao bài thi này');
-        //   this.router.navigate(['/student/dashboard']);
-        // }
       },
       error: (err) => {
         console.error('Lỗi khi tải bài thi:', err);

@@ -25,7 +25,6 @@ export class StudentDashboardComponent {
 
   ngOnInit(): void {
     this.userId = this.userService.getUserId() ?? 0;
-    // Lấy notification từ router state nếu có
     const nav = this.router.getCurrentNavigation();
     if (nav && nav.extras.state && nav.extras.state['notification']) {
       this.notification = nav.extras.state['notification'];

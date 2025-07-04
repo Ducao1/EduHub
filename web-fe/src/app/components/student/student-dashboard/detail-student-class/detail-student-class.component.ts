@@ -32,7 +32,6 @@ export class DetailStudentClassComponent implements OnInit {
   selectedFiles: File[] = [];
   commentSelectedFiles: File[] = [];
 
-  // Comment related properties
   comments: IComment[] = [];
   currentUserId: number | null = null;
   replyingTo: number | null = null;
@@ -83,7 +82,6 @@ export class DetailStudentClassComponent implements OnInit {
   loadComments() {
     this.commentService.getAllCommentsByClassId(this.classId).subscribe({
       next: (allComments) => {
-        // Lấy tất cả userId duy nhất từ comments và subComments
         const userIds = new Set<number>();
         allComments.forEach(c => {
           userIds.add(c.userId);
@@ -93,7 +91,6 @@ export class DetailStudentClassComponent implements OnInit {
         forkJoin(userRequests).subscribe((users: any[]) => {
           const userMap = new Map<number, any>();
           users.forEach(u => userMap.set(u.id, u));
-          // Gán avatar cho từng comment và subComment
           allComments.forEach(c => {
             c.avatar = userMap.get(c.userId)?.avatar || '';
             if (c.subComments) {
@@ -102,7 +99,6 @@ export class DetailStudentClassComponent implements OnInit {
               });
             }
           });
-          // Sắp xếp lại comments như cũ
           const parentComments = allComments.filter(c => !c.parentCommentId);
           parentComments.forEach(parent => {
             parent.subComments = allComments.filter(c => c.parentCommentId === parent.id)
@@ -149,7 +145,7 @@ export class DetailStudentClassComponent implements OnInit {
       console.log('Attached files:', this.commentSelectedFiles.map(f => f.name));
     }
     this.commentContent = '';
-    this.commentSelectedFiles = []; // Reset files after posting
+    this.commentSelectedFiles = [];
   }
 
   postNewComment(parentId: number | null = null): void {
@@ -165,7 +161,6 @@ export class DetailStudentClassComponent implements OnInit {
       formData.append('parentCommentId', parentId.toString());
     }
 
-    // Append all files
     if (parentId && this.commentSelectedFiles.length > 0) {
       this.commentSelectedFiles.forEach(file => formData.append('files', file, file.name));
     }
@@ -221,7 +216,6 @@ export class DetailStudentClassComponent implements OnInit {
       const jsDate = new Date(year, month - 1, day, hour, minute, second);
       return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
     } else {
-      // Handle string date
       const jsDate = new Date(dateArray);
       return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
     }
@@ -229,12 +223,12 @@ export class DetailStudentClassComponent implements OnInit {
 
   cancelNewContent() {
     this.newPostContent = '';
-    this.selectedFiles = []; // Reset files on cancel
+    this.selectedFiles = [];
   }
 
   cancelComment() {
     this.commentContent = '';
-    this.commentSelectedFiles = []; // Reset files on cancel
+    this.commentSelectedFiles = [];
   }
 
   handleFilesSelected(event: Event, targetArray: File[]) {

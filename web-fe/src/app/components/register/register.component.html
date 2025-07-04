@@ -1,20 +1,28 @@
 <app-header></app-header>
+<app-notification
+  *ngIf="notificationMessage"
+  [type]="notificationType"
+  [message]="notificationMessage"
+  (close)="closeNotification()">
+</app-notification>
 <div class="register-page-container d-flex justify-content-center align-items-center vh-100">
     <div class="register-card card p-4 shadow-lg">
         <h3 class="text-center mb-4">Đăng ký</h3>
 
-        <form #registerForm="ngForm" (ngSubmit)="register()">
+        <form [formGroup]="form">
             <div class="form-group mb-3">
                 <label for="fullName">Họ tên</label>
-                <input type="text" class="form-control" id="fullName" name="fullName" [(ngModel)]="fullName" placeholder="Họ tên" required>
+                <input type="text" class="form-control" id="fullName" formControlName="fullName" placeholder="Họ tên">
+                <div *ngIf="fullNameError" class="text-danger mt-1 small">{{ fullNameError }}</div>
             </div>
             <div class="form-group mb-3">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" [(ngModel)]="email" placeholder="Nhập email" required>
+                <input type="email" class="form-control" id="email" formControlName="email" placeholder="Nhập email">
+                <div *ngIf="emailError" class="text-danger mt-1 small">{{ emailError }}</div>
             </div>
             <div class="form-group mb-3">
                 <label for="roleId">Bạn là</label>
-                <select class="form-control" id="roleId" name="roleId" [(ngModel)]="roleId" required>
+                <select class="form-control" id="roleId" [(ngModel)]="roleId" [ngModelOptions]="{standalone: true}" name="roleId" required>
                     <option *ngFor="let role of availableRoles" [value]="role.id">
                         {{ role.name === 'STUDENT' ? 'Sinh viên' : role.name === 'TEACHER' ? 'Giảng viên' : role.name }}
                     </option>
@@ -22,12 +30,15 @@
             </div>
             <div class="form-group mb-3 password-group">
                 <label for="password">Mật khẩu</label>
-                <input [type]="passwordVisible ? 'text' : 'password'" class="form-control" id="password" name="password" [(ngModel)]="password" placeholder="Mật khẩu" required>
-                <span class="password-toggle" (click)="togglePasswordVisibility()">
-                    <i class="fas" [ngClass]="{'fa-eye': !passwordVisible, 'fa-eye-slash': passwordVisible}"></i>
-                </span>
+                <input [type]="passwordVisible ? 'text' : 'password'" class="form-control" id="password" formControlName="password" placeholder="Mật khẩu">
+                <div *ngIf="passwordError" class="text-danger mt-1 small">{{ passwordError }}</div>
             </div>
-            <button type="submit" class="btn-register btn btn-primary w-100" [disabled]="isLoading">
+            <div class="form-group mb-3 password-group">
+                <label for="confirmPassword">Nhập lại mật khẩu</label>
+                <input [type]="passwordVisible ? 'text' : 'password'" class="form-control" id="confirmPassword" formControlName="confirmPassword" placeholder="Nhập lại mật khẩu">
+                <div *ngIf="confirmPasswordError" class="text-danger mt-1 small">{{ confirmPasswordError }}</div>
+            </div>
+            <button type="button" class="btn-register btn btn-primary w-100" [disabled]="isLoading" (click)="register()">
                 <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
                 {{ isLoading ? 'Đang đăng ký...' : 'Đăng ký' }}
             </button>

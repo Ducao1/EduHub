@@ -214,11 +214,11 @@
   top: 100%;
   background: #fff;
   border: 1px solid #ddd;
-  z-index: 1000; /* Đảm bảo dropdown hiển thị trên các phần tử khác */
+  z-index: 1000;
   min-width: 120px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   padding: 0;
-  display: block; /* Đảm bảo dropdown hiển thị */
+  display: block;
 }
 
 .dropdown-menu button {

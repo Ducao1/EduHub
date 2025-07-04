@@ -34,7 +34,6 @@ public class WebSecurityConfig {
     @Value("${api.prefix}")
     private String apiPrefix;
     @Bean
-    //Pair.of(String.format("%s/products", apiPrefix), "GET"),
     public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception{
         http
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
@@ -172,13 +171,10 @@ public class WebSecurityConfig {
                                     String.format("%s/comments/files/view/**", apiPrefix)).hasAnyAuthority(Role.STUDENT, Role.TEACHER)
                             .requestMatchers(GET,
                                     String.format("%s/comments/files/**", apiPrefix)).hasAnyAuthority(Role.STUDENT, Role.TEACHER)
-//                            .requestMatchers(GET,
-//                                    String.format("%s/exam-activity", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(HttpMethod.GET, "/api/v1/exam-activity").permitAll()
-
+                            .requestMatchers(POST,
+                                    String.format("%s/chat", apiPrefix)).permitAll()
                             .anyRequest().permitAll();
-                    //.anyRequest().permitAll();
-
                 })
                 .csrf(AbstractHttpConfigurer::disable);
         http.cors(new Customizer<CorsConfigurer<HttpSecurity>>() {

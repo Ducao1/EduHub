@@ -5,7 +5,6 @@
     <p>{{ classDescription }}</p>
   </div>
   <div class="stream-container">
-    <!-- Input area for new post -->
     <div class="new-post-input">
       <textarea [(ngModel)]="newPostContent" placeholder="Bạn muốn thông báo gì?"></textarea>
       <div *ngIf="selectedFiles && selectedFiles.length > 0" class="selected-files">
@@ -32,7 +31,6 @@
       </div>
     </div>
 
-    <!-- Post Card -->
     <div class="post-card" *ngFor="let comment of comments">
       <div class="post-header">
         <div class="avatar-circle" style="background-color: #4285f4; overflow: hidden;">
@@ -84,7 +82,6 @@
         </div>
       </div>
       <div class="comment-section">
-        <!-- Sub-comments -->
         <div *ngIf="comment.subComments && comment.subComments.length > 0" class="sub-comments">
           <div *ngFor="let reply of comment.subComments" class="sub-comment-item">
             <div class="post-header">
@@ -127,12 +124,7 @@
                 </ng-container>
               </div>
             </div>
-            <!-- <div class="comment-actions">
-              <button class="reply-btn" (click)="toggleReply(reply.id)">Trả lời</button>
-              <button *ngIf="currentUserId === reply.userId" class="delete-btn" (click)="handleDeleteComment(reply.id)">Xóa</button>
-            </div> -->
 
-            <!-- Reply Form for sub-comment -->
             <div *ngIf="replyingTo === reply.id" class="reply-form">
               <div class="reply-input">
                 <textarea [(ngModel)]="replyContent" placeholder="Viết câu trả lời của bạn..."
@@ -147,7 +139,6 @@
           </div>
         </div>
 
-        <!-- Comment Input -->
         <div class="comment-input">
           <div class="input-row">
             <div class="avatar-circle" style="background-color: #4285f4; overflow: hidden;">

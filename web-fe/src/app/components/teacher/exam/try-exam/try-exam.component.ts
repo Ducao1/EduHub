@@ -10,7 +10,7 @@ interface Question {
   id: number;
   questionText: string;
   type: 'SINGLE_CHOICE' | 'MULTI_CHOICE' | 'ESSAY';
-  answers: { answerText: string; isCorrect: boolean }[]; // Add isCorrect if needed
+  answers: { answerText: string; isCorrect: boolean }[];
   status: 'not-visited' | 'not-answered' | 'answered' | 'marked-for-review' | 'marked-and-answered';
 }
 

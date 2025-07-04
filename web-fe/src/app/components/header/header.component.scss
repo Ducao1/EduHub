@@ -1,8 +1,13 @@
 .navbar {
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  padding: 0.75rem 1.5rem;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+  border-bottom: 2px solid #e0e3e7;
+  padding: 0 1.5rem;
   transition: all 0.3s ease;
+  min-height: 70px;
+  height: 80px;
+  display: flex;
+  align-items: center;
   
   .navbar-nav {
     margin-left: auto;
@@ -11,32 +16,25 @@
 
 
 .navbar-brand {
-  padding: 0.5rem 0;
-  
-  a {
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      transform: translateY(-1px);
-    }
-  }
-  
-  .brand-icon {
-    font-size: 1.75rem;
-    margin-right: 0.75rem;
-    background: linear-gradient(135deg, #4a5fd1, #7b2cbf);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  
-  .brand-text {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-right: 2rem;
+  justify-content: flex-start;
+  flex: unset;
+
+  .sidebar-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #4a5fd1;
-    letter-spacing: 0.5px;
+    color: #0052B4;
+    padding: 0;
+    cursor: pointer;
+    margin: 15px 0 0 0;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    transition: none;
+    user-select: none;
   }
 }
 
@@ -147,7 +145,6 @@
   }
 }
 
-// Animation for dropdown
 .animated--grow-in {
   animation: growIn 0.2s ease-out;
 }

@@ -161,9 +161,4 @@ public class ScoreServiceImpl implements ScoreService {
         }
         return result;
     }
-
-//    @Override
-//    public List<Score> getScoresByUserId(Long userId) {
-//        return scoreRepository.findByUserId(userId);
-//    }
 }

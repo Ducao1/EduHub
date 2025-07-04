@@ -37,7 +37,7 @@ export class ListExamComponent implements OnInit {
     if (!this.classId) {
       console.error('classId không hợp lệ:', this.classId);
       alert('Thiếu classId trong URL. Vui lòng kiểm tra lại.');
-      return; // Có thể redirect về trang dashboard nếu cần
+      return;
     }
     this.loadClassInfo();
     this.loadExams();

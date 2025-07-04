@@ -53,8 +53,6 @@ public class SubmissionController {
         }
 
         Submission submission = submissionService.saveSubmission(assignmentId, studentId, file);
-        
-        // Lấy attachments của submission
         List<AttachmentDTO> attachments = attachmentService.getAttachmentsBySubmissionId(submission.getId());
         
         return ResponseEntity.ok(Map.of(
@@ -169,7 +167,6 @@ public class SubmissionController {
     public ResponseEntity<?> getSubmissionById(@PathVariable Long id) {
         try {
             Submission submission = submissionService.getSubmissionById(id);
-            // Lấy attachments của submission
             List<AttachmentDTO> attachments = attachmentService.getAttachmentsBySubmissionId(id);
             
             Map<String, Object> response = new HashMap<>();
@@ -184,7 +181,6 @@ public class SubmissionController {
         }
     }
 
-    // Attachment endpoints
     @PostMapping("/{submissionId}/attachments")
     public ResponseEntity<?> addAttachmentToSubmission(
             @PathVariable Long submissionId,
