@@ -23,6 +23,8 @@ export class JoinClassComponent {
   userId!: number;
   notificationType: 'success' | 'warning' | 'error' = 'success';
   notificationMessage: string = '';
+  notificationTitle: string = '';
+  showNotification: boolean = false;
   constructor(
     private enrollmentService: EnrollmentService,
     private userService: UserService,
@@ -34,7 +36,7 @@ export class JoinClassComponent {
   }
 
   closeNotification() {
-    this.notificationMessage = '';
+    this.showNotification = false;
   }
 
   joinClass() {
@@ -46,16 +48,27 @@ export class JoinClassComponent {
       this.enrollmentService.joinClass(JoinClassDTO).subscribe({
         next: (response: any) => {
           this.notificationType = 'success';
+          this.notificationTitle = 'Thành công';
           this.notificationMessage = 'Đã gửi yêu cầu tham gia lớp';
+          this.showNotification = true;
           setTimeout(() => {
+            this.showNotification = false;
             this.router.navigate(['/student/dashboard'], { state: { notification: this.notificationMessage } });
-            this.notificationMessage = '';
-          }, 3000);
+          }, 1500);
         },
         error: (error: any) => {
-          this.notificationType = 'error';
-          this.notificationMessage = 'mã lớp không tồn tại';
-          setTimeout(() => this.notificationMessage = '', 3000);
+          const errorMessage = error?.error?.error || error?.error || 'Tham gia lớp thất bại';
+          if (errorMessage.includes('Bạn đã tham gia lớp học này')) {
+            this.notificationType = 'warning';
+            this.notificationTitle = 'Cảnh báo';
+            this.notificationMessage = 'Bạn đã gửi yêu cầu tham gia lớp';
+          } else {
+            this.notificationType = 'error';
+            this.notificationTitle = 'Lỗi';
+            this.notificationMessage = errorMessage;
+          }
+          this.showNotification = true;
+          setTimeout(() => this.showNotification = false, 2500);
         }
       });
     }

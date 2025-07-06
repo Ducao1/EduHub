@@ -68,7 +68,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public List<Classroom> getListClassByStudentId(Long studentId) {
-        return enrollmentRepository.findClassesByStudentId(studentId);
+        return enrollmentRepository.findConfirmedClassesByStudentId(studentId);
     }
 
     @Override

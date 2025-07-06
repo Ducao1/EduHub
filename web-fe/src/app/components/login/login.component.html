@@ -1,4 +1,11 @@
 <app-header></app-header>
+
+<app-notification *ngIf="showNotification"
+  [type]="notificationType"
+  [title]="notificationTitle"
+  [message]="notificationMessage"
+  (close)="onNotificationClose()">
+</app-notification>
 <div class="login-page-container d-flex justify-content-center align-items-center vh-100">
   <div class="login-card card p-4 shadow-lg">
     <h3 class="text-center mb-4">Đăng nhập</h3>

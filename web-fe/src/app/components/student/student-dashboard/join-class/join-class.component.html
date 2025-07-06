@@ -1,4 +1,4 @@
-<app-notification *ngIf="notificationMessage" [type]="notificationType" [message]="notificationMessage" class="fixed-notification" (close)="closeNotification()"></app-notification>
+<app-notification *ngIf="showNotification" [type]="notificationType" [title]="notificationTitle" [message]="notificationMessage" class="fixed-notification" (close)="closeNotification()"></app-notification>
 <button class="back-btn fixed-back-btn" type="button" (click)="goBack()">
   <i class="fas fa-arrow-left"></i> Quay lại
 </button>

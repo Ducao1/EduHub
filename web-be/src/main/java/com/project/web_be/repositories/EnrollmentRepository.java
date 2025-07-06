@@ -30,4 +30,7 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     List<Enrollment> findByClassroomIdAndConfirmFalse(Long classroomId);
 
     Optional<Enrollment> findByClassroomIdAndStudentId(Long classId, Long studentId);
+
+    @Query("SELECT e.classroom FROM Enrollment e WHERE e.student.id = :studentId AND e.confirm = true")
+    List<Classroom> findConfirmedClassesByStudentId(@Param("studentId") Long studentId);
 }

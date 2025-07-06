@@ -40,6 +40,8 @@ export class RegisterComponent {
   fullNameError: string = '';
   notificationMessage: string = '';
   notificationType: 'success' | 'warning' | 'error' = 'success';
+  notificationTitle: string = '';
+  showNotification: boolean = false;
 
   constructor(
     private router: Router,
@@ -86,6 +88,8 @@ export class RegisterComponent {
     this.confirmPasswordError = '';
     this.notificationMessage = '';
     this.notificationType = 'success';
+    this.notificationTitle = '';
+    this.showNotification = false;
 
     if (this.form.invalid) {
       const fullNameCtrl = this.form.get('fullName');
@@ -124,18 +128,22 @@ export class RegisterComponent {
       next: (response: any) => {
         this.isLoading = false;
         this.notificationType = 'success';
+        this.notificationTitle = 'Thành công';
         this.notificationMessage = 'Đăng ký thành công! Vui lòng đăng nhập.';
+        this.showNotification = true;
         setTimeout(() => {
-          this.notificationMessage = '';
+          this.showNotification = false;
           this.router.navigate(['/login']);
-        }, 2000);
+        }, 1500);
       },
       error: (error: any) => {
         this.isLoading = false;
         const errorMessage = error?.error?.error || error?.error || 'Đăng ký thất bại';
         this.notificationType = 'error';
+        this.notificationTitle = 'Lỗi';
         this.notificationMessage = errorMessage;
-        setTimeout(() => this.notificationMessage = '', 3000);
+        this.showNotification = true;
+        setTimeout(() => this.showNotification = false, 2500);
       }
     });
   }
@@ -149,6 +157,6 @@ export class RegisterComponent {
   }
 
   closeNotification() {
-    this.notificationMessage = '';
+    this.showNotification = false;
   }
 }

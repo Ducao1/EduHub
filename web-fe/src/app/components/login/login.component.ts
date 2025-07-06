@@ -7,6 +7,7 @@ import { TokenService } from '../../services/token.service';
 import { LoginDTO } from '../../dtos/requests/login.dto';
 import { FooterComponent } from "../footer/footer.component";
 import { CommonModule } from '@angular/common';
+import { NotificationComponent } from '../notification/notification.component';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ import { CommonModule } from '@angular/common';
     HeaderComponent,
     FooterComponent,
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NotificationComponent
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
@@ -34,6 +36,12 @@ export class LoginComponent implements OnInit {
   loginError: string = '';
 
   form: FormGroup;
+
+  // Notification state
+  showNotification: boolean = false;
+  notificationType: 'success' | 'warning' | 'error' = 'success';
+  notificationTitle: string = '';
+  notificationMessage: string = '';
 
   constructor(
     private router: Router,
@@ -62,6 +70,7 @@ export class LoginComponent implements OnInit {
     this.emailError = '';
     this.passwordError = '';
     this.loginError = '';
+    this.showNotification = false;
 
     if (this.form.invalid) {
       const emailCtrl = this.form.get('email');
@@ -88,17 +97,30 @@ export class LoginComponent implements OnInit {
       next: (response: any) => {
         debugger
         const token = response.token;
-        this.handleLoginSuccess(token);
+        this.showNotification = true;
+        this.notificationType = 'success';
+        this.notificationTitle = 'Thành công';
+        this.notificationMessage = 'Đăng nhập thành công!';
+        setTimeout(() => {
+          this.showNotification = false;
+          this.handleLoginSuccess(token);
+        }, 1200);
       },
       error: (error: any) => {
         debugger
         const errorMessage = error?.error?.error || error?.error || 'Đăng nhập thất bại';
+        this.showNotification = true;
+        this.notificationType = 'error';
+        this.notificationTitle = 'Lỗi';
         if (errorMessage.includes('không tồn tại')) {
           this.emailError = 'Email không tồn tại';
+          this.notificationMessage = 'Email không tồn tại';
         } else if (errorMessage.includes('không chính xác')) {
           this.loginError = 'Email hoặc mật khẩu không chính xác';
+          this.notificationMessage = 'Email hoặc mật khẩu không chính xác';
         } else {
           this.loginError = errorMessage;
+          this.notificationMessage = errorMessage;
         }
       }
     });
@@ -118,7 +140,10 @@ export class LoginComponent implements OnInit {
       window.location.href = 'http://localhost:8080/oauth2/authorization/google';
     } catch (error) {
       console.error('Lỗi khi đăng nhập Google:', error);
-      this.loginError = 'Có lỗi xảy ra khi đăng nhập Google. Vui lòng thử lại.';
+      this.showNotification = true;
+      this.notificationType = 'error';
+      this.notificationTitle = 'Lỗi';
+      this.notificationMessage = 'Có lỗi xảy ra khi đăng nhập Google. Vui lòng thử lại.';
     }
   }
 
@@ -150,10 +175,24 @@ export class LoginComponent implements OnInit {
   private handleOAuthCallback(token: string) {
     try {
       // Sử dụng cùng logic xử lý đăng nhập thành công
-      this.handleLoginSuccess(token);
+      this.showNotification = true;
+      this.notificationType = 'success';
+      this.notificationTitle = 'Thành công';
+      this.notificationMessage = 'Đăng nhập Google thành công!';
+      setTimeout(() => {
+        this.showNotification = false;
+        this.handleLoginSuccess(token);
+      }, 1200);
     } catch (error) {
       console.error('Lỗi khi xử lý OAuth callback:', error);
-      this.loginError = 'Có lỗi xảy ra khi xử lý đăng nhập Google. Vui lòng thử lại.';
+      this.showNotification = true;
+      this.notificationType = 'error';
+      this.notificationTitle = 'Lỗi';
+      this.notificationMessage = 'Có lỗi xảy ra khi xử lý đăng nhập Google. Vui lòng thử lại.';
     }
+  }
+
+  onNotificationClose() {
+    this.showNotification = false;
   }
 }
