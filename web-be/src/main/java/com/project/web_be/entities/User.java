@@ -43,6 +43,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "full_name")
     private String fullName;
 
+    @Column(name = "google_id", unique = true)
+    private String googleId;
+
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;

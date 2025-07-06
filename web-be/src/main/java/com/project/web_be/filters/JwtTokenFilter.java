@@ -29,13 +29,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private String apiPrefix;
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtils jwtTokenUtil;
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain)
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            if(isBypassToken(request)) {
+            if (isBypassToken(request)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -49,24 +50,30 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             if (email != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User userDetails = (User) userDetailsService.loadUserByUsername(email);
-                if(jwtTokenUtil.validateToken(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails,
-                                    null,
-                                    userDetails.getAuthorities()
-                            );
+                if (jwtTokenUtil.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
             filterChain.doFilter(request, response);
-        }catch (Exception e) {
+        } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         }
 
     }
+
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
+        String requestPath = request.getServletPath();
+        String requestMethod = request.getMethod();
+
+        if (requestPath.startsWith("/oauth2/") || requestPath.startsWith("/login/oauth2/")) {
+            return true;
+        }
+
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 Pair.of(String.format("%s/users/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/users/login", apiPrefix), "POST"),
@@ -85,11 +92,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("/ws/**", "POST"),
                 Pair.of("/uploads/", "GET"),
                 Pair.of("/api/v1/exam-activity", "GET"),
-                Pair.of("/api/v1/chat", "POST")
-        );
-
-        String requestPath = request.getServletPath();
-        String requestMethod = request.getMethod();
+                Pair.of("/api/v1/chat", "POST"),
+                Pair.of("/login", "GET"),
+                Pair.of("/favicon.ico", "GET"),
+                Pair.of("/error", "GET"));
 
         for (Pair<String, String> bypassToken : bypassTokens) {
             if (requestPath.contains(bypassToken.getFirst())
@@ -98,15 +104,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return true;
             }
         }
-//        String requestPath = request.getServletPath();
-//        String requestMethod = request.getMethod();
-//
-//        for (Pair<String, String> bypassToken : bypassTokens) {
-//            if (requestPath.equals(bypassToken.getFirst()) && requestMethod.equals(bypassToken.getSecond())) {
-//                System.out.println("Bypass token for Path: " + requestPath + ", Method: " + requestMethod);
-//                return true;
-//            }
-//        }
+        // String requestPath = request.getServletPath();
+        // String requestMethod = request.getMethod();
+        //
+        // for (Pair<String, String> bypassToken : bypassTokens) {
+        // if (requestPath.equals(bypassToken.getFirst()) &&
+        // requestMethod.equals(bypassToken.getSecond())) {
+        // System.out.println("Bypass token for Path: " + requestPath + ", Method: " +
+        // requestMethod);
+        // return true;
+        // }
+        // }
 
         return false;
     }

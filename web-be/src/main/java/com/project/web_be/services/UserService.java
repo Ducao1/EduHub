@@ -23,4 +23,5 @@ public interface UserService {
 
     // Method lấy danh sách bài tập và bài thi của sinh viên trong một lớp cụ thể
     StudentTaskWithStudentResponse getStudentTasksInClass(Long studentId, Long classId) throws Exception;
+    User processOAuthPostLogin(org.springframework.security.oauth2.core.user.OAuth2User oAuth2User);
 }

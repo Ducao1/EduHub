@@ -35,6 +35,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -407,6 +408,44 @@ public class UserServiceImpl implements UserService {
                 .classTasks(classTasks)
                 .overallSummary(overallSummary)
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public User processOAuthPostLogin(OAuth2User oAuth2User) {
+        try {
+            String email = oAuth2User.getAttribute("email");
+            String fullName = oAuth2User.getAttribute("name");
+            String pictureUrl = oAuth2User.getAttribute("picture");
+            String googleId = oAuth2User.getName();
+
+            User user = userRepository.findByGoogleId(googleId).orElse(null);
+            if (user == null) {
+                user = userRepository.findByEmail(email).orElse(null);
+                if (user != null) {
+                    user.setGoogleId(googleId);
+                } else {
+                    // Set role mặc định là STUDENT (hoặc logic khác)
+                    Role defaultRole = roleRepository.findByName("STUDENT").orElseThrow(() -> new RuntimeException("Role not found"));
+                    user = User.builder()
+                            .email(email)
+                            .fullName(fullName)
+                            .googleId(googleId)
+                            .avatar(pictureUrl)
+                            .role(defaultRole)
+                            .currentRole(defaultRole)
+                            .roles(new HashSet<>(List.of(defaultRole)))
+                            .password("$2a$10$cNI4fkoq9rITYDwr2taVO.e80xTkIESIECxRZaFx9EnvgDSo1KSBi")
+                            .gender(true)
+                            .build();
+                }
+            }
+            user.setAvatar(pictureUrl);
+            User savedUser = userRepository.save(user);
+            return savedUser;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     private String determineStatus(LocalDateTime dueDate, Optional<Submission> submissionOpt) {

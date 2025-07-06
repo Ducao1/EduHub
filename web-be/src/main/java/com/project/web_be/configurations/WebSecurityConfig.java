@@ -1,7 +1,10 @@
 package com.project.web_be.configurations;
 
+import com.project.web_be.components.OAuth2Authentication;
 import com.project.web_be.entities.Role;
 import com.project.web_be.filters.JwtTokenFilter;
+
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +34,10 @@ import static org.springframework.http.HttpMethod.*;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final JwtTokenFilter jwtTokenFilter;
+    private final OAuth2Authentication oAuth2Authentication;
     @Value("${api.prefix}")
     private String apiPrefix;
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception{
         http
@@ -175,6 +180,13 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,
                                     String.format("%s/chat", apiPrefix)).permitAll()
                             .anyRequest().permitAll();
+                })
+                .oauth2Login(oauth2 -> {
+                    oauth2.loginPage("/login")
+                          .successHandler(oAuth2Authentication)
+                          .failureHandler((request, response, exception) -> {
+                              response.sendRedirect("/login?error");
+                          });
                 })
                 .csrf(AbstractHttpConfigurer::disable);
         http.cors(new Customizer<CorsConfigurer<HttpSecurity>>() {

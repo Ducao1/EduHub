@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { FormsModule, NgForm, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
@@ -23,7 +23,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./login.component.scss']
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   @ViewChild('loginForm') loginForm!: NgForm;
   email: string = '';
   password: string = '';
@@ -45,6 +45,16 @@ export class LoginComponent {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
+
+  ngOnInit() {
+    // Kiểm tra token từ URL parameters (OAuth callback)
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      const token = params['token'];
+      if (token) {
+        this.handleOAuthCallback(token);
+      }
     });
   }
 
@@ -78,17 +88,10 @@ export class LoginComponent {
       next: (response: any) => {
         debugger
         const token = response.token;
-        this.tokenService.saveToken(token);
-        this.userService.saveUserData(token);
-        const payload = this.tokenService.getDecodedToken();
-        const currentRole = payload?.currentRole;
-        if (currentRole === 'TEACHER') {
-          this.router.navigate(['/teacher/dashboard']);
-        } else if (currentRole === 'STUDENT') {
-          this.router.navigate(['/student/dashboard']);
-        }
+        this.handleLoginSuccess(token);
       },
       error: (error: any) => {
+        debugger
         const errorMessage = error?.error?.error || error?.error || 'Đăng nhập thất bại';
         if (errorMessage.includes('không tồn tại')) {
           this.emailError = 'Email không tồn tại';
@@ -107,5 +110,50 @@ export class LoginComponent {
 
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible;
+  }
+
+  loginWithGoogle() {
+    try {
+      // Chuyển hướng đến endpoint OAuth2 của Spring Boot
+      window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+    } catch (error) {
+      console.error('Lỗi khi đăng nhập Google:', error);
+      this.loginError = 'Có lỗi xảy ra khi đăng nhập Google. Vui lòng thử lại.';
+    }
+  }
+
+  private handleLoginSuccess(token: string) {
+    try {
+      // Lưu token và thông tin user
+      this.tokenService.saveToken(token);
+      this.userService.saveUserData(token);
+      
+      // Lấy thông tin user từ token
+      const payload = this.tokenService.getDecodedToken();
+      const currentRole = payload?.currentRole;
+      
+      // Chuyển hướng dựa trên role
+      if (currentRole === 'TEACHER') {
+        this.router.navigate(['/teacher/dashboard']);
+      } else if (currentRole === 'STUDENT') {
+        this.router.navigate(['/student/dashboard']);
+      } else {
+        // Nếu không có role cụ thể, chuyển về trang chủ
+        this.router.navigate(['/']);
+      }
+    } catch (error) {
+      console.error('Lỗi khi xử lý đăng nhập:', error);
+      this.loginError = 'Có lỗi xảy ra khi xử lý đăng nhập. Vui lòng thử lại.';
+    }
+  }
+
+  private handleOAuthCallback(token: string) {
+    try {
+      // Sử dụng cùng logic xử lý đăng nhập thành công
+      this.handleLoginSuccess(token);
+    } catch (error) {
+      console.error('Lỗi khi xử lý OAuth callback:', error);
+      this.loginError = 'Có lỗi xảy ra khi xử lý đăng nhập Google. Vui lòng thử lại.';
+    }
   }
 }
