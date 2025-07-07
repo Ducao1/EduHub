@@ -387,7 +387,12 @@ export class TakeExamComponent implements OnInit, OnDestroy {
     const elapsed = now - this.startTime;
     this.timeLeft = Math.max(Math.floor((durationMs - elapsed) / 1000), 0);
     if (this.timeLeft <= 0) {
-      this.submitExam();
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+      // Tự động nộp bài luôn, không hiện popup xác nhận
+      this.confirmSubmitExam();
     }
   }
 }

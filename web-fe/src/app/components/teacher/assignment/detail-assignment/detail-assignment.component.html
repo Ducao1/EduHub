@@ -8,7 +8,16 @@
   <div class="submission-info" *ngIf="submission">
     <p><b>Ngày nộp:</b> {{ formatDate(submission.submissionDate)}}</p>
     <p><b>File nộp:</b>
-      <a [href]="fileUrl" target="_blank">{{ getOriginalFileName(submission.file) }}</a>
+      <ng-container *ngIf="submission && isImage(submission.file); else downloadLink">
+        <a [href]="getAttachmentUrl(submission.file)" target="_blank">
+          <img [src]="getAttachmentUrl(submission.file)" style="max-width: 200px; max-height: 200px; vertical-align: middle; border-radius: 8px;" />
+        </a>
+      </ng-container>
+      <ng-template #downloadLink>
+        <a [href]="getAttachmentUrl(submission.file)" [attr.download]="getOriginalFileName(submission.file)">
+          {{ getOriginalFileName(submission.file) }}
+        </a>
+      </ng-template>
     </p>
   </div>
   <div class="grade-box" *ngIf="submission">

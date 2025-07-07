@@ -181,5 +181,14 @@ export class StudentDetailAssignmentComponent implements OnInit {
     }
     return fileName;
   }
+
+  isImage(filePath: string): boolean {
+    return /\.(jpg|jpeg|png|gif|bmp)$/i.test(filePath);
+  }
+
+  getAttachmentUrl(filePath: string): string {
+    const filename = filePath.split(/[\\/]/).pop();
+    return `http://localhost:8080/uploads/${filename}`;
+  }
 }
 

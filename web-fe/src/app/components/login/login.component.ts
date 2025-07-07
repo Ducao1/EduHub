@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit {
         this.notificationMessage = 'Đăng nhập thành công!';
         setTimeout(() => {
           this.showNotification = false;
-          this.handleLoginSuccess(token);
+        this.handleLoginSuccess(token);
         }, 1200);
       },
       error: (error: any) => {
@@ -181,7 +181,7 @@ export class LoginComponent implements OnInit {
       this.notificationMessage = 'Đăng nhập Google thành công!';
       setTimeout(() => {
         this.showNotification = false;
-        this.handleLoginSuccess(token);
+      this.handleLoginSuccess(token);
       }, 1200);
     } catch (error) {
       console.error('Lỗi khi xử lý OAuth callback:', error);
