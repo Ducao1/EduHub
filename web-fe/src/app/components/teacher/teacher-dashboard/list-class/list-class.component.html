@@ -15,22 +15,52 @@
             </a>
         </div>
         <div *ngFor="let class of classes; let i = index" class="course-card" [style.background]="getCardBackground(i)">
-            <div class="card-header" [style.color]="getCardTitleColor(i)">
+            <div class="card-header" [style.color]="getCardTitleColor(i)" style="position: relative;">
                  <h3 class="course-title">{{ class.name }}</h3>
                  <p class="course-code">{{ class.description }}</p>
+                 <div class="class-actions" style="position: absolute; top: 0; right: 0;">
+                   <button class="ellipsis-btn" (click)="toggleDropdown(i)">
+                     <i class="fas fa-ellipsis-v"></i>
+                   </button>
+                   <div class="dropdown-menu" *ngIf="openDropdownIndex === i">
+                     <!-- <button (click)="handleUpdate(class)">Cập nhật</button> -->
+                     <button (click)="handleDelete(class)">Xóa</button>
+                   </div>
+                 </div>
             </div>
             <div class="card-body">
                  <div class="student-section">
                       <div class="student-avatars">
-                           <span class="student-count">Sĩ số lớp: {{ class.studentCount }}</span>
+                           <span class="student-count">Sĩ số lớp: {{ class.studentCount === null ? '...' : class.studentCount }}</span>
                       </div>
                  </div>
                  <div class="separator"></div>
                  <div class="view-result">
                       <a routerLink="/teacher/detail-class/{{class.id}}">Truy cập lớp</a>
-                      <i class="fas fa-arrow-right"></i>
+                      <!-- <i class="fas fa-arrow-right"></i> -->
                  </div>
             </div>
         </div>
     </div>
+</div>
+
+<app-notification *ngIf="notification"
+  [type]="notification.type"
+  [message]="notification.message"
+  (close)="onNotificationClose()">
+</app-notification>
+<div class="popup-overlay" *ngIf="isDeleteConfirmVisible">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h5>Xác nhận xóa lớp học</h5>
+      <button class="close-button" (click)="cancelDeleteClass()">×</button>
+    </div>
+    <div class="popup-body">
+      <p>Bạn có chắc chắn muốn xóa <b>{{ deleteClassName }}</b> không?</p>
+    </div>
+    <div class="popup-footer">
+      <button class="btn btn-secondary" (click)="cancelDeleteClass()">Hủy</button>
+      <button class="btn btn-primary" (click)="confirmDeleteClass()">Xác nhận</button>
+    </div>
+  </div>
 </div>

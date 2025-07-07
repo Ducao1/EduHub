@@ -86,9 +86,15 @@ public class ClassroomController {
         }
     }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<?> deleteClassroom(@PathVariable long id){
-//        classroomService.deleteClassroom(id);
-//        return ResponseEntity.ok("Delete classroom successfully");
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteClassroom(@PathVariable long id){
+        try {
+            classroomService.deleteClassroom(id);
+            Map<String, String> response = new HashMap<>();
+            response.put("success", "delete class successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

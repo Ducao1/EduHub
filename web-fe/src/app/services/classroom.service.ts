@@ -52,4 +52,8 @@ export class ClassroomService {
   refreshClassCode(classId: number): Observable<any> {
     return this.http.put(`${environment.apiBaseUrl}/classes/${classId}/refresh-code`, {});
   }
+
+  deleteClassroom(classId: number): Observable<any> {
+    return this.http.delete(`${environment.apiBaseUrl}/classes/${classId}`);
+  }
 }

@@ -83,6 +83,8 @@ public class WebSecurityConfig {
                                     String.format("%s/classes/**", apiPrefix)).hasAuthority(Role.TEACHER)
                             .requestMatchers(PUT,
                                     String.format("%s/classes/*/refresh-code", apiPrefix)).hasAuthority(Role.TEACHER)
+                            .requestMatchers(DELETE,
+                                    String.format("%s/classes/**", apiPrefix)).hasAuthority(Role.TEACHER)
 
                             .requestMatchers(POST,
                                     String.format("%s/assignments/add", apiPrefix)).hasAuthority(Role.TEACHER)

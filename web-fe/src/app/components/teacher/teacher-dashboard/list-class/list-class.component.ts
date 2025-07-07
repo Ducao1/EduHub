@@ -3,12 +3,15 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ClassroomService } from '../../../../services/classroom.service';
 import { UserService } from '../../../../services/user.service';
+import { EnrollmentService } from '../../../../services/enrollment.service';
+import { NotificationComponent } from '../../../notification/notification.component';
 
 @Component({
   selector: 'app-list-class',
   imports: [
     CommonModule,
     RouterModule,
+    NotificationComponent
   ],
   templateUrl: './list-class.component.html',
   styleUrl: './list-class.component.scss'
@@ -16,9 +19,15 @@ import { UserService } from '../../../../services/user.service';
 export class ListClassComponent {
   userId!: number;
   classes: any[]=[];
+  openDropdownIndex: number|null = null;
+  isDeleteConfirmVisible: boolean = false;
+  deleteClassId: number|null = null;
+  deleteClassName: string = '';
+  notification: { type: 'success' | 'warning' | 'error', message: string } | null = null;
   constructor(
     private classroomService: ClassroomService,
-    private userService : UserService
+    private userService : UserService,
+    private enrollmentService: EnrollmentService
   ){}
   ngOnInit(): void {
     this.userId = this.userService.getUserId() ?? 0;
@@ -55,13 +64,67 @@ export class ListClassComponent {
   loadAllClassByTeacher() {
     this.classroomService.getClassByTeacher(this.userId).subscribe({
       next: (response) => {
-        debugger
-        this.classes = response;
+        this.classes = response.map((c: any) => ({ ...c, studentCount: null }));
+        this.classes.forEach((c: any, idx: number) => {
+          this.enrollmentService.getAllStudentInClass(c.id).subscribe({
+            next: (students) => {
+              this.classes[idx].studentCount = students.length;
+            },
+            error: () => {
+              this.classes[idx].studentCount = 0;
+            }
+          });
+        });
       },
       error: (error) => {
-        debugger
         alert(error.error);
       }
     });
+  }
+
+  toggleDropdown(index: number) {
+    this.openDropdownIndex = this.openDropdownIndex === index ? null : index;
+  }
+
+  handleUpdate(classItem: any) {
+    alert('Chức năng cập nhật lớp đang phát triển!');
+    this.openDropdownIndex = null;
+  }
+
+  handleDelete(classItem: any) {
+    this.deleteClassId = classItem.id;
+    this.deleteClassName = classItem.name;
+    this.isDeleteConfirmVisible = true;
+    this.openDropdownIndex = null;
+  }
+
+  confirmDeleteClass() {
+    if (this.deleteClassId != null) {
+      this.classroomService.deleteClassroom(this.deleteClassId).subscribe({
+        next: (res: any) => {
+          this.isDeleteConfirmVisible = false;
+          this.deleteClassId = null;
+          this.deleteClassName = '';
+          this.notification = { type: 'success', message: 'Xóa lớp thành công!' };
+          this.loadAllClassByTeacher();
+        },
+        error: (err: any) => {
+          this.isDeleteConfirmVisible = false;
+          this.deleteClassId = null;
+          this.deleteClassName = '';
+          this.notification = { type: 'error', message: err.error || 'Xóa lớp thất bại!' };
+        }
+      });
+    }
+  }
+
+  cancelDeleteClass() {
+    this.isDeleteConfirmVisible = false;
+    this.deleteClassId = null;
+    this.deleteClassName = '';
+  }
+
+  onNotificationClose() {
+    this.notification = null;
   }
 }
