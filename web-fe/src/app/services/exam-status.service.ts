@@ -19,7 +19,7 @@ export class ExamStatusService {
   private connectionSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private reconnectAttempts: number = 0;
   private readonly maxReconnectAttempts: number = 5;
-  private readonly reconnectInterval: number = 5000; // 5 seconds
+  private readonly reconnectInterval: number = 5000;
   private pendingStatusUpdates: { examId: number, studentId: number, status: ExamStatusType, classId: number }[] = [];
   private activitySubscriptions: { [key: string]: boolean } = {};
 
@@ -41,7 +41,7 @@ export class ExamStatusService {
         console.log('Kết nối WebSocket thành công');
         this.connectionSubject.next(true);
         this.reconnectAttempts = 0;
-        this.processPendingUpdates(); // Xử lý các cập nhật trạng thái đang chờ
+        this.processPendingUpdates();
       },
       onDisconnect: () => {
         console.log('Ngắt kết nối WebSocket');
@@ -54,7 +54,6 @@ export class ExamStatusService {
         this.attemptReconnect();
       },
       debug: (str) => {
-        // console.log(new Date(), str); // Uncomment for detailed STOMP debugging
       },
       reconnectDelay: 5000
     });
@@ -171,7 +170,6 @@ export class ExamStatusService {
     }
   }
 
-  // Gửi sự kiện hoạt động của sinh viên (chuyển tab, thoát fullscreen, rời trang)
   sendExamActivity(activityType: 'FULLSCREEN_EXIT' | 'TAB_CHANGE' | 'EXAM_LEFT', examId: number, classId: number, studentId: number) {
     const activity = {
       examId,
@@ -181,7 +179,6 @@ export class ExamStatusService {
       timestamp: new Date().toISOString()
     };
     
-    // Cache activity ngay lập tức
     this.examCacheService.addActivityToCache(examId, classId, activity);
     
     if (this.stompClient && this.stompClient.connected) {
@@ -192,26 +189,18 @@ export class ExamStatusService {
     }
   }
 
-  /**
-   * Đăng ký nhận log hoạt động sinh viên qua WebSocket
-   * @param examId
-   * @param classId
-   * @param callback Hàm xử lý khi nhận được activity
-   */
   subscribeToStudentActivityLog(examId: number, classId: number, callback: (activity: any) => void) {
     const topic = `/topic/exam-activity/${examId}/${classId}`;
     if (this.stompClient && this.stompClient.connected) {
       if (!this.activitySubscriptions[topic]) {
         this.stompClient.subscribe(topic, (message: any) => {
           const activity = JSON.parse(message.body);
-          // Cache activity khi nhận được từ WebSocket
           this.examCacheService.addActivityToCache(examId, classId, activity);
           callback(activity);
         });
         this.activitySubscriptions[topic] = true;
       }
     } else {
-      // Nếu chưa kết nối, đợi kết nối xong rồi subscribe
       this.connectionStatus$.subscribe(connected => {
         if (connected) {
           this.subscribeToStudentActivityLog(examId, classId, callback);
@@ -220,23 +209,14 @@ export class ExamStatusService {
     }
   }
 
-  /**
-   * Lấy toàn bộ log hoạt động sinh viên từ backend
-   */
   fetchActivityLog(examId: number, classId: number): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiBaseUrl}/exam-activity?examId=${examId}&classId=${classId}`);
   }
 
-  /**
-   * Lấy log hoạt động từ cache (cho trường hợp reload trang)
-   */
   getCachedActivityLog(examId: number, classId: number): any[] {
     return this.examCacheService.getActivityLog(examId, classId) || [];
   }
 
-  /**
-   * Xóa cache activity log
-   */
   clearActivityLogCache(examId: number, classId: number): void {
     this.examCacheService.clearActivityLog(examId, classId);
   }

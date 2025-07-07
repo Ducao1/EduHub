@@ -174,7 +174,6 @@ export class UserService {
     if (data.dob) formData.append('dob', data.dob);
     if (data.avatar) formData.append('avatar', data.avatar);
 
-    // Tạo headers riêng cho FormData, không set Content-Type để Angular tự động set
     const headers = new HttpHeaders({
       'Accept-Language': 'vi',
     });
@@ -192,5 +191,10 @@ export class UserService {
 
   getStudentTasksInClass(studentId: number, classId: number): Observable<any> {
     return this.http.get(`${environment.apiBaseUrl}/users/${studentId}/tasks/class/${classId}`, this.getApiConfig());
+  }
+
+  changePassword(userId: number, oldPassword: string, newPassword: string) {
+    const body = { userId, oldPassword, newPassword };
+    return this.http.post(`${environment.apiBaseUrl}/users/change-password`, body, this.getApiConfig());
   }
 }

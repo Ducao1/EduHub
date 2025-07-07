@@ -18,6 +18,7 @@ public interface UserService {
     void addRoleToUser(String email, String roleName) throws Exception;
     void removeRoleFromUser(String email, String roleName) throws Exception;
     User updateUser(Long id, UpdateUserDTO updateUserDTO) throws Exception;
+    void changePassword(Long userId, String oldPassword, String newPassword) throws Exception;
     // Method lấy danh sách bài tập và bài thi của sinh viên theo lớp
     StudentTaskWithStudentResponse getStudentTasksByClass(Long studentId) throws Exception;
 

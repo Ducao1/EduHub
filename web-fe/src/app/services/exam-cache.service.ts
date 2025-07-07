@@ -25,7 +25,7 @@ export class ExamCacheService {
       if (Date.now() - cacheData.timestamp < this.TTL) {
         return cacheData.exam;
       } else {
-        localStorage.removeItem(`${this.CACHE_KEY_PREFIX}${examId}`); // Xóa cache hết hạn
+        localStorage.removeItem(`${this.CACHE_KEY_PREFIX}${examId}`);
       }
     }
     return null;
@@ -51,7 +51,6 @@ export class ExamCacheService {
     localStorage.removeItem(`${this.ANSWER_CACHE_KEY_PREFIX}${examId}`);
   }
 
-  // Cache activity log
   setActivityLog(examId: number, classId: number, activities: any[]): void {
     const key = `${this.ACTIVITY_CACHE_KEY_PREFIX}${examId}_${classId}`;
     const cacheData = {
@@ -66,7 +65,6 @@ export class ExamCacheService {
     const cached = localStorage.getItem(key);
     if (cached) {
       const cacheData = JSON.parse(cached);
-      // Cache activity log không có TTL vì cần giữ lại khi reload
       return cacheData.activities;
     }
     return null;
@@ -82,10 +80,8 @@ export class ExamCacheService {
       activities = cacheData.activities || [];
     }
 
-    // Thêm activity mới vào đầu mảng
     activities.unshift(activity);
 
-    // Giới hạn số lượng activity trong cache (tối đa 1000)
     if (activities.length > 1000) {
       activities = activities.slice(0, 1000);
     }
@@ -102,7 +98,6 @@ export class ExamCacheService {
     localStorage.removeItem(key);
   }
 
-  // Xóa tất cả cache liên quan đến exam
   clearAllExamCache(examId: number, classId: number): void {
     this.clearExam(examId);
     this.clearAnswers(examId);

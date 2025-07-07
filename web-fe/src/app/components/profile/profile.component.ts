@@ -25,6 +25,16 @@ export class ProfileComponent implements OnInit {
   avatarFile: File | null = null;
   avatarPreviewUrl: string | null = null;
   notification: { type: 'success' | 'warning' | 'error', title: string, message: string } | null = null;
+  selectedTab: 'profile' | 'password' = 'profile';
+  oldPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
+  passwordError: string = '';
+  passwordSuccess: string = '';
+  showNotification: boolean = false;
+  notificationType: 'success' | 'warning' | 'error' = 'success';
+  notificationTitle: string = '';
+  notificationMessage: string = '';
 
   constructor(
     private userService: UserService,
@@ -109,6 +119,76 @@ export class ProfileComponent implements OnInit {
         setTimeout(() => this.notification = null, 3000);
       }
     });
+  }
+
+  selectTab(tab: 'profile' | 'password') {
+    this.selectedTab = tab;
+    this.passwordError = '';
+    this.passwordSuccess = '';
+    this.oldPassword = '';
+    this.newPassword = '';
+    this.confirmPassword = '';
+  }
+
+  changePassword() {
+    this.passwordError = '';
+    this.passwordSuccess = '';
+    const userId = this.userService.getUserId();
+    if (!userId) {
+      this.passwordError = 'Không xác định được người dùng!';
+      this.showNotification = true;
+      this.notificationType = 'error';
+      this.notificationTitle = 'Lỗi';
+      this.notificationMessage = 'Không xác định được người dùng!';
+      return;
+    }
+    if (!this.oldPassword || !this.newPassword || !this.confirmPassword) {
+      this.passwordError = 'Vui lòng nhập đầy đủ thông tin.';
+      this.showNotification = true;
+      this.notificationType = 'error';
+      this.notificationTitle = 'Lỗi';
+      this.notificationMessage = 'Vui lòng nhập đầy đủ thông tin.';
+      return;
+    }
+    if (this.newPassword.length < 8) {
+      this.passwordError = 'Mật khẩu mới phải có ít nhất 8 ký tự.';
+      this.showNotification = true;
+      this.notificationType = 'error';
+      this.notificationTitle = 'Lỗi';
+      this.notificationMessage = 'Mật khẩu mới phải có ít nhất 8 ký tự.';
+      return;
+    }
+    if (this.newPassword !== this.confirmPassword) {
+      this.passwordError = 'Xác nhận mật khẩu không khớp.';
+      this.showNotification = true;
+      this.notificationType = 'error';
+      this.notificationTitle = 'Lỗi';
+      this.notificationMessage = 'Xác nhận mật khẩu không khớp.';
+      return;
+    }
+    this.userService.changePassword(userId, this.oldPassword, this.newPassword).subscribe({
+      next: (res: any) => {
+        this.passwordSuccess = res.message || 'Đổi mật khẩu thành công!';
+        this.showNotification = true;
+        this.notificationType = 'success';
+        this.notificationTitle = 'Thành công';
+        this.notificationMessage = res.message || 'Đổi mật khẩu thành công!';
+        this.oldPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+      },
+      error: (err: any) => {
+        this.passwordError = err?.error?.error || 'Đổi mật khẩu thất bại!';
+        this.showNotification = true;
+        this.notificationType = 'error';
+        this.notificationTitle = 'Lỗi';
+        this.notificationMessage = err?.error?.error || 'Đổi mật khẩu thất bại!';
+      }
+    });
+  }
+
+  closeNotification() {
+    this.showNotification = false;
   }
 
   onBack() {

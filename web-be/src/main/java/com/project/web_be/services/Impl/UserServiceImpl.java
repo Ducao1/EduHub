@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
         }
         User existingUser = optionalUser.get();
         if(!passwordEncoder.matches(userLoginDTO.getPassword(), existingUser.getPassword())) {
-                throw new BadCredentialsException("password not match");
+                throw new BadCredentialsException("Đăng nhập không thành công");
         }
         if (existingUser.getCurrentRole() == null) {
             existingUser.setCurrentRole(existingUser.getRole());
@@ -214,6 +214,17 @@ public class UserServiceImpl implements UserService {
         }
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public void changePassword(Long userId, String oldPassword, String newPassword) throws Exception {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new BadCredentialsException("Mật khẩu cũ không đúng");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     @Override

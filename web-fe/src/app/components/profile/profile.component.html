@@ -1,4 +1,12 @@
 <div class="profile-container">
+  <app-notification
+    *ngIf="showNotification"
+    [type]="notificationType"
+    [title]="notificationTitle"
+    [message]="notificationMessage"
+    (close)="closeNotification()"
+    class="profile-notification-fixed">
+  </app-notification>
   <div class="profile-left">
     <div class="avatar-upload">
       <div class="avatar-dropzone" style="position: relative;">
@@ -19,68 +27,82 @@
   </div>
   <div class="profile-right">
     <div class="profile-tabs">
-      <div class="tab active">Thông tin cá nhân</div>
+      <div class="tab" [class.active]="selectedTab === 'profile'" (click)="selectTab('profile')">Thông tin cá nhân</div>
+      <div class="tab" [class.active]="selectedTab === 'password'" (click)="selectTab('password')">Đổi mật khẩu</div>
     </div>
-    <form class="profile-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Họ và tên</label>
-          <input type="text" class="form-control" [(ngModel)]="user.fullName" name="fullName">
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" class="form-control" [(ngModel)]="user.email" name="email" disabled>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Số điện thoại</label>
-          <input type="text" class="form-control" [(ngModel)]="user.phoneNumber" name="phoneNumber">
-        </div>
-        <div class="form-group">
-          <label>Ngày sinh</label>
-          <input type="date" class="form-control" [(ngModel)]="user.dob" name="dob">
-        </div>
-      </div>
-      <div class="profile-form-row">
-        <div class="profile-form-group">
-          <label>Giới tính</label>
-          <div>
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                [(ngModel)]="user.gender"
-                [value]="false"
-              />
-              Nam
-            </label>
-            <label style="margin-left: 16px;">
-              <input
-                type="radio"
-                name="gender"
-                [(ngModel)]="user.gender"
-                [value]="true"
-              />
-              Nữ
-            </label>
+    <div *ngIf="selectedTab === 'profile'">
+      <form class="profile-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Họ và tên</label>
+            <input type="text" class="form-control" [(ngModel)]="user.fullName" name="fullName">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" [(ngModel)]="user.email" name="email" disabled>
           </div>
         </div>
-      </div>
-      <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 18px;">
-        <button class="btn-back" type="button" (click)="onBack()">Trở lại</button>
-        <button class="btn-update" (click)="updateUser()">Cập nhật</button>
-      </div>
-    </form>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Số điện thoại</label>
+            <input type="text" class="form-control" [(ngModel)]="user.phoneNumber" name="phoneNumber">
+          </div>
+          <div class="form-group">
+            <label>Ngày sinh</label>
+            <input type="date" class="form-control" [(ngModel)]="user.dob" name="dob">
+          </div>
+        </div>
+        <div class="profile-form-row">
+          <div class="profile-form-group">
+            <label>Giới tính</label>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="gender"
+                  [(ngModel)]="user.gender"
+                  [value]="false"
+                />
+                Nam
+              </label>
+              <label style="margin-left: 16px;">
+                <input
+                  type="radio"
+                  name="gender"
+                  [(ngModel)]="user.gender"
+                  [value]="true"
+                />
+                Nữ
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 18px;">
+          <button class="btn-back" type="button" (click)="onBack()">Trở lại</button>
+          <button class="btn-update" (click)="updateUser()">Cập nhật</button>
+        </div>
+      </form>
+    </div>
+    <div *ngIf="selectedTab === 'password'" class="change-password-tab">
+      <form (ngSubmit)="changePassword()" class="change-password-form">
+        <div class="form-group mb-3">
+          <label for="oldPassword">Mật khẩu cũ</label>
+          <input type="password" id="oldPassword" class="form-control" [(ngModel)]="oldPassword" name="oldPassword" required>
+        </div>
+        <div class="form-group mb-3">
+          <label for="newPassword">Mật khẩu mới</label>
+          <input type="password" id="newPassword" class="form-control" [(ngModel)]="newPassword" name="newPassword" required>
+        </div>
+        <div class="form-group mb-3">
+          <label for="confirmPassword">Xác nhận mật khẩu mới</label>
+          <input type="password" id="confirmPassword" class="form-control" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+        </div>
+        <div *ngIf="passwordError" class="text-danger mb-2">{{ passwordError }}</div>
+        <div *ngIf="passwordSuccess" class="text-success mb-2">{{ passwordSuccess }}</div>
+        <div class="text-end">
+          <button type="submit" class="btn-update">Đổi mật khẩu</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
-
-<div class="notification-fixed-container">
-  <app-notification
-    *ngIf="notification"
-    [type]="notification.type"
-    [title]="notification.title"
-    [message]="notification.message"
-    (close)="notification = null">
-  </app-notification>
 </div>

@@ -5,6 +5,7 @@ import com.project.web_be.dtos.UserDTO;
 import com.project.web_be.dtos.UserLoginDTO;
 import com.project.web_be.dtos.UserRolesDTO;
 import com.project.web_be.dtos.UpdateUserDTO;
+import com.project.web_be.dtos.requests.ChangePasswordDTO;
 import com.project.web_be.dtos.responses.StudentTaskWithStudentResponse;
 import com.project.web_be.entities.Role;
 import com.project.web_be.entities.Submission;
@@ -176,6 +177,20 @@ public class UserController {
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO dto) {
+        try {
+            userService.changePassword(dto.getUserId(), dto.getOldPassword(), dto.getNewPassword());
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Đổi mật khẩu thành công");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
