@@ -197,4 +197,8 @@ export class UserService {
     const body = { userId, oldPassword, newPassword };
     return this.http.post(`${environment.apiBaseUrl}/users/change-password`, body, this.getApiConfig());
   }
+
+  getAllUsers(): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/users/all`, this.getApiConfig());
+  }
 }

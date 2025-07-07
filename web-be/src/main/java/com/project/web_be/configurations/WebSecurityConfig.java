@@ -64,7 +64,7 @@ public class WebSecurityConfig {
                             .requestMatchers(GET,
                                     String.format("%s/users/*/tasks/class/*", apiPrefix)).hasAnyAuthority(Role.STUDENT, Role.TEACHER)
                             .requestMatchers(POST,
-                                    String.format("%s/user/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)
+                                    String.format("%s/user/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT,Role.ADMIN)
 
                             .requestMatchers(POST,
                                     String.format("%s/answer/add", apiPrefix)).hasAuthority(Role.TEACHER)

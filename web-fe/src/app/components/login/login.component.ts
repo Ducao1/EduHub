@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
 
   form: FormGroup;
 
-  // Notification state
   showNotification: boolean = false;
   notificationType: 'success' | 'warning' | 'error' = 'success';
   notificationTitle: string = '';
@@ -52,12 +51,11 @@ export class LoginComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
 
   ngOnInit() {
-    // Kiểm tra token từ URL parameters (OAuth callback)
     this.activatedRoute.queryParams.subscribe((params: any) => {
       const token = params['token'];
       if (token) {
@@ -136,7 +134,6 @@ export class LoginComponent implements OnInit {
 
   loginWithGoogle() {
     try {
-      // Chuyển hướng đến endpoint OAuth2 của Spring Boot
       window.location.href = 'http://localhost:8080/oauth2/authorization/google';
     } catch (error) {
       console.error('Lỗi khi đăng nhập Google:', error);
@@ -149,21 +146,18 @@ export class LoginComponent implements OnInit {
 
   private handleLoginSuccess(token: string) {
     try {
-      // Lưu token và thông tin user
       this.tokenService.saveToken(token);
       this.userService.saveUserData(token);
-      
-      // Lấy thông tin user từ token
       const payload = this.tokenService.getDecodedToken();
       const currentRole = payload?.currentRole;
-      
-      // Chuyển hướng dựa trên role
+    
       if (currentRole === 'TEACHER') {
         this.router.navigate(['/teacher/dashboard']);
       } else if (currentRole === 'STUDENT') {
         this.router.navigate(['/student/dashboard']);
+      } else if (currentRole === 'ADMIN') {
+        this.router.navigate(['/admin/dashboard']);
       } else {
-        // Nếu không có role cụ thể, chuyển về trang chủ
         this.router.navigate(['/']);
       }
     } catch (error) {
@@ -174,7 +168,6 @@ export class LoginComponent implements OnInit {
 
   private handleOAuthCallback(token: string) {
     try {
-      // Sử dụng cùng logic xử lý đăng nhập thành công
       this.showNotification = true;
       this.notificationType = 'success';
       this.notificationTitle = 'Thành công';

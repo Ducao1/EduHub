@@ -1,0 +1,95 @@
+<div class="container-fluid px-0">
+    <div class="row g-0 min-vh-100">
+      <div class="col-md-2 sidebar-container">
+        <div class="sidebar d-flex flex-column justify-content-between h-100">
+          <div>
+            <div class="sidebar-header text-center mb-4">
+              <h5 class="sidebar-title" (click)="goToDashboard()">EduHub</h5>
+            </div>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/admin/dashboard" routerLinkActive="active">
+                  Quản lý tài khoản
+                </a>
+              </li>
+            </ul>
+          </div>
+  
+          <ul class="nav flex-column mt-3">
+            <li class="nav-item">
+              <a class="nav-link sign-out-link" (click)="logout()">
+                <i class="fas fa-sign-out-alt me-3"></i>
+                Đăng xuất
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+  
+      <div class="col-md-10 content-area d-flex flex-column">
+        <header class="top-bar">
+          <div class="topbar">
+          <div class="topbar-icons">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-bell notification-icon">
+              <span class="notification-dot-topbar"></span>
+            </i>
+            <div class="profile-pic-container" (click)="toggleDropdown()">
+              <ng-container *ngIf="userInfo">
+                <img *ngIf="userInfo.avatar"
+                     [src]="userInfo.avatar.startsWith('http') ? userInfo.avatar : 'http://localhost:8080' + userInfo.avatar"
+                     alt="avatar"
+                     class="profile-avatar-img"
+                     style="width: 40px; height: 40px; object-fit: cover; border-radius: 0; border: 1px solid #ccc;" />
+                <span *ngIf="!userInfo.avatar" class="user-text">{{ userInfo.fullName ? userInfo.fullName.charAt(0).toUpperCase() : '?' }}</span>
+              </ng-container>
+              <div class="dropdown-menu-custom" *ngIf="dropdownOpen">
+                <button class="dropdown-item" (click)="viewProfile($event)">Thông tin tài khoản</button>
+                <button class="dropdown-item" (click)="logout($event)">Đăng xuất</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </header>
+        <div class="account-management">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Tìm kiếm sinh viên theo tên, mã hoặc email..."
+            [(ngModel)]="searchText"
+            (input)="onSearch()"
+          />
+          <table class="account-table">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Họ và tên</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of filteredUsers; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ user.fullName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phoneNumber }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <app-notification
+          *ngIf="notificationMessage"
+          [type]="notificationType"
+          [message]="notificationMessage"
+          (close)="closeNotification()">
+        </app-notification>
+        <div class="divider"></div>
+        <div class="main-content flex-grow-1 overflow-auto">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+  

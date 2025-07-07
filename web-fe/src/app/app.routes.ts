@@ -40,6 +40,7 @@ import { ListSubmissionAssignmentComponent } from './components/teacher/assignme
 import { ListScoreAssignmentComponent } from './components/teacher/assignment/list-score-assignment/list-score-assignment.component';
 import { ListScoreExamComponent } from './components/teacher/exam/list-score-exam/list-score-exam.component';
 import { PeopleComponent } from './components/student/student-dashboard/people/people.component';
+import { AdminLayoutComponent } from './components/admin/admin-layout.component';
 
 
 export const routes: Routes = [
@@ -97,4 +98,9 @@ export const routes: Routes = [
   { path: 'confirm-exam/:examId/class/:classId', component: ConfirmExamComponent },
   { path: 'result-exam/:id', component: ResultExamComponent },
   { path: 'session-exam/:examId/class/:classId', component: SessionExamComponent },
+  {
+    path: 'admin/dashboard', component: AdminLayoutComponent, children: [
+      { path: 'profile/:id', component: ProfileComponent }
+    ]
+  }
 ];

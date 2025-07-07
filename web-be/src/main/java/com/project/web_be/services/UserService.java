@@ -22,4 +22,5 @@ public interface UserService {
     StudentTaskWithStudentResponse getStudentTasksByClass(Long studentId) throws Exception;
     StudentTaskWithStudentResponse getStudentTasksInClass(Long studentId, Long classId) throws Exception;
     User processOAuthLogin(org.springframework.security.oauth2.core.user.OAuth2User oAuth2User);
+    List<User> getAllUsers();
 }

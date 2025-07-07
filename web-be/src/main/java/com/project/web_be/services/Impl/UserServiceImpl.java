@@ -547,4 +547,9 @@ public class UserServiceImpl implements UserService {
                 .overallAverageScore(Math.round(overallAverageScore * 100.0) / 100.0)
                 .build();
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }
