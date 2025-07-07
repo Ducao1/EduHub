@@ -18,8 +18,7 @@
                 </a>
               </ng-container>
               <ng-template #downloadLink>
-                <a [href]="getAttachmentUrl(attachment.filePath)" [attr.download]="attachment.fileName" class="attachment-link d-block">
-                  <i class="fas fa-paperclip"></i>
+                <a [href]="getAttachmentUrl(attachment.filePath)" [attr.download]="attachment.fileName">
                   {{ attachment.fileName }}
                 </a>
               </ng-template>

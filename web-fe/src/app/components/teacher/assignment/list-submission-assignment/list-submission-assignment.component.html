@@ -17,6 +17,22 @@
             <div class="assignment-content">
                 <p><strong>Nội dung:</strong> {{ assignment.content }}</p>
             </div>
+            <div *ngIf="assignment.attachments && assignment.attachments.length > 0" class="mt-3">
+              <strong>Tài liệu đính kèm</strong>
+              <div *ngFor="let attachment of assignment.attachments" class="attachment-item mt-2">
+                <ng-container *ngIf="isImage(attachment.filePath); else downloadLink">
+                  <a [href]="getAttachmentUrl(attachment.filePath)" target="_blank" class="attachment-link d-block">
+                    <img [src]="getAttachmentUrl(attachment.filePath)" style="max-width: 200px; max-height: 200px; vertical-align: middle; border-radius: 8px;" />
+                  </a>
+                </ng-container>
+                <ng-template #downloadLink>
+                  <a [href]="getAttachmentUrl(attachment.filePath)" [attr.download]="attachment.fileName" class="attachment-link d-block">
+                    <i class="fas fa-paperclip"></i>
+                    {{ attachment.fileName }}
+                  </a>
+                </ng-template>
+              </div>
+            </div>
         </div>
 
         <div class="student-list-container">

@@ -183,4 +183,13 @@ export class ListSubmissionAssignmentComponent {
   viewSubmission(studentId: number) {
     this.router.navigate(['/teacher/assignment', this.assignmentId, 'submission', studentId]);
   }
+
+  isImage(filePath: string): boolean {
+    return /\.(jpg|jpeg|png|gif|bmp)$/i.test(filePath);
+  }
+
+  getAttachmentUrl(filePath: string): string {
+    const filename = filePath.split(/[\\/]/).pop();
+    return `http://localhost:8080/uploads/${filename}`;
+  }
 }
