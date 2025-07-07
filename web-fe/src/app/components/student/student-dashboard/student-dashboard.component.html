@@ -22,12 +22,12 @@
             <div class="card-body">
                  <div class="student-section">
                       <div class="student-avatars">
-                           <span class="student-count">Sĩ số lớp: {{ class.studentCount }}</span>
+                           <span class="student-count">Sĩ số lớp: {{ class.studentCount === null ? '...' : class.studentCount }}</span>
                       </div>
                  </div>
                  <div class="separator"></div>
                  <div class="view-result">
-                      <a routerLink="/student/detail-class/{{class.id}}">Xem lớp</a>
+                      <a routerLink="/student/detail-class/{{class.id}}">Truy cập lớp</a>
                       <!-- <i class="fas fa-arrow-right"></i> -->
                  </div>
             </div>

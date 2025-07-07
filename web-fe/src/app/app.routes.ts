@@ -39,6 +39,7 @@ import { SessionExamComponent } from './components/teacher/exam/session-exam/ses
 import { ListSubmissionAssignmentComponent } from './components/teacher/assignment/list-submission-assignment/list-submission-assignment.component';
 import { ListScoreAssignmentComponent } from './components/teacher/assignment/list-score-assignment/list-score-assignment.component';
 import { ListScoreExamComponent } from './components/teacher/exam/list-score-exam/list-score-exam.component';
+import { PeopleComponent } from './components/student/student-dashboard/people/people.component';
 
 
 export const routes: Routes = [
@@ -57,6 +58,7 @@ export const routes: Routes = [
       { path: 'list-exam/:classId', component: ListExamComponent },
       { path: 'score/:classId', component: ScoreComponent },
       { path: 'profile/:id', component: ProfileComponent },
+      { path: 'people/:classId', component: PeopleComponent },
     ]
   },
 

@@ -36,11 +36,19 @@ export class StudentDashboardComponent {
   loadAllClassByStudent() {
     this.enrollmentService.getAllClassByStudentId(this.userId).subscribe({
       next: (response) => {
-        debugger
-        this.classes = response;
+        this.classes = response.map((c: any) => ({ ...c, studentCount: null }));
+        this.classes.forEach((c: any, idx: number) => {
+          this.enrollmentService.getAllStudentInClass(c.id).subscribe({
+            next: (students) => {
+              this.classes[idx].studentCount = students.length;
+            },
+            error: () => {
+              this.classes[idx].studentCount = 0;
+            }
+          });
+        });
       },
       error: (error) => {
-        debugger
         alert(`Lỗi khi lấy danh sách lớp: ${error.message}`);
       }
     });

@@ -1,0 +1,45 @@
+<div class="page-container">
+    <app-student-nav-bar [className]="className"></app-student-nav-bar>
+    <div class="notification-wrapper" *ngIf="showNotification">
+        <app-notification
+            [type]="notificationType"
+            [message]="notificationMessage"
+            (close)="hideNotification()">
+        </app-notification>
+    </div>
+    
+    <div class="student-list-container">
+        <div class="student-list-header">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Tìm kiếm sinh viên theo tên, mã hoặc email..." [(ngModel)]="searchTerm" (input)="onSearchInput(searchTerm)">
+            </div>
+        </div>
+
+        <div class="student-table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let student of paginatedStudents; let i = index">
+                        <td>{{i + 1 }}</td>
+                        <td>{{ student.fullName }}</td>
+                        <td>{{student.email}}</td>
+                        <td>{{ student.phoneNumber }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div *ngIf="students.length === 0" class="no-students">
+                <i class="fas fa-users"></i>
+                <p>Chưa có sinh viên nào trong lớp</p>
+            </div>
+        </div>
+        
+    </div>
+</div>

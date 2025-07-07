@@ -65,13 +65,13 @@ export class ListClassComponent {
     this.classroomService.getClassByTeacher(this.userId).subscribe({
       next: (response) => {
         this.classes = response.map((c: any) => ({ ...c, studentCount: null }));
-        this.classes.forEach((c: any, idx: number) => {
+        this.classes.forEach((c: any, index: number) => {
           this.enrollmentService.getAllStudentInClass(c.id).subscribe({
             next: (students) => {
-              this.classes[idx].studentCount = students.length;
+              this.classes[index].studentCount = students.length;
             },
             error: () => {
-              this.classes[idx].studentCount = 0;
+              this.classes[index].studentCount = 0;
             }
           });
         });
@@ -106,6 +106,7 @@ export class ListClassComponent {
           this.deleteClassId = null;
           this.deleteClassName = '';
           this.notification = { type: 'success', message: 'Xóa lớp thành công!' };
+          setTimeout(() => this.notification = null, 3000);
           this.loadAllClassByTeacher();
         },
         error: (err: any) => {
@@ -113,6 +114,7 @@ export class ListClassComponent {
           this.deleteClassId = null;
           this.deleteClassName = '';
           this.notification = { type: 'error', message: err.error || 'Xóa lớp thất bại!' };
+          setTimeout(() => this.notification = null, 3000);
         }
       });
     }
