@@ -19,7 +19,6 @@ export class AddClassComponent {
   className = '';
   description = '';
   
-  // Notification properties
   showNotification = false;
   notificationType: 'success' | 'warning' | 'error' = 'success';
   notificationMessage = '';

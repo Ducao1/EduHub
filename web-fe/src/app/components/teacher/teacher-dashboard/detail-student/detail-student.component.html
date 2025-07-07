@@ -1,7 +1,5 @@
 <div class="page-container">
     <app-teacher-nav-bar [className]="className"></app-teacher-nav-bar>
-    
-    <!-- Notification -->
     <div class="notification-wrapper" *ngIf="showNotification">
         <app-notification 
             [type]="notificationType"
@@ -11,7 +9,6 @@
     </div>
     
     <div class="detail-student-container">
-        <!-- Header -->
         <div class="header">
             <button class="back-btn" (click)="onBack()">
                 <i class="fas fa-arrow-left"></i>
@@ -20,7 +17,6 @@
             <h1 class="page-title">Theo dõi sinh viên</h1>
         </div>
 
-        <!-- Student Info Card -->
         <div class="student-info-card" *ngIf="student">
             <div class="student-avatar">
                 <img [src]="getAvatarUrl(student.avatar)" 
@@ -44,7 +40,6 @@
             </div>
         </div>
 
-        <!-- Score List Container -->
         <div class="score-list-container">
             <div class="score-header">
                 <h2 class="score-title">Bảng điểm tổng hợp</h2>

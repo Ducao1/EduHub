@@ -74,7 +74,7 @@ public class ClassroomController {
     @GetMapping("/teacher/{teacherId}")
     public ResponseEntity<?> getAllClassByTeacherId(@PathVariable Long teacherId) {
         try {
-            List<Classroom> classrooms = classroomService.getClassByTeacherId(teacherId);
+                List<Classroom> classrooms = classroomService.getClassByTeacherId(teacherId);
             List<ClassResponse> listClassResponses = classrooms.stream()
                     .map(ClassResponse::fromClassroom)
                     .toList();

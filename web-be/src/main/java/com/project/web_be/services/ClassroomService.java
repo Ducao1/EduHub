@@ -13,8 +13,6 @@ public interface ClassroomService {
     Classroom updateClassroom(ClassroomDTO classroomDTO,long id) throws Exception;
     @Transactional
     Classroom updateClassCode(long id) throws Exception;
-
     List<Classroom> getClassByTeacherId(Long teacherId);
-
     void deleteClassroom(long id);
 }

@@ -12,7 +12,6 @@ public interface ScoreService {
     Score getScoreBySubmissionId(Long submissionId);
     List<ScoreAssignmentResponse> getScoresByAssignmentId(Long assignmentId);
     List<ScoreDTO> getScoresByExamId(Long examId);
-
     List<StudentScoreResponse> getExamScoresByStudentId(Long studentId);
     List<StudentScoreResponse> getAssignmentScoresByStudentId(Long studentId);
 }

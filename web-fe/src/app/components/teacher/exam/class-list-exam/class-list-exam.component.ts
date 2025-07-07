@@ -57,9 +57,11 @@ export class ClassListExamComponent implements OnInit {
   loadClassInfo() {
     this.classroomService.getClassById(this.classId).subscribe({
       next: (response) => {
+        debugger
         this.className = response.name;
       },
       error: (err) => {
+        debugger
         console.error('Lỗi khi lấy thông tin lớp:', err);
       }
     });

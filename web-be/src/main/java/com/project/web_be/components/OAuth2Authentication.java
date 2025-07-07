@@ -26,9 +26,8 @@ public class OAuth2Authentication extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         try {
-            if (authentication.getPrincipal() instanceof OAuth2User) {
-                OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-                User user = userService.processOAuthPostLogin(oAuth2User); // Gọi trực tiếp từ UserService
+            if (authentication.getPrincipal() instanceof OAuth2User oAuth2User) {
+                User user = userService.processOAuthLogin(oAuth2User);
                 String token = jwtTokenUtils.generateToken(user);
                 response.sendRedirect("http://localhost:4200/login?token=" + token);
             } else {

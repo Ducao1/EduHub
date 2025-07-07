@@ -436,30 +436,10 @@
     }
 }
 
-.form-group {
-    margin-bottom: 20px;
-
-    label {
-        display: block;
-        margin-bottom: 8px;
-        color: #495057;
-        font-weight: 500;
-    }
-}
-
-.form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-
-    &:focus {
-        border-color: #0052B4;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(0, 82, 180, 0.1);
-    }
+.popup-body {
+    margin: 20px 0 10px 0;
+    font-size: 16px;
+    color: #333;
 }
 
 .popup-footer {
@@ -496,6 +476,32 @@
         &:hover {
             background: #003d8f;
         }
+    }
+}
+
+.form-group {
+    margin-bottom: 20px;
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #495057;
+        font-weight: 500;
+    }
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+
+    &:focus {
+        border-color: #0052B4;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 82, 180, 0.1);
     }
 }
 

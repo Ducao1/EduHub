@@ -64,7 +64,6 @@ export class UpdateQuestionComponent implements OnInit {
         };
         
         this.examId = response.exam_id;
-        // Set selectedAnswerIndex for SINGLE_CHOICE
         if (this.questionDTO.type === 'SINGLE_CHOICE') {
           const idx = this.questionDTO.answers.findIndex(a => a.is_correct);
           this.selectedAnswerIndex = idx !== -1 ? idx : 0;
@@ -78,7 +77,6 @@ export class UpdateQuestionComponent implements OnInit {
   }
 
   updateQuestion() {
-    // Đồng bộ đáp án đúng cho SINGLE_CHOICE
     if (this.questionDTO.type === 'SINGLE_CHOICE') {
       this.questionDTO.answers.forEach((a, idx) => a.is_correct = idx === this.selectedAnswerIndex);
     }

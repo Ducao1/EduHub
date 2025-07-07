@@ -41,10 +41,7 @@ export class ListStudentComponent implements OnInit {
   searchTerm: string = '';
   private searchSubject = new Subject<string>();
 
-  // Dropdown management
   activeDropdownIndex: number = -1;
-
-  // Notification management
   showNotification: boolean = false;
   notificationType: 'success' | 'warning' | 'error' = 'success';
   notificationMessage: string = '';
@@ -58,7 +55,6 @@ export class ListStudentComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
-    // Close dropdown if clicking outside
     if (this.activeDropdownIndex !== -1) {
       const target = event.target as HTMLElement;
       if (!target.closest('.dropdown-container')) {
@@ -193,7 +189,6 @@ export class ListStudentComponent implements OnInit {
     });
   }
 
-  // Dropdown methods
   toggleDropdown(index: number, event: Event) {
     event.stopPropagation();
     this.activeDropdownIndex = this.activeDropdownIndex === index ? -1 : index;
@@ -203,10 +198,8 @@ export class ListStudentComponent implements OnInit {
     this.activeDropdownIndex = -1;
   }
 
-  // Action methods
   followStudent(student: User) {
     console.log('Theo dõi sinh viên:', student.fullName);
-    // Chuyển hướng đến trang chi tiết sinh viên
     this.router.navigate(['/teacher/class', this.classId, 'student', student.id]);
     this.closeDropdown();
   }
@@ -216,7 +209,7 @@ export class ListStudentComponent implements OnInit {
       this.enrollmentService.removeStudentFromClass(this.classId, studentId).subscribe({
         next: (response) => {
           this.showNotificationMessage('success', `Đã xóa sinh viên "${studentName}" khỏi lớp thành công!`);
-          this.loadAllStudent(); // Reload danh sách sinh viên
+          this.loadAllStudent();
         },
         error: (error) => {
           this.showNotificationMessage('error', `Lỗi khi xóa sinh viên: ${error.error?.message || error.message}`);
@@ -226,13 +219,11 @@ export class ListStudentComponent implements OnInit {
     this.closeDropdown();
   }
 
-  // Notification methods
   showNotificationMessage(type: 'success' | 'warning' | 'error', message: string) {
     this.notificationType = type;
     this.notificationMessage = message;
     this.showNotification = true;
     
-    // Auto hide notification after 5 seconds
     setTimeout(() => {
       this.hideNotification();
     }, 5000);

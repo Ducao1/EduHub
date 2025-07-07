@@ -8,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface ClassroomExamService {
     ClassExam assignExam(AssignExamDTO assignExamDTO) throws Exception;
-
     Page<ClassExam> getExamByClassroomId(Long id, Pageable pageable);
-
     ClassExam updateExamDate(UpdateExamDateDTO updateExamDateDTO, long id) throws Exception;
 }

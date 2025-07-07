@@ -1,7 +1,5 @@
 <div class="page-container">
     <app-teacher-nav-bar [className]="className"></app-teacher-nav-bar>
-    
-    <!-- Notification -->
     <div class="notification-wrapper" *ngIf="showNotification">
         <app-notification
             [type]="notificationType"
@@ -123,6 +121,4 @@
         </div>
     </div>
 </div>
-
-<!-- Click outside to close dropdown -->
 <div class="dropdown-backdrop" *ngIf="activeDropdownIndex !== -1" (click)="closeDropdown()"></div>

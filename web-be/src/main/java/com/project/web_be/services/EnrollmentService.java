@@ -11,22 +11,13 @@ import java.util.List;
 
 public interface EnrollmentService {
     Enrollment addStudent(EnrollmentDTO enrollmentDTO) throws Exception;
-
     Enrollment joinClassroom(JoinClassDTO joinClassDTO) throws Exception;
-
     List<Classroom> getListClassByStudentId(Long studentId);
-
     List<User> getAllStudentInClass(Long id);
-
     List<User> getStudentsByClassId(Long classId);
-
     Enrollment approveStudent(Long enrollmentId) throws Exception;
-
     List<User> searchStudentsInClass(Long classId, String keyword);
-
     List<StudentResponse> getPendingStudentsInClass(Long classId);
-
     void approveAllPendingStudents(Long classId) throws Exception;
-
     void removeStudentFromClass(Long classId, Long studentId) throws Exception;
 }

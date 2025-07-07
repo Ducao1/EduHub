@@ -129,3 +129,19 @@
   [message]="notificationMessage"
   (close)="onNotificationClose()">
 </app-notification>
+
+<div class="popup-overlay" *ngIf="isDeleteConfirmVisible">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h5>Xác nhận xóa bài kiểm tra</h5>
+      <button class="close-button" (click)="cancelDeleteExam()">×</button>
+    </div>
+    <div class="popup-body">
+      <p>Bạn có chắc chắn muốn xóa <b>{{ deleteExamTitle }}</b> không?</p>
+    </div>
+    <div class="popup-footer">
+      <button class="btn btn-secondary" (click)="cancelDeleteExam()">Hủy</button>
+      <button class="btn btn-primary" (click)="confirmDeleteExam()">Xác nhận</button>
+    </div>
+  </div>
+</div>

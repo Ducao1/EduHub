@@ -111,6 +111,7 @@ export class SessionExamComponent implements OnInit, OnDestroy {
   private loadExamDetails(): void {
     this.examService.getExamById(this.examId, { classId: this.classId }).subscribe({
       next: (exam: Exam) => {
+        debugger
         this.examName = exam.title || '';
       },
       error: (err: any) => {
@@ -191,13 +192,10 @@ export class SessionExamComponent implements OnInit, OnDestroy {
   private restoreActivityLogFromCache(): void {
     const cachedActivities = this.examStatusService.getCachedActivityLog(this.examId, this.classId);
     if (cachedActivities.length > 0) {
-      console.log('Khôi phục', cachedActivities.length, 'activity từ cache');
       this.activities = cachedActivities.map(activity => ({
         message: this.getActivityMessage(activity),
         timestamp: new Date(activity.timestamp)
       }));
-      
-      // Cập nhật danh sách sinh viên có hoạt động gần đây
       cachedActivities.forEach(activity => {
         this.recentActivityStudents.add(activity.studentId);
       });
@@ -207,29 +205,20 @@ export class SessionExamComponent implements OnInit, OnDestroy {
   fetchActivityLog() {
     this.examStatusService.fetchActivityLog(this.examId, this.classId)
       .subscribe(logs => {
-        // Kết hợp logs từ server với cache
         const serverActivities = logs.map(activity => ({
           message: this.getActivityMessage(activity),
           timestamp: new Date(activity.timestamp)
         }));
-
-        // Lấy activities từ cache
         const cachedActivities = this.examStatusService.getCachedActivityLog(this.examId, this.classId);
         const cachedActivityMessages = cachedActivities.map(activity => ({
           message: this.getActivityMessage(activity),
           timestamp: new Date(activity.timestamp)
         }));
-
-        // Kết hợp và loại bỏ trùng lặp
         const allActivities = [...serverActivities, ...cachedActivityMessages];
         const uniqueActivities = this.removeDuplicateActivities(allActivities);
-        
-        // Sắp xếp theo thời gian mới nhất
         this.activities = uniqueActivities.sort((a, b) => 
           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
         );
-
-        // Cập nhật cache với dữ liệu mới
         this.examCacheService.setActivityLog(this.examId, this.classId, 
           this.activities.map(activity => ({
             examId: this.examId,
@@ -270,13 +259,11 @@ export class SessionExamComponent implements OnInit, OnDestroy {
     return 'UNKNOWN';
   }
 
-  // Xóa cache khi kết thúc session exam
   clearExamCache(): void {
     this.examCacheService.clearAllExamCache(this.examId, this.classId);
     console.log('Đã xóa cache cho bài thi:', this.examId, 'lớp:', this.classId);
   }
 
-  // Xóa chỉ cache activity log
   clearActivityCache(): void {
     this.examCacheService.clearActivityLog(this.examId, this.classId);
     this.activities = [];
@@ -284,17 +271,14 @@ export class SessionExamComponent implements OnInit, OnDestroy {
     console.log('Đã xóa cache activity log cho bài thi:', this.examId, 'lớp:', this.classId);
   }
 
-  // Làm mới danh sách sinh viên
   refreshStudentList(): void {
     this.examStatusService.getClassStudentsWithExamStatus(this.examId, this.classId);
   }
 
-  // Kiểm tra sinh viên có hoạt động gần đây không
   hasRecentActivity(studentId: number): boolean {
     return this.recentActivityStudents.has(studentId);
   }
 
-  // Lấy class CSS cho activity item
   getActivityClass(activity: any): string {
     const activityType = this.extractActivityTypeFromMessage(activity.message);
     switch (activityType) {
@@ -309,7 +293,6 @@ export class SessionExamComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Lấy icon cho activity
   getActivityIcon(activity: any): string {
     const activityType = this.extractActivityTypeFromMessage(activity.message);
     switch (activityType) {
@@ -324,7 +307,6 @@ export class SessionExamComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Lấy log hoạt động cho từng sinh viên
   getLogsForStudent(studentId: number) {
     return this.activities
       .filter(log => log.message.includes(`Sinh viên ${studentId} `))

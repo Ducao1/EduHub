@@ -28,7 +28,6 @@ export class DetailStudentComponent implements OnInit {
   loading: boolean = true;
   error: string | null = null;
 
-  // Notification management
   showNotification: boolean = false;
   notificationType: 'success' | 'warning' | 'error' = 'success';
   notificationMessage: string = '';
@@ -104,13 +103,10 @@ export class DetailStudentComponent implements OnInit {
     this.router.navigate(['/teacher/class', this.classId]);
   }
 
-  // Notification methods
   showNotificationMessage(type: 'success' | 'warning' | 'error', message: string) {
     this.notificationType = type;
     this.notificationMessage = message;
     this.showNotification = true;
-    
-    // Auto hide notification after 5 seconds
     setTimeout(() => {
       this.hideNotification();
     }, 5000);

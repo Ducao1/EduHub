@@ -423,7 +423,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User processOAuthPostLogin(OAuth2User oAuth2User) {
+    public User processOAuthLogin(OAuth2User oAuth2User) {
         try {
             String email = oAuth2User.getAttribute("email");
             String fullName = oAuth2User.getAttribute("name");

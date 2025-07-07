@@ -10,9 +10,7 @@ import java.util.Optional;
 
 public interface QuestionService {
     Question addQuestion(QuestionDTO questionDTO) throws Exception;
-
     Question updateQuestion(long id, QuestionDTO questionDTO) throws DataNotFoundException;
-
     Question getQuestionById(long id) throws DataNotFoundException;
     List<Question> getAllQuestions();
     void deleteQuestion(long id);

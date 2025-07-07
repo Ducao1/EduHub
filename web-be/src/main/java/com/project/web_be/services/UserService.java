@@ -19,10 +19,7 @@ public interface UserService {
     void removeRoleFromUser(String email, String roleName) throws Exception;
     User updateUser(Long id, UpdateUserDTO updateUserDTO) throws Exception;
     void changePassword(Long userId, String oldPassword, String newPassword) throws Exception;
-    // Method lấy danh sách bài tập và bài thi của sinh viên theo lớp
     StudentTaskWithStudentResponse getStudentTasksByClass(Long studentId) throws Exception;
-
-    // Method lấy danh sách bài tập và bài thi của sinh viên trong một lớp cụ thể
     StudentTaskWithStudentResponse getStudentTasksInClass(Long studentId, Long classId) throws Exception;
-    User processOAuthPostLogin(org.springframework.security.oauth2.core.user.OAuth2User oAuth2User);
+    User processOAuthLogin(org.springframework.security.oauth2.core.user.OAuth2User oAuth2User);
 }

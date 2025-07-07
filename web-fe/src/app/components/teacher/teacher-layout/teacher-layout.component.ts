@@ -45,7 +45,7 @@ export class TeacherLayoutComponent {
   }
 
   closeDropdown() {
-    setTimeout(() => this.dropdownOpen = false, 150); // delay để click chọn menu không bị mất
+    setTimeout(() => this.dropdownOpen = false, 150);
   }
 
   viewProfile(event: Event) {

@@ -20,11 +20,12 @@
                     </a>
                 </div>
                 <div class="exam-details">
-                    <span class="class-name">
+                    <!-- <span class="class-name">
                         <i class="fas fa-chalkboard me-2"></i>{{ exam.className }}
-                    </span>
-                    <span class="duration">
-                        <i class="fas fa-hourglass-half me-2"></i>{{ exam.durationInMinutes }} phút
+                    </span> -->
+                    <span>
+                      <i class="fas fa-hourglass-half"></i>
+                      {{ (exam.duration || 0) / 60000 | number:'1.0-0' }} phút
                     </span>
                     <span class="due-date" [class.no-deadline]="!exam.dueDate || exam.dueDate[0] === 9999">
                         <i class="fas fa-clock me-2"></i>

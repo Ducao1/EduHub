@@ -49,6 +49,10 @@ export class ExamComponent implements OnInit, OnDestroy {
   notificationType: 'success' | 'warning' | 'error' = 'success';
   notificationMessage = '';
 
+  isDeleteConfirmVisible = false;
+  deleteExamId: number | null = null;
+  deleteExamTitle: string = '';
+
   constructor(
     private examService: ExamService,
     private activedRoute: ActivatedRoute,
@@ -132,16 +136,42 @@ export class ExamComponent implements OnInit, OnDestroy {
   }
 
   deleteExam(examId: number) {
-    if (confirm('Bạn có chắc chắn muốn xóa bài kiểm tra này?')) {
-      this.examService.deleteExamById(examId).subscribe({
+    const exam = this.exams.find(e => e.id === examId);
+    this.deleteExamId = examId;
+    this.deleteExamTitle = exam ? exam.title : '';
+    this.isDeleteConfirmVisible = true;
+  }
+
+  confirmDeleteExam() {
+    if (this.deleteExamId != null) {
+      this.examService.deleteExamById(this.deleteExamId).subscribe({
         next: (response) => {
           this.loadAllExams();
+          this.isDeleteConfirmVisible = false;
+          this.deleteExamId = null;
+          this.deleteExamTitle = '';
+          this.showNotification = true;
+          this.notificationType = 'success';
+          this.notificationMessage = 'Xóa bài kiểm tra thành công!';
+          setTimeout(() => { this.showNotification = false; }, 2000);
         },
         error: (error) => {
-          alert(error.error);
+          this.isDeleteConfirmVisible = false;
+          this.deleteExamId = null;
+          this.deleteExamTitle = '';
+          this.showNotification = true;
+          this.notificationType = 'error';
+          this.notificationMessage = error.error || 'Xóa bài kiểm tra thất bại!';
+          setTimeout(() => { this.showNotification = false; }, 3000);
         }
       });
     }
+  }
+
+  cancelDeleteExam() {
+    this.isDeleteConfirmVisible = false;
+    this.deleteExamId = null;
+    this.deleteExamTitle = '';
   }
 
   closePopup(event: any) {

@@ -26,33 +26,30 @@ export class ListClassComponent {
     
   }
 
-  // Define an array of background colors based on the desired theme (blue, grey, white)
   cardBackgrounds: string[] = [
-    '#eef2f7', // Very light blue-grey
-    '#ffffff', // White
-    '#e6f3ff', // Light blue
-    '#f8f9fa', // Very light grey
-    '#e9ecef', // Light grey
-    '#cfe6ff'  // Slightly more vibrant light blue (matches profile border)
+    '#eef2f7',
+    '#ffffff',
+    '#e6f3ff',
+    '#f8f9fa',
+    '#e9ecef',
+    '#cfe6ff'
   ];
 
-  // Define a corresponding array of text/primary colors for titles and links
   cardTextColors: string[] = [
-    '#0052B4', // Dark blue (matches sidebar)
-    '#4a5fd1', // Original primary blue
-    '#007bff', // Bootstrap primary blue
-    '#6c757d', // Muted grey
-    '#343a40', // Dark grey
-    '#0056b3'  // Darker blue for contrast
+    '#0052B4',
+    '#4a5fd1',
+    '#007bff',
+    '#6c757d',
+    '#343a40',
+    '#0056b3' 
   ];
 
   getCardBackground(index: number): string {
-    return '#ffffff'; // Set all card backgrounds to white
+    return '#ffffff';
   }
 
   getCardTitleColor(index: number): string {
-    // Use a consistent dark color for text
-    return '#343a40'; // Dark grey for text
+    return '#343a40';
   }
 
   loadAllClassByTeacher() {
