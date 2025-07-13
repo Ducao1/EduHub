@@ -14,4 +14,5 @@ import java.util.List;
 @Repository
 public interface ClassExamRepository extends JpaRepository<ClassExam, Long> {
     Page<ClassExam> findByClassroomId(Long id, Pageable pageable);
+    List<ClassExam> findByClassroomId(Long classId);
 }

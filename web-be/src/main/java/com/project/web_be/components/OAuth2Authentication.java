@@ -17,7 +17,7 @@ import java.io.IOException;
 @Component
 public class OAuth2Authentication extends SimpleUrlAuthenticationSuccessHandler {
     @Autowired
-    @Lazy // Trì hoãn khởi tạo UserService để phá vỡ chu kỳ phụ thuộc
+    @Lazy
     private UserService userService;
 
     @Autowired

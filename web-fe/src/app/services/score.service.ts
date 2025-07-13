@@ -43,4 +43,8 @@ export class ScoreService {
   exportExamScoresToExcel(examId: number) {
     return this.http.get(`${this.apiBase}/exams/${examId}/export`, { responseType: 'blob' });
   }
+
+  exportStudentScoresByClassId(classId: number) {
+    return this.http.get(`${this.apiBase}/class/${classId}/students-scores/export`, { responseType: 'blob' });
+  }
 }

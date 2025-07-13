@@ -36,7 +36,6 @@ public class GeminiServiceImpl implements GeminiService {
         int attempts = 0;
         while (attempts < maxRetries) {
             try {
-                // Tạo request body đơn giản
                 String requestBody = "{" +
                         "\"contents\":[{" +
                         "\"parts\":[{" +

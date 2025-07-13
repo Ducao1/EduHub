@@ -169,6 +169,10 @@ public class WebSecurityConfig {
                                     String.format("%s/scores/exams/**", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)
                             .requestMatchers(GET,
                                     String.format("%s/scores/exams/*/export", apiPrefix)).hasAuthority(Role.TEACHER)
+                            .requestMatchers(GET,
+                                    String.format("%s/scores/class/*/students-scores", apiPrefix)).hasAuthority(Role.TEACHER)
+                            .requestMatchers(GET,
+                                    String.format("%s/scores/class/*/students-scores/export", apiPrefix)).hasAuthority(Role.TEACHER)
 
                             .requestMatchers(GET,
                                     String.format("%s/scores/assignments/*/export", apiPrefix)).hasAuthority(Role.TEACHER)
@@ -181,6 +185,8 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.GET, "/api/v1/exam-activity").permitAll()
                             .requestMatchers(POST,
                                     String.format("%s/chat", apiPrefix)).permitAll()
+                            .requestMatchers(GET,
+                                    String.format("%s/comments/*/likes", apiPrefix)).hasAnyAuthority(Role.TEACHER, Role.STUDENT)
                             .anyRequest().permitAll();
                 })
                 .oauth2Login(oauth2 -> {

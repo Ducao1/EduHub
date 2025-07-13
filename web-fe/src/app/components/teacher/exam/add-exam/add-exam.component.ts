@@ -5,13 +5,15 @@ import { ExamService } from '../../../../services/exam.service';
 import { ExamDTO } from '../../../../dtos/requests/exam.dto';
 import { UserService } from '../../../../services/user.service';
 import { FormsModule } from '@angular/forms';
+import { NotificationComponent } from '../../../notification/notification.component';
 
 @Component({
   selector: 'app-add-exam',
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    NotificationComponent
   ],
   templateUrl: './add-exam.component.html',
   styleUrl: './add-exam.component.scss'
@@ -21,6 +23,11 @@ export class AddExamComponent {
   title = '';
   examId!: number;
   duration: number = 60;
+  notification = {
+    show: false,
+    type: 'success' as 'success' | 'warning' | 'error',
+    message: ''
+  };
 
   constructor(
     private examService: ExamService,
@@ -42,17 +49,27 @@ export class AddExamComponent {
     };
     this.examService.addExam(examDTO).subscribe({
       next: (response) => {
-        debugger
-        alert('Bài kiểm tra được tạo thành công!');
+        this.notification = {
+          show: true,
+          type: 'success',
+          message: 'Bài kiểm tra được tạo thành công!'
+        };
         this.examId = response.id;
-        this.router.navigate(['/teacher/detail-exam', this.examId]);
+        setTimeout(() => {
+          this.notification.show = false;
+          this.router.navigate(['/teacher/detail-exam', this.examId]);
+        }, 1500);
       },
       complete: () => {
         debugger
       },
       error: (error) => {
-        debugger
-        alert(error.error)
+        this.notification = {
+          show: true,
+          type: 'error',
+          message: error.error || 'Tạo đề thi thất bại!'
+        };
+        setTimeout(() => this.notification.show = false, 2000);
       }
     });
   }

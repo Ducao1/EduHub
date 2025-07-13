@@ -1,4 +1,13 @@
 <div class="submission-detail-container">
+  <!-- Notification Component -->
+  <app-notification
+    *ngIf="showNotification"
+    [type]="notificationType"
+    [title]="notificationTitle"
+    [message]="notificationMessage"
+    (close)="closeNotification()">
+  </app-notification>
+
   <h2>Chi tiết bài nộp</h2>
   <div class="student-info" *ngIf="student">
     <p><b>Họ tên:</b> {{ student.fullName }}</p>
@@ -22,7 +31,10 @@
   </div>
   <div class="grade-box" *ngIf="submission">
     <label>Nhập điểm:</label>
-    <input type="number" [(ngModel)]="grade" min="0" max="10" step="0.1"/>
-    <button (click)="saveGrade()">Lưu điểm</button>
+    <input type="number" [(ngModel)]="grade" min="0" max="10" step="0.1" [disabled]="isGrading"/>
+    <button (click)="saveGrade()" [disabled]="isGrading">
+      <span *ngIf="!isGrading">Lưu điểm</span>
+      <span *ngIf="isGrading">Đang lưu...</span>
+    </button>
   </div>
 </div>

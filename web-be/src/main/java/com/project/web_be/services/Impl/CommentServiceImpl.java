@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -192,6 +191,13 @@ public class CommentServiceImpl implements CommentService {
             comment.setLikes(comment.getLikes() - 1);
             commentRepository.save(comment);
         }
+    }
+
+    @Override
+    public int getCommentLikes(Long commentId) throws DataNotFoundException {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new DataNotFoundException("Comment not found"));
+        return comment.getLikes();
     }
 
     private CommentDTO convertToDTO(Comment comment) {

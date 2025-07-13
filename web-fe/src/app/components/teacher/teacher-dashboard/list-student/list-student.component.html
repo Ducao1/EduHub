@@ -15,7 +15,8 @@
                 <input type="text" class="search-input" placeholder="Tìm kiếm sinh viên theo tên, mã hoặc email..." [(ngModel)]="searchTerm" (input)="onSearchInput(searchTerm)">
             </div>
             <div style="display: flex; gap: 12px; align-items: center;">
-                <button class="export-btn" (click)="exportExcel()">Xuất Excel</button>
+                <button class="export-btn" (click)="exportListScore()">Xuất điểm</button>
+                <button class="export-btn" (click)="exportListStudent()">Xuất danh sách</button>
                 <button class="btn-approve" (click)="onApprove()">
                   <i class="fa-solid fa-circle-check"></i>Duyệt
                 </button>

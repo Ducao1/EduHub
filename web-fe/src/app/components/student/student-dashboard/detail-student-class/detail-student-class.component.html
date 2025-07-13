@@ -47,7 +47,7 @@
           <span class="like-section-inline">
             <button class="like-btn" (click)="toggleLike(comment)">
               <i class="fas fa-heart" [ngClass]="{'liked': comment?.likedByCurrentUser}"></i>
-              <span>{{ comment?.likeCount || 0 }}</span>
+              <span>{{ comment?.likes || 0 }}</span>
             </button>
           </span>
         </div>
@@ -99,7 +99,7 @@
                 <span class="like-section-inline">
                   <button class="like-btn" (click)="toggleLike(reply)">
                     <i class="fas fa-heart" [ngClass]="{'liked': reply?.likedByCurrentUser}"></i>
-                    <span>{{ reply?.likeCount || 0 }}</span>
+                    <span>{{ reply?.likes || 0 }}</span>
                   </button>
                 </span>
               </div>

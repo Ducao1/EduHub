@@ -436,7 +436,6 @@ public class UserServiceImpl implements UserService {
                 if (user != null) {
                     user.setGoogleId(googleId);
                 } else {
-                    // Set role mặc định là STUDENT (hoặc logic khác)
                     Role defaultRole = roleRepository.findByName("STUDENT").orElseThrow(() -> new RuntimeException("Role not found"));
                     user = User.builder()
                             .email(email)

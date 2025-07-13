@@ -5,6 +5,7 @@ import { UserService } from '../../../../services/user.service';
 import { ScoreService } from '../../../../services/score.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NotificationComponent } from '../../../notification/notification.component';
 
 @Component({
   selector: 'app-detail-assignment',
@@ -12,6 +13,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     FormsModule,
+    NotificationComponent,
   ],
   templateUrl: './detail-assignment.component.html',
   styleUrl: './detail-assignment.component.scss',
@@ -24,6 +26,15 @@ export class DetailAssignmentComponent implements OnInit {
   submission: any;
   fileUrl: string = '';
   grade: number | null = null;
+  
+  // Notification properties
+  showNotification = false;
+  notificationType: 'success' | 'warning' | 'error' = 'success';
+  notificationTitle = '';
+  notificationMessage = '';
+  
+  // Loading state
+  isGrading = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,6 +79,13 @@ export class DetailAssignmentComponent implements OnInit {
 
   saveGrade() {
     if (!this.submission?.id) return;
+    
+    if (this.grade === null || this.grade < 0 || this.grade > 10) {
+      this.showNotificationMessage('error', 'Lỗi', 'Điểm phải từ 0 đến 10');
+      return;
+    }
+
+    this.isGrading = true;
     const teacherId = this.userService.getUserId();
     const scoreDTO = {
       submission_id: this.submission.id,
@@ -77,14 +95,32 @@ export class DetailAssignmentComponent implements OnInit {
     this.scoreService.gradeSubmission(scoreDTO).subscribe({
       next: () => {
         debugger
-        alert('Lưu điểm thành công!');
+        this.isGrading = false;
+        this.showNotificationMessage('success', 'Thành công', 'Lưu điểm thành công!');
         this.loadScore();
       },
       error: () => {
         debugger
-        alert('Lỗi khi lưu điểm!');
+        this.isGrading = false;
+        this.showNotificationMessage('error', 'Lỗi', 'Lỗi khi lưu điểm!');
       }
     });
+  }
+
+  showNotificationMessage(type: 'success' | 'warning' | 'error', title: string, message: string) {
+    this.notificationType = type;
+    this.notificationTitle = title;
+    this.notificationMessage = message;
+    this.showNotification = true;
+    
+    // Auto hide notification after 3 seconds
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 3000);
+  }
+
+  closeNotification() {
+    this.showNotification = false;
   }
 
   formatDate(dateArray: number[]): string {

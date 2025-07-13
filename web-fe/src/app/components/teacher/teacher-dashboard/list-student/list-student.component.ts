@@ -9,6 +9,7 @@ import { debounceTime, Subject } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { NotificationComponent } from '../../../notification/notification.component';
 import { Router } from '@angular/router';
+import { ScoreService } from '../../../../services/score.service';
 
 @Component({
   selector: 'app-list-student',
@@ -50,7 +51,8 @@ export class ListStudentComponent implements OnInit {
     private enrollmentService: EnrollmentService,
     private route: ActivatedRoute,
     private classroomService: ClassroomService,
-    private router: Router
+    private router: Router,
+    private scoreService: ScoreService
   ) { }
 
   @HostListener('document:click', ['$event'])
@@ -135,7 +137,7 @@ export class ListStudentComponent implements OnInit {
     );
   }
 
-  exportExcel() {
+  exportListStudent() {
     const className = this.className ? this.className.replace(/[^a-zA-Z0-9_-]/g, '_') : this.classId;
     this.enrollmentService.exportStudentsInClassToExcel(this.classId).subscribe((response: any) => {
       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -146,6 +148,22 @@ export class ListStudentComponent implements OnInit {
       a.click();
       window.URL.revokeObjectURL(url);
       this.showNotificationMessage('success', 'Xuất Excel thành công!');
+    });
+  }
+
+  exportListScore(){
+    const className = this.className ? this.className.replace(/[^a-zA-Z0-9_-]/g, '_') : this.classId;
+    this.scoreService.exportStudentScoresByClassId(this.classId).subscribe((response: any) => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `student_scores_${className}.xlsx`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      this.showNotificationMessage('success', 'Xuất báo cáo điểm thành công!');
+    }, (error) => {
+      this.showNotificationMessage('error', 'Lỗi khi xuất báo cáo điểm');
     });
   }
 

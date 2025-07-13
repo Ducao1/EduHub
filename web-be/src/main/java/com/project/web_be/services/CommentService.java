@@ -21,4 +21,5 @@ public interface CommentService {
     Page<CommentDTO> getCommentsByUserId(Long userId, Pageable pageable);
     void likeComment(Long commentId, Long userId) throws DataNotFoundException;
     void unlikeComment(Long commentId, Long userId) throws DataNotFoundException;
-} 
+    int getCommentLikes(Long commentId) throws DataNotFoundException;
+}

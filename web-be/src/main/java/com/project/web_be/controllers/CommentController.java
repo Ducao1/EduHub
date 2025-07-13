@@ -139,6 +139,16 @@ public class CommentController {
         }
     }
 
+    @GetMapping("/{commentId}/likes")
+    public ResponseEntity<Integer> getCommentLikes(@PathVariable Long commentId) {
+        try {
+            int likes = commentService.getCommentLikes(commentId);
+            return ResponseEntity.ok(likes);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     @GetMapping("/files/{filename:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
         try {

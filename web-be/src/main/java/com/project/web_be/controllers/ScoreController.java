@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.project.web_be.dtos.ScoreDTO;
+import com.project.web_be.dtos.ListStudentScoreDTO;
 import com.project.web_be.dtos.ScoreAssignmentResponseDTO;
 import java.util.List;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.ByteArrayOutputStream;
 import com.project.web_be.services.AssignmentService;
 import com.project.web_be.services.ExamService;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("${api.prefix}/scores")
@@ -180,6 +182,70 @@ public class ScoreController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
             headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=score_" + safeTitle + ".xlsx");
+            return ResponseEntity.ok().headers(headers).body(bytes);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    // API: Lấy danh sách sinh viên đã xác nhận trong lớp kèm điểm các bài nộp
+    @GetMapping("/class/{classId}/students-scores")
+    public ResponseEntity<?> getStudentScoresByClassId(@PathVariable Long classId) {
+        try {
+            List<ListStudentScoreDTO> result = scoreService.getStudentScoresByClassId(classId);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi khi lấy danh sách điểm: "+e.getMessage());
+        }
+    }
+
+    // API: Xuất báo cáo Excel danh sách sinh viên và điểm các bài nộp
+    @GetMapping("/class/{classId}/students-scores/export")
+    public ResponseEntity<byte[]> exportStudentScoresByClassId(@PathVariable Long classId) {
+        try {
+            List<ListStudentScoreDTO> result = scoreService.getStudentScoresByClassId(classId);
+
+            // Tìm tất cả các bài (bài tập + bài thi) theo thứ tự xuất hiện đầu tiên
+            List<String> allTitles = new ArrayList<>();
+            if (!result.isEmpty()) {
+                for (ListStudentScoreDTO.SubmissionScoreDTO sub : result.get(0).getSubmissions()) {
+                    allTitles.add(sub.getTitle());
+                }
+            }
+
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Student Scores");
+            Row header = sheet.createRow(0);
+            header.createCell(0).setCellValue("STT");
+            header.createCell(1).setCellValue("Tên sinh viên");
+            for (int i = 0; i < allTitles.size(); i++) {
+                header.createCell(i + 2).setCellValue(allTitles.get(i));
+            }
+
+            int rowIdx = 1;
+            int stt = 1;
+            for (ListStudentScoreDTO student : result) {
+                Row row = sheet.createRow(rowIdx++);
+                row.createCell(0).setCellValue(stt++);
+                row.createCell(1).setCellValue(student.getStudentName());
+                // Map bài -> điểm
+                java.util.Map<String, Float> titleToScore = new java.util.HashMap<>();
+                for (ListStudentScoreDTO.SubmissionScoreDTO sub : student.getSubmissions()) {
+                    titleToScore.put(sub.getTitle(), sub.getScore() != null ? sub.getScore() : 0f);
+                }
+                for (int i = 0; i < allTitles.size(); i++) {
+                    Float score = titleToScore.getOrDefault(allTitles.get(i), 0f);
+                    row.createCell(i + 2).setCellValue(score);
+                }
+            }
+            for (int i = 0; i < allTitles.size() + 2; i++) sheet.autoSizeColumn(i);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
+            workbook.close();
+            byte[] bytes = out.toByteArray();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=student_scores_class_" + classId + ".xlsx");
             return ResponseEntity.ok().headers(headers).body(bytes);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

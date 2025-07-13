@@ -11,6 +11,14 @@ import com.project.web_be.repositories.UserRepository;
 import com.project.web_be.services.ScoreService;
 import com.project.web_be.dtos.ScoreDTO;
 import com.project.web_be.dtos.responses.ScoreAssignmentResponse;
+import com.project.web_be.dtos.ListStudentScoreDTO;
+import com.project.web_be.entities.Enrollment;
+import com.project.web_be.entities.Assignment;
+import com.project.web_be.entities.ClassExam;
+import com.project.web_be.entities.Exam;
+import com.project.web_be.repositories.EnrollmentRepository;
+import com.project.web_be.repositories.AssignmentRepository;
+import com.project.web_be.repositories.ClassExamRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +32,18 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class ScoreServiceImpl implements ScoreService {
+    private final EnrollmentRepository enrollmentRepository;
+    private final AssignmentRepository assignmentRepository;
+    private final ClassExamRepository classExamRepository;
     private final ScoreRepository scoreRepository;
     private final SubmissionRepository submissionRepository;
-    private final SubmissionAnswerRepository submissionAnswerRepository;
     private final UserRepository userRepository;
 
     public Score autoGradeSubmission(Long submissionId) {
         Submission submission = submissionRepository.findById(submissionId)
                 .orElseThrow(() -> new EntityNotFoundException("Submission not found"));
 
-        float totalScore = (float) submissionAnswerRepository.findBySubmissionId(submissionId)
+        float totalScore = (float) submission.getSubmissionAnswers()
                 .stream()
                 .filter(a -> a.getAnswer().isCorrect())
                 .count();
@@ -158,6 +168,47 @@ public class ScoreServiceImpl implements ScoreService {
                 String title = score.getSubmission().getAssignment().getTitle();
                 result.add(new StudentScoreResponse(title, score.getScore()));
             }
+        }
+        return result;
+    }
+
+    @Override
+    public List<ListStudentScoreDTO> getStudentScoresByClassId(Long classId) {
+        List<Enrollment> enrollments = enrollmentRepository.findByClassroomIdAndConfirmTrue(classId);
+        List<Assignment> assignments = assignmentRepository.findByClassroomId(classId);
+        List<ClassExam> classExams = classExamRepository.findByClassroomId(classId);
+        List<ListStudentScoreDTO> result = new ArrayList<>();
+        for (Enrollment enrollment : enrollments) {
+            User student = enrollment.getStudent();
+            List<ListStudentScoreDTO.SubmissionScoreDTO> submissions = new ArrayList<>();
+            // Bài tập
+            for (Assignment assignment : assignments) {
+                List<Float> scores = scoreRepository.findScoresByAssignmentIdAndStudentId(assignment.getId(), student.getId());
+                Float score = scores.isEmpty() ? 0f : scores.get(0);
+                submissions.add(ListStudentScoreDTO.SubmissionScoreDTO.builder()
+                        .type("ASSIGNMENT")
+                        .id(assignment.getId())
+                        .title(assignment.getTitle())
+                        .score(score)
+                        .build());
+            }
+            // Bài thi
+            for (ClassExam classExam : classExams) {
+                Exam exam = classExam.getExam();
+                List<Float> examScores = scoreRepository.findScoresByExamIdAndStudentId(exam.getId(), student.getId());
+                Float examScore = examScores.isEmpty() ? 0f : examScores.get(0);
+                submissions.add(ListStudentScoreDTO.SubmissionScoreDTO.builder()
+                        .type("EXAM")
+                        .id(exam.getId())
+                        .title(exam.getTitle())
+                        .score(examScore)
+                        .build());
+            }
+            result.add(ListStudentScoreDTO.builder()
+                    .studentId(student.getId())
+                    .studentName(student.getFullName())
+                    .submissions(submissions)
+                    .build());
         }
         return result;
     }

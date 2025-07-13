@@ -8,10 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     Page<Assignment> findByTeacherId(Long teacherId, Pageable pageable);
     Page<Assignment> findByClassroomId(Long classId, Pageable pageable);
+    List<Assignment> findByClassroomId(Long classId);
 
     @Query("SELECT a FROM Assignment a WHERE a.teacher.id = :teacherId AND LOWER(a.title) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Assignment> searchByTeacherIdAndTitle(@Param("teacherId") Long teacherId, @Param("searchTerm") String searchTerm, Pageable pageable);

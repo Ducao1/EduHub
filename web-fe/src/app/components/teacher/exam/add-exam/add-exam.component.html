@@ -1,3 +1,8 @@
+<app-notification *ngIf="notification.show"
+  [type]="notification.type"
+  [message]="notification.message"
+  (close)="notification.show = false">
+</app-notification>
 <div class="add-exam-container">
   <div class="add-exam-card">
     <h2 class="add-exam-title">Tạo đề thi</h2>

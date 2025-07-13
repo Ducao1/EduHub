@@ -135,6 +135,11 @@ export class DetailTeacherClassComponent implements OnInit {
                 : new Date(b.createdAt);
               return dateB.getTime() - dateA.getTime();
             });
+            this.comments.forEach(comment => {
+              this.commentService.getCommentLikes(comment.id).subscribe(likes => {
+                comment.likes = likes;
+              });
+            });
           });
         },
         error: (err) => {

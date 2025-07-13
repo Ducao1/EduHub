@@ -320,6 +320,7 @@ export class SessionExamComponent implements OnInit, OnDestroy {
   formatDate(dateArray: number[]): string {
     const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
     const jsDate = new Date(year, month - 1, day, hour, minute, second);
+    jsDate.setHours(jsDate.getHours() + 7);
     return this.datePipe.transform(jsDate, 'HH:mm dd/MM/yyyy') || '';
   }
 

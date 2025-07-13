@@ -57,8 +57,20 @@ h2 {
   transition: background 0.2s;
 }
 
-.grade-box button:hover {
+.grade-box button:hover:not(:disabled) {
   background: #125ea2;
+}
+
+.grade-box button:disabled {
+  background: #bdbdbd;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.grade-box input[type="number"]:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 a {

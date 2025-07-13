@@ -19,13 +19,14 @@ public class AssignmentDTO {
     private String title;
     @JsonProperty("content")
     private String content;
-    @JsonProperty("assigned_date")
+    @JsonProperty("assignedDate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime assignedDate;
-    @JsonProperty("due_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonProperty("dueDate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime dueDate;
-    @JsonProperty("teacher_id")
+    @JsonProperty("teacherId")
     private long teacherId;
-    @JsonProperty("class_id")
+    @JsonProperty("classId")
     private long classId;
 }

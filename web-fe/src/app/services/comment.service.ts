@@ -50,4 +50,10 @@ export class CommentService {
       headers: this.httpUtilService.createHeaders() 
     });
   }
+
+  getCommentLikes(commentId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiComment}/${commentId}/likes`, {
+      headers: this.httpUtilService.createHeaders()
+    });
+  }
 } 
